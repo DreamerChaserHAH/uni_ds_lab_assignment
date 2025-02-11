@@ -2,7 +2,6 @@
 /// Custom Array Container in C++ with Dedicated Functions
 /// </summary>
 
-#ifndef ARRAY_H
-#define ARRAY_H
+#pragma once
 
-#endif //ARRAY_H
+
