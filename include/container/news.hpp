@@ -9,8 +9,11 @@
 #include <string>
 #include <ctime>
 
-enum NewsGenre {
+#include "linked_list.hpp"
 
+enum NewsGenre {
+    SPORTS,
+    POLITICS
 };
 
 struct News {
@@ -18,4 +21,6 @@ struct News {
     std::string content;
     NewsGenre genre;
     time_t publication_date;
+
+    bool operator==(const News & news) const = default;
 };
