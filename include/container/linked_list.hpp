@@ -2,12 +2,20 @@
 /// Custom Linked List Implementation in C++
 /// </summary>
 #pragma once
+using namespace std;
 
 #include <string>
 #include <fstream>
-#include <utility>
+#include <iomanip>
+#include <sstream>
+#include <ctime>
 
 #include "news.hpp"
+
+void parse_date(const std::string& date_str, struct tm& tm) {
+    std::istringstream ss(date_str);
+    ss >> std::get_time(&tm, "%B %d, %Y");
+}
 
 struct NewsNode {
     News data;
@@ -38,6 +46,35 @@ public:
         std::string date;
 
         /// TODO Implement reading from file after cleaning
+        ifstream file(filepath);
+
+        while (file.good()) {
+            getline(file, title, ',');
+            getline(file, text, ',');
+            getline(file, subject, ',');
+            getline(file, date, ',');
+
+            if (title == "title")
+                continue;
+            else if (title == "")
+                break;
+
+        News news1;
+            news1.title = title;
+            news1.content = text;
+            if (subject == "worldnews") {
+                news1.genre = NewsGenre::WORLD_NEWS;
+            }
+            else {
+                news1.genre = NewsGenre::POLITICS;
+            }
+
+            struct tm tm = {};
+            parse_date(date, tm);
+            news1.publication_date = mktime(&tm);
+            this->displayArticle();
+            this->insert(news1);
+        }
     }
 
     void insert(News newNews) {

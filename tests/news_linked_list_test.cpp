@@ -8,10 +8,6 @@
 #include <sstream>
 #include <ctime>
 
-void parse_date(const std::string& date_str, struct tm& tm) {
-    std::istringstream ss(date_str);
-    ss >> std::get_time(&tm, "%B %d, %Y");
-}
 
 void test_linked_list_insertion() {
     NewsLinkedList news_linked_list_container;
@@ -115,7 +111,7 @@ void test_linked_list_insert_at_location() {
 
 void test_linked_list_load_from_file() {
     NewsLinkedList news_linked_list_container;
-    news_linked_list_container.load_from_file("tests/test_data/test_source_file.csv");
+    news_linked_list_container.load_from_file("test_source_file.csv");
 
     News test1example;
     test1example.title = "Title 1";
