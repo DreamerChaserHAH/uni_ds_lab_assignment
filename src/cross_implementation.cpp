@@ -5,8 +5,8 @@
 
 #include <iostream>
 
-#include <array.h>
-#include <linked_list.h>
+#include "container/array.hpp"
+#include "container/linked_list.hpp"
 
 int main() {
     std::cout << "Hello from Cross Implementation File" << std::endl;
