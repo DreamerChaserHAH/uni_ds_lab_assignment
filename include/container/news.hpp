@@ -12,7 +12,7 @@
 #include "linked_list.hpp"
 
 enum NewsGenre {
-    SPORTS,
+    WORLD_NEWS,
     POLITICS
 };
 

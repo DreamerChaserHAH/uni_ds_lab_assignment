@@ -4,13 +4,21 @@
 
 #include "container/linked_list.hpp"
 #include <assert.h>
+#include <iomanip>
+#include <sstream>
+#include <ctime>
+
+void parse_date(const std::string& date_str, struct tm& tm) {
+    std::istringstream ss(date_str);
+    ss >> std::get_time(&tm, "%B %d, %Y");
+}
 
 void test_linked_list_insertion() {
     NewsLinkedList news_linked_list_container;
     News news1;
     news1.title = "Test Title 1";
     news1.content = "Test Content 1";
-    news1.genre = NewsGenre::SPORTS;
+    news1.genre = NewsGenre::POLITICS;
     news1.publication_date = time(nullptr);
 
     news_linked_list_container.insert(news1);
@@ -36,7 +44,7 @@ void test_linked_list_get_at_location() {
     News news1;
     news1.title = "Test Title 1";
     news1.content = "Test Content 1";
-    news1.genre = NewsGenre::SPORTS;
+    news1.genre = NewsGenre::WORLD_NEWS;
     news1.publication_date = time(nullptr);
 
     news_linked_list_container.insert(news1);
@@ -52,7 +60,7 @@ void test_linked_list_get_at_location() {
     News news3;
     news3.title = "Test Title 3";
     news3.content = "Test Content 3";
-    news3.genre = NewsGenre::SPORTS;
+    news3.genre = NewsGenre::WORLD_NEWS;
     news3.publication_date = time(nullptr);
 
     news_linked_list_container.insert(news3);
@@ -68,7 +76,7 @@ void test_linked_list_insert_at_location() {
     News news1;
     news1.title = "Test Title 1";
     news1.content = "Test Content 1";
-    news1.genre = NewsGenre::SPORTS;
+    news1.genre = NewsGenre::POLITICS;
     news1.publication_date = time(nullptr);
 
     news_linked_list_container.insert(news1);
@@ -84,7 +92,7 @@ void test_linked_list_insert_at_location() {
     News news3;
     news3.title = "Test Title 3";
     news3.content = "Test Content 3";
-    news3.genre = NewsGenre::SPORTS;
+    news3.genre = NewsGenre::POLITICS;
     news3.publication_date = time(nullptr);
 
     news_linked_list_container.insert(news3);
@@ -97,7 +105,7 @@ void test_linked_list_insert_at_location() {
     News randomInsertionNews;
     randomInsertionNews.title = "Random";
     randomInsertionNews.content = "Random Content";
-    randomInsertionNews.genre = NewsGenre::SPORTS;
+    randomInsertionNews.genre = NewsGenre::POLITICS;
     randomInsertionNews.publication_date = time(nullptr);
 
     news_linked_list_container.insert_at_location(randomInsertionNews, 1);
@@ -112,9 +120,9 @@ void test_linked_list_load_from_file() {
     News test1example;
     test1example.title = "Title 1";
     test1example.content = "Text 1";
-    test1example.genre = NewsGenre::SPORTS;
+    test1example.genre = NewsGenre::WORLD_NEWS;
     struct tm tm = {};
-    strptime("December 28, 2017", "%B %d, %Y", &tm);
+    parse_date("December 28, 2017", tm);
     test1example.publication_date = mktime(&tm);
 
     assert(test1example == news_linked_list_container.get_at_location(0)->data);
