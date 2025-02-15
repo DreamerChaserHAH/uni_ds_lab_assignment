@@ -1,0 +1,74 @@
+//
+// Created by Victor Mak on 15/02/2025.
+//
+
+#pragma once
+
+
+#include <string>
+#include <fstream>
+#include <iomanip>
+#include <sstream>
+#include <ctime>
+
+#include "news.hpp"
+
+void parse_date(const std::string& date_str, struct tm& tm) {
+    std::istringstream ss(date_str);
+    ss >> std::get_time(&tm, "%B %d, %Y");
+}
+
+class NewsContainer{
+  public:
+    /// <summary>
+    /// filepath: the path of the file we are reading
+    /// description: load the data from the designated file into this particular linked list
+    /// </summary>
+    void load_from_file(std::string filepath) {
+        std::ifstream current_file(filepath);
+
+        std::string title;
+        std::string text;
+        std::string subject;
+        std::string date;
+
+        /// TODO Implement reading from file after cleaning
+        std::ifstream file(filepath);
+
+        while (file.good()) {
+            getline(file, title, ',');
+            getline(file, text, ',');
+            getline(file, subject, ',');
+            getline(file, date, ',');
+
+            if (title == "title")
+                continue;
+            else if (title == "")
+                break;
+
+            News news1;
+            news1.title = title;
+            news1.content = text;
+            if (subject == "worldnews") {
+                news1.genre = NewsGenre::WORLD_NEWS;
+            }
+            else {
+                news1.genre = NewsGenre::POLITICS;
+            }
+
+            struct tm tm = {};
+            parse_date(date, tm);
+            news1.publication_date = mktime(&tm);
+            this->display_article();
+            this->insert(news1);
+        }
+    }
+
+    void display_article(){
+
+    }
+
+     virtual void insert(News newNews) = 0;
+     virtual void insert_at_location(News newNews, int location) = 0;
+     virtual News* get_at_location(int locaiton) = 0;
+};

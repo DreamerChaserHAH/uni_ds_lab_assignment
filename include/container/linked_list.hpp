@@ -5,17 +5,9 @@
 using namespace std;
 
 #include <string>
-#include <fstream>
-#include <iomanip>
-#include <sstream>
-#include <ctime>
 
 #include "news.hpp"
-
-void parse_date(const std::string& date_str, struct tm& tm) {
-    std::istringstream ss(date_str);
-    ss >> std::get_time(&tm, "%B %d, %Y");
-}
+#include "news_container.hpp"
 
 struct NewsNode {
     News data;
@@ -23,7 +15,7 @@ struct NewsNode {
     NewsNode* prevAddress;
 };
 
-class NewsLinkedList {
+class NewsLinkedList : public NewsContainer{
 private:
     NewsNode* head;
     NewsNode* tail;
@@ -33,51 +25,7 @@ public:
 
     }
 
-    /// <summary>
-    /// filepath: the path of the file we are reading
-    /// description: load the data from the designated file into this particular linked list
-    /// </summary>
-    void load_from_file(std::string filepath) {
-        std::ifstream current_file(filepath);
-
-        std::string title;
-        std::string text;
-        std::string subject;
-        std::string date;
-
-        /// TODO Implement reading from file after cleaning
-        ifstream file(filepath);
-
-        while (file.good()) {
-            getline(file, title, ',');
-            getline(file, text, ',');
-            getline(file, subject, ',');
-            getline(file, date, ',');
-
-            if (title == "title")
-                continue;
-            else if (title == "")
-                break;
-
-        News news1;
-            news1.title = title;
-            news1.content = text;
-            if (subject == "worldnews") {
-                news1.genre = NewsGenre::WORLD_NEWS;
-            }
-            else {
-                news1.genre = NewsGenre::POLITICS;
-            }
-
-            struct tm tm = {};
-            parse_date(date, tm);
-            news1.publication_date = mktime(&tm);
-            this->displayArticle();
-            this->insert(news1);
-        }
-    }
-
-    void insert(News newNews) {
+    void insert(News newNews) override{
         auto* newsNode = new NewsNode;
         newsNode->data = std::move(newNews);
         newsNode->nextAddress = nullptr;
@@ -93,7 +41,7 @@ public:
         }
     }
 
-    NewsNode* get_at_location(int location) {
+     News* get_at_location(int location) override {
         NewsNode* current = head;
         for (int i = 0; i < location; i++) {
             if (current == nullptr) {
@@ -101,10 +49,10 @@ public:
             }
             current = current->nextAddress;
         }
-        return current;
+        return &(current->data);
     }
 
-    void insert_at_location(News newNews, int location) {
+    void insert_at_location(News newNews, int location) override {
         auto* newsNode = new NewsNode;
         newsNode->data = std::move(newNews);
         newsNode->nextAddress = nullptr;
@@ -138,9 +86,6 @@ public:
         return *tail;
     }
 
-    void displayArticle() {
-
-    }
     ~NewsLinkedList() {
 
     }
