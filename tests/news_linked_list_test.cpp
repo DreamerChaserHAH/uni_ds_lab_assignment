@@ -114,20 +114,21 @@ void test_linked_list_load_from_file() {
     news_linked_list_container.load_from_file("test_data/test_source_file.csv");
 
     News test1example;
-    test1example.title = "Title 1";
-    test1example.content = "Text 1";
+    test1example.title = "\"Title 1\"";
+    test1example.content = "\"Text 1\"";
     test1example.genre = NewsGenre::WORLD_NEWS;
     struct tm tm = {};
-    parse_date("December 28, 2017", tm);
+    parse_date("\"December 28, 2017\"", tm);
     test1example.publication_date = mktime(&tm);
 
     assert(news_linked_list_container.get_at_location(0) != nullptr);
-    assert(test1example == *news_linked_list_container.get_at_location(0));
+    News at_location = *news_linked_list_container.get_at_location(0);
+    assert(test1example == at_location);
 }
 
 int main() {
     test_linked_list_insertion();
     test_linked_list_get_at_location();
     test_linked_list_insert_at_location();
-    //test_linked_list_load_from_file();
+    test_linked_list_load_from_file();
 }

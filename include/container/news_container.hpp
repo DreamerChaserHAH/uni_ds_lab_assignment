@@ -10,12 +10,16 @@
 #include <iomanip>
 #include <sstream>
 #include <ctime>
+#include <iostream>
 
 #include "news.hpp"
 
 void parse_date(const std::string& date_str, struct tm& tm) {
     std::istringstream ss(date_str);
-    ss >> std::get_time(&tm, "%B %d, %Y");
+    ss >> std::get_time(&tm, "\"%b %d, %Y\"");
+    if (ss.fail()) {
+        std::__1::cerr << "Failed to parse date: " << date_str << std::endl;
+    }
 }
 
 class NewsContainer{
@@ -41,7 +45,7 @@ class NewsContainer{
             getline(file, title, ',');
             getline(file, text, ',');
             getline(file, subject, ',');
-            getline(file, date, ',');
+            getline(file, date, '\n');
 
             if (title == "title")
                 continue;
