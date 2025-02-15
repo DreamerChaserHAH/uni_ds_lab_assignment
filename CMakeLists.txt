@@ -11,7 +11,9 @@ add_executable(linked_list_implementation src/linked_list_implementation.cpp inc
 add_executable(cross_implementation src/cross_implementation.cpp include/container/array.hpp include/container/linked_list.hpp include/algorithms/search.h include/algorithms/sort.h)
 
 add_executable(tests-news-linked-list tests/news_linked_list_test.cpp)
+add_executable(tests-news-array tests/news_array_test.cpp)
 
 enable_testing()
 
 add_test(news_linked_list_test tests-news-linked-list)
+add_test(news_array_test tests-news-array)

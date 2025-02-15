@@ -20,6 +20,8 @@ void parse_date(const std::string& date_str, struct tm& tm) {
 
 class NewsContainer{
   public:
+    virtual ~NewsContainer() = default;
+
     /// <summary>
     /// filepath: the path of the file we are reading
     /// description: load the data from the designated file into this particular linked list
