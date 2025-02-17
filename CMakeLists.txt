@@ -13,9 +13,11 @@ add_executable(cross_implementation src/cross_implementation.cpp include/contain
 add_executable(tests-news-linked-list tests/news_linked_list_test.cpp)
 #add_executable(tests-news-array tests/news_array_test.cpp)
 add_executable(tests-linked-list-quick-sort tests/algorithms/linked_list/linked_list_quick_sort.cpp)
+add_executable(tests-linked-list-bucket-sort tests/algorithms/linked_list/linked_list_bucket_sort.cpp)
 
 enable_testing()
 
 add_test(news_linked_list_test tests-news-linked-list)
 #add_test(news_array_test tests-news-array)
 add_test(linked_list_quick_sort_test tests-linked-list-quick-sort)
+add_test(linked_list_bucket_sort_test tests-linked-list-bucket-sort)
