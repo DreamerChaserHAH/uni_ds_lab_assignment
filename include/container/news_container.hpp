@@ -24,13 +24,25 @@ void parse_date(const std::string& date_str, struct tm& tm) {
 
 class NewsContainer{
   public:
+    ///<summary>
+    ///The starting pointer from which this container will be able to access
+    ///</summary>
+    void* head;
+
+    int size;
+
+    NewsContainer(): size(0), head(nullptr) {}
+
+    //an alternative constructor that allows us to set the head pointer
+    NewsContainer(int size, void* head): size(size), head(head){}
+
     virtual ~NewsContainer() = default;
 
     /// <summary>
     /// filepath: the path of the file we are reading
     /// description: load the data from the designated file into this particular linked list
     /// </summary>
-    void load_from_file(std::string filepath) {
+    void load_from_file(const std::string& filepath) {
         std::ifstream current_file(filepath);
 
         std::string title;
@@ -65,7 +77,7 @@ class NewsContainer{
             struct tm tm = {};
             parse_date(date, tm);
             news1.publication_date = mktime(&tm);
-            this->display_article();
+            //this->display_article();
             this->insert(news1);
         }
     }
@@ -74,7 +86,42 @@ class NewsContainer{
 
     }
 
-     virtual void insert(News newNews) = 0;
-     virtual void insert_at_location(News newNews, int location) = 0;
-     virtual News* get_at_location(int locaiton) = 0;
+    virtual void insert(News newNews) = 0;
+    virtual void insert_at_location(News newNews, int location) = 0;
+    virtual News* get_at_location(int location) = 0;
+
+    /// <summary>
+    /// Swap between two elements in the container
+    /// </summary>
+    virtual void swap_news(int i, int j) = 0;
+
+    /// <summary>
+    /// get the last element in the container
+    /// </summary>
+    virtual void* get_tail() = 0;
+
+    /// <summary>
+    /// get the news at the memory location
+    /// </summary>
+    virtual News* get_news_at_memory(void* memory) = 0;
+
+    /// <summary>
+    /// move to next pointer
+    /// </summary>
+    virtual void* move_to_next(void* current) = 0;
+
+    /// <summary>
+    /// move to previous pointer
+    /// </summary>
+    virtual void* move_to_prev(void* previous) = 0;
+
+    /// <summary>
+    /// Split the container from the left exclusive of the midpoint
+    /// </summary>
+    virtual void* split_left(int mid_point) = 0;
+
+    /// <summary>
+    /// Split the container from the right exclusive of the midpoint
+    /// </summary>
+    virtual void* split_right(int mid_point) = 0;
 };

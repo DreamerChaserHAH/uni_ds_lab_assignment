@@ -10,30 +10,36 @@ using namespace std;
 #include "news_container.hpp"
 
 struct NewsNode {
-    News data;
+    News* data;
     NewsNode* nextAddress;
     NewsNode* prevAddress;
 };
 
 class NewsLinkedList : public NewsContainer{
 private:
-    NewsNode* head;
     NewsNode* tail;
 
+    NewsLinkedList(NewsNode* head_pointer, NewsNode* tail_pointer, int size) {
+        this->head = head_pointer;
+        this->size = size;
+        this->tail = tail_pointer;
+    }
+
 public:
-    NewsLinkedList() : head(nullptr), tail(nullptr) {
+    NewsLinkedList() : tail(nullptr) {
 
     }
 
     void insert(News newNews) override{
         auto* newsNode = new NewsNode;
-        newsNode->data = std::move(newNews);
+        newsNode->data = new News(newNews);
         newsNode->nextAddress = nullptr;
         newsNode->prevAddress = tail;
+        size++;
 
         if (head == nullptr) {
             head = newsNode;
-            tail = head;
+            tail = static_cast<NewsNode*>(head);
             return;
         }else {
             tail->nextAddress = newsNode;
@@ -42,30 +48,42 @@ public:
     }
 
      News* get_at_location(int location) override {
-        NewsNode* current = head;
+        NewsNode* current = static_cast<NewsNode*>(head);
+        for (int i = 0; i < location; i++) {
+            current = current->nextAddress;
+        }
+        if (current == nullptr) {
+            return nullptr;
+        }
+        return (current->data);
+    }
+
+    NewsNode* get_node_at_location(int location) {
+        NewsNode* current = static_cast<NewsNode*>(head);
         for (int i = 0; i < location; i++) {
             if (current == nullptr) {
                 return nullptr;
             }
             current = current->nextAddress;
         }
-        return &(current->data);
+        return current;
     }
 
     void insert_at_location(News newNews, int location) override {
         auto* newsNode = new NewsNode;
-        newsNode->data = std::move(newNews);
+        newsNode->data = new News(newNews);
         newsNode->nextAddress = nullptr;
         newsNode->prevAddress = nullptr;
+        size++;
 
         if (location == 0) {
-            newsNode->nextAddress = head;
-            head->prevAddress = newsNode;
+            newsNode->nextAddress = static_cast<NewsNode*>(head);
+            newsNode->nextAddress->prevAddress = newsNode;
             head = newsNode;
             return;
         }
 
-        NewsNode* current = head;
+        NewsNode* current = static_cast<NewsNode*>(head);
         for (int i = 0; i < location - 1; i++) {
             if (current == nullptr) {
                 return;
@@ -78,12 +96,67 @@ public:
         current->nextAddress = newsNode;
     }
 
-    NewsNode get_head() {
-        return *head;
+    void swap_news(int i, int j) override {
+        NewsNode* node1 = get_node_at_location(i);
+        NewsNode* node2 = get_node_at_location(j);
+
+        if (node1 == nullptr || node2 == nullptr) {
+            return;
+        }
+
+        News* temp = node1->data;
+        node1->data = node2->data;
+        node2->data = temp;
     }
 
-    NewsNode get_tail() {
+    NewsNode get_head() {
+        return *static_cast<NewsNode*>(head);
+    }
+
+    NewsNode get_tail_node() {
         return *tail;
+    }
+
+    void* get_tail() override{
+        return tail;
+    }
+
+    News* get_news_at_memory(void *memory) override {
+        if (memory == nullptr) {
+            return nullptr;
+        }
+        return static_cast<NewsNode*>(memory)->data;
+    }
+
+    void* move_to_next(void *current) override {
+        return static_cast<NewsNode*>(current)->nextAddress;
+    }
+
+    void* move_to_prev(void *current) override{
+        return static_cast<NewsNode*>(current)->prevAddress;
+    }
+
+    void* split_left(int mid_point) override {
+        auto* current = static_cast<NewsNode*>(head);
+        NewsNode* new_head = current;
+        NewsNode* new_tail = get_node_at_location(mid_point - 1);
+
+        if (current == nullptr) {
+            return nullptr;
+        }
+
+        return new NewsLinkedList(new_head, new_tail, mid_point);
+    }
+
+    void* split_right(int mid_point) override {
+        auto* current = static_cast<NewsNode*>(head);
+        NewsNode* new_head = get_node_at_location(mid_point + 1);
+        NewsNode* new_tail = tail;
+
+        if (current == nullptr) {
+            return nullptr;
+        }
+        return new NewsLinkedList(new_head, new_tail, size - mid_point - 1);
     }
 
     ~NewsLinkedList() {

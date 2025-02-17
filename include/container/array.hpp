@@ -13,7 +13,6 @@
 class NewsArray : public NewsContainer {
 private:
     News* newsArray;
-    int size;
     int capacity;
 
     void resize() {
@@ -32,7 +31,7 @@ private:
     }
 
 public:
-    NewsArray(int cap = 10) : size(0), capacity(cap) {
+    NewsArray(int cap = 10) : capacity(cap) {
         newsArray = new News[capacity];
     }
 

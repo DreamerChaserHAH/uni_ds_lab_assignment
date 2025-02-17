@@ -4,8 +4,6 @@
 
 #include "container/linked_list.hpp"
 #include <assert.h>
-#include <iomanip>
-#include <sstream>
 #include <ctime>
 
 
@@ -19,8 +17,8 @@ void test_linked_list_insertion() {
 
     news_linked_list_container.insert(news1);
 
-    assert(news1 == news_linked_list_container.get_head().data);
-    assert(news1 == news_linked_list_container.get_tail().data);
+    assert(news1 == *news_linked_list_container.get_head().data);
+    assert(news1 == *news_linked_list_container.get_tail_node().data);
 
     News news2;
     news2.title = "Test Title 2";
@@ -30,8 +28,8 @@ void test_linked_list_insertion() {
 
     news_linked_list_container.insert(news2);
 
-    assert(news1 == news_linked_list_container.get_head().data);
-    assert(news2 == news_linked_list_container.get_tail().data);
+    assert(news1 == *news_linked_list_container.get_head().data);
+    assert(news2 == *news_linked_list_container.get_tail_node().data);
 
 }
 

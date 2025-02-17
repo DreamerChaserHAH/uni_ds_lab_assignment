@@ -10,7 +10,5 @@
 /// 8. Fibonacci Search
 /// </summary>
 
-#ifndef SEARCH_H
-#define SEARCH_H
+#pragma once
 
-#endif //SEARCH_H
