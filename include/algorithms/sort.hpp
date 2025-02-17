@@ -4,9 +4,9 @@
 /// 3. Insertion Sort (Abbirami)
 /// 4. Merge Sort (Abbirami)
 /// 5. Quick Sort (Htet Aung Hlaing)
-/// 6. Radix Sort
-/// 7. Counting Sort
-/// 8. Bucket Sort
+/// 6. Radix Sort (Kaung)
+/// 7. Counting Sort (Htet Aung Hlaing)
+/// 8. Bucket Sort (Kaung)
 /// </summary>
 
 #pragma once
