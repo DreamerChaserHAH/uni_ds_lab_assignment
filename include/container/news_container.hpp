@@ -18,7 +18,7 @@ void parse_date(const std::string& date_str, struct tm& tm) {
     std::istringstream ss(date_str);
     ss >> std::get_time(&tm, "\"%b %d, %Y\"");
     if (ss.fail()) {
-        std::__1::cerr << "Failed to parse date: " << date_str << std::endl;
+        std::cerr << "Failed to parse date: " << date_str << std::endl;
     }
 }
 
