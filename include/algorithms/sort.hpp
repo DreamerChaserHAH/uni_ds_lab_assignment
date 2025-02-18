@@ -59,12 +59,15 @@ void quick_sort(NewsContainer& news_container) {
     void* right_pointer = news_container.move_to_prev(tail_pointer);
 
     do {
+        News left, right;
         /// # Step 3
-        while (true) {
+        while (left_pointer_index <= news_container.size - 2) {
             News* news_at_memory = news_container.get_news_at_memory(left_pointer);
             if (news_at_memory == nullptr) {
                 break;
             }
+            left = *news_at_memory;
+
             if (news_at_memory->publication_date > pivot_date) {
                 break;
             }
@@ -76,11 +79,12 @@ void quick_sort(NewsContainer& news_container) {
             left_pointer_index++;
         }
 
-        while (true) {
+        while (right_pointer_index >= 0) {
             News* news_at_memory = news_container.get_news_at_memory(right_pointer);
             if (news_at_memory == nullptr) {
                 break;
             }
+            right = *news_at_memory;
             if (news_at_memory->publication_date < pivot_date) {
                 break;
             }
