@@ -11,13 +11,18 @@
 #include <sstream>
 #include <ctime>
 #include <iostream>
+#include <iomanip>
 #include "container/news.hpp"
 
-inline void parse_date(const std::string& date_str, struct tm& tm) {
+inline bool parse_date(const std::string& date_str, struct tm& tm) {
     std::istringstream ss(date_str);
     ss >> std::get_time(&tm, "\"%b %d, %Y\"");
     if (ss.fail()) {
-        std::cerr << "Failed to parse date: " << date_str << std::endl;
+        std::istringstream ss2(date_str);
+        ss2 >> std::get_time(&tm, "\"%d-%b-%y\"");
+        if (ss2.fail()) {
+            std::cerr << "Failed to parse date: " << date_str << std::endl;
+        }
     }
 }
 
@@ -44,26 +49,55 @@ class NewsContainer{
     /// description: load the data from the designated file into this particular linked list
     /// </summary>
     void load_from_file(const std::string& filepath) {
-        std::ifstream current_file(filepath);
+        std::ifstream target_file(filepath);
 
-        std::string title;
-        std::string text;
-        std::string subject;
-        std::string date;
+        if (!target_file.is_open()) {
+            std::cerr << "Error opening file!" << std::endl;
+        }
 
-        /// TODO Implement reading from file after cleaning
-        std::ifstream file(filepath);
+        std::string line, full_line;
 
-        while (file.good()) {
-            getline(file, title, ',');
-            getline(file, text, ',');
-            getline(file, subject, ',');
-            getline(file, date, '\n');
+        // Read and ignore the header from the original file
+        getline(target_file, line);
 
-            if (title == "title")
-                continue;
-            else if (title == "")
-                break;
+        while (getline(target_file, line))
+        {
+            full_line = line;
+            int quote_count = std::count(line.begin(), line.end(), '"');
+
+            // If we have an odd number of quotes, the entry is not complete
+            while (quote_count % 2 != 0) {
+                std::string next_line;
+                if (!getline(target_file, next_line)) break;
+
+                full_line += "\n" + next_line;
+                quote_count += std::count(next_line.begin(), next_line.end(), '"');
+            }
+
+            std::istringstream ss(full_line);
+            std::string title, text, subject, date;
+
+            // Read title
+            getline(ss, title, ',');
+            if (title.front() == '\"') {
+                std::string temp;
+                while (title.back() != '\"') {
+                    getline(ss, temp, ',');
+                    title += "," + temp;
+                }
+            }
+
+            getline(ss, text, ',');
+            if (text.front() == '\"') {
+                std::string temp;
+                while (text.back() != '\"') {
+                    getline(ss, temp, ',');
+                    text += "," + temp;
+                }
+            }
+
+            getline(ss, subject, ',');
+            getline(ss, date, '\n');
 
             News news1;
             news1.title = title;

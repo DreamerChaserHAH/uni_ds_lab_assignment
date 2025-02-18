@@ -37,8 +37,7 @@ std::string remove_random_character(const std::string& input) {
     return result;
 }
 
-bool parse_date(const std::string& date_str) {
-    struct tm tm = {};
+bool parse_date(const std::string& date_str, struct tm& tm) {
     std::istringstream ss(date_str);
     ss >> std::get_time(&tm, "%b %d, %Y");
     if (ss.fail()) {
@@ -148,13 +147,17 @@ void clean_csv(std::string input_file_path, std::string output_file_path) {
             continue;
         }
 
-        bool parse_date_success = parse_date(date);
+        struct tm tm = {};
+        bool parse_date_success = parse_date(date, tm);
         if (!parse_date_success) {
             //parsing date failed
             date = previous_date;
+            parse_date(date, tm);
         }
-
         previous_date = date;
+        std::ostringstream formatted_date;
+        formatted_date << std::put_time(&tm, "%B %d, %Y");
+        date = formatted_date.str();
         // Write cleaned data to new CSV file
         output_file << "\"" << title << "\",\"" << text << "\",\"" << subject << "\",\"" << date << "\"\n";
 
