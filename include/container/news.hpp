@@ -9,6 +9,8 @@
 #include <string>
 #include <ctime>
 
+#include "news_container.hpp"
+
 enum NewsGenre {
     WORLD_NEWS,
     POLITICS
@@ -20,5 +22,14 @@ struct News {
     NewsGenre genre;
     time_t publication_date;
 
+    int getYear() const {
+        struct tm* timeinfo = localtime(&publication_date);
+        return timeinfo->tm_year + 1900; // convert to full years
+    }
+
     bool operator==(const News & news) const = default;
 };
+
+
+
+

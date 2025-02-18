@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include "container/array.hpp"
 #include "container/news_container.hpp"
 
 void bubble_sort(NewsContainer& news_container) {
@@ -112,15 +113,97 @@ void quick_sort(NewsContainer& news_container) {
     }
 
 }
+void counting_sort(NewsContainer& news_container) {
+
+}
 
 void radix_sort(NewsContainer& news_container) {
 
 }
 
-void counting_sort(NewsContainer& news_container) {
 
-}
 
 void bucket_sort(NewsContainer& news_container) {
 
+    /*
+     step 1 - find min and max publication year
+     step 2 - create new bucket
+     step 3 - distribute articles into the correct year bucket
+     step 4 - sort each bucket using insertion sort (by full publication_date)
+     step 5 - merged sorted bucket into 'news_container'
+     step 6 - delete the bucket
+     */
+    if (news_container.size == 0) return;  // Edge case: empty container
+
+    // Step 1: Find min and max publication year
+    int min_year = INT_MAX, max_year = INT_MIN;
+    for (int i = 0; i < news_container.size; i++) {
+        News* news = news_container.get_at_location(i);
+        if (news) {
+            int year = news->getYear();
+            min_year = std::min(min_year, year);
+            max_year = std::max(max_year, year);
+        }
+    }
+
+    int bucket_count = max_year - min_year + 1;
+
+    // step 2 - Create buckets manually using raw arrays
+    int bucket_sizes[bucket_count] = {0};  // Track number of elements in each bucket
+    const int MAX_BUCKET_SIZE = 100;  // Adjust based on dataset
+    News** buckets = new News*[bucket_count];
+
+    for (int i = 0; i < bucket_count; i++) {
+        buckets[i] = new News[MAX_BUCKET_SIZE];  // Allocate array for each bucket
+    }
+
+    // Step 3: Distribute articles into the correct bucket
+    for (int i = 0; i < news_container.size; i++) {
+        News* news = news_container.get_at_location(i);
+        if (news) {
+            int year = news->getYear();
+            int index = year - min_year;
+
+            if (bucket_sizes[index] >= MAX_BUCKET_SIZE) {
+                std::cerr << "Bucket overflow for year " << year << "!" << std::endl;
+                continue;
+            }
+
+            buckets[index][bucket_sizes[index]] = *news;  // Store news in bucket
+            bucket_sizes[index]++;
+        }
+    }
+
+    // Step 4: Sort each bucket using Insertion Sort (by full `publication_date`)
+    for (int i = 0; i < bucket_count; i++) {
+        int size = bucket_sizes[i];
+        for (int j = 1; j < size; j++) {
+            News key = buckets[i][j];
+            int k = j - 1;
+
+            // Sort by full `publication_date`
+            while (k >= 0 && buckets[i][k].publication_date > key.publication_date) {
+                buckets[i][k + 1] = buckets[i][k];
+                k--;
+            }
+            buckets[i][k + 1] = key;
+        }
+    }
+
+    // Step 5: Merge sorted buckets back into `news_container`
+    int index = 0;
+    for (int i = 0; i < bucket_count; i++) {
+        for (int j = 0; j < bucket_sizes[i]; j++) {
+            news_container.insert_at_location(buckets[i][j], index++);
+        }
+    }
+
+    // Step 6: Free allocated memory
+    for (int i = 0; i < bucket_count; i++) {
+        delete[] buckets[i];
+    }
+    delete[] buckets;
 }
+
+}
+
