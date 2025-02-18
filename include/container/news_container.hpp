@@ -14,7 +14,7 @@
 
 #include "news.hpp"
 
-void parse_date(const std::string& date_str, struct tm& tm) {
+inline void parse_date(const std::string& date_str, struct tm& tm) {
     std::istringstream ss(date_str);
     ss >> std::get_time(&tm, "\"%b %d, %Y\"");
     if (ss.fail()) {
@@ -23,6 +23,8 @@ void parse_date(const std::string& date_str, struct tm& tm) {
 }
 
 class NewsContainer{
+    protected:
+        time_t max_date;
   public:
     ///<summary>
     ///The starting pointer from which this container will be able to access
@@ -31,10 +33,10 @@ class NewsContainer{
 
     int size;
 
-    NewsContainer(): size(0), head(nullptr) {}
+    NewsContainer(): size(0), head(nullptr), max_date(0) {}
 
     //an alternative constructor that allows us to set the head pointer
-    NewsContainer(int size, void* head): size(size), head(head){}
+    NewsContainer(int size, void* head, time_t max_date): size(size), head(head), max_date(max_date){}
 
     virtual ~NewsContainer() = default;
 
@@ -84,13 +86,26 @@ class NewsContainer{
         }
     }
 
+    /// <summary>
+    /// get the maximum date from insertion
+    /// </summary>
+    [[nodiscard]] time_t get_max_date() {
+        return max_date;
+    }
+
     void display_article(){
 
     }
 
     virtual void insert(News newNews) = 0;
+    virtual void insert_empty() = 0;
     virtual void insert_at_location(News newNews, int location) = 0;
     virtual News* get_at_location(int location) = 0;
+
+    /// <summary>
+    /// Put the value at the designated location, overwriting the existing values
+    /// </summary>
+    virtual void put_at_location(News newNews, int location) = 0;
 
     /// <summary>
     /// Swap between two elements in the container
@@ -126,4 +141,9 @@ class NewsContainer{
     /// Split the container from the right exclusive of the midpoint
     /// </summary>
     virtual void* split_right(int mid_point) = 0;
+
+    /// <summary>
+    /// Create a container of the same type with the same amount of elements
+    /// </summary>
+    virtual void* allocate_empty_copy() = 0;
 };

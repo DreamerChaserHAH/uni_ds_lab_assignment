@@ -117,11 +117,55 @@ void quick_sort(NewsContainer& news_container) {
 
 }
 
-void radix_sort(NewsContainer& news_container) {
+void counting_sort(NewsContainer& news_container) {
+    /// 1. Understand which element has the highest publication date
+    /// 2. Create an temporary array with max + 1 elements
+    /// 3. Store the occurence of each unique input
+    /// 4. Cumlative sum each element and put into each index
+    /// 5. Generate the final sorted container
 
+    void *tail_pointer = news_container.get_tail();
+    /// # Step 1
+    time_t max_date = news_container.get_max_date();
+
+    /// # Step 2
+    long* count_array = new long[max_date + 1];
+    for (time_t i = 0; i <= max_date; i++) {
+        count_array[i] = 0;
+    }
+
+    /// # Step 3
+    void* current_pointer = news_container.head;
+    while (current_pointer != nullptr) {
+        News* current_news = news_container.get_news_at_memory(current_pointer);
+        if (current_news == nullptr) {
+            break;
+        }
+        count_array[current_news->publication_date]++;
+        current_pointer = news_container.move_to_next(current_pointer);
+    }
+
+    /// # Step 4
+    for (time_t i = 1; i <= max_date; i++) {
+        count_array[i] += count_array[i - 1];
+    }
+
+    /// 5. Step 5
+    auto* sorted_container = static_cast<NewsContainer*>(news_container.allocate_empty_copy());
+    for (int j = news_container.size - 1; j >= 0; j--) {
+        News* current_news = news_container.get_at_location(j);
+        if (current_news == nullptr) {
+            break;
+        }
+        int index = count_array[current_news->publication_date];
+        sorted_container->put_at_location(*current_news, index - 1);
+        count_array[current_news->publication_date]--;
+    }
+    delete[] count_array;
+    news_container = *sorted_container;
 }
 
-void counting_sort(NewsContainer& news_container) {
+void radix_sort(NewsContainer& news_container) {
 
 }
 

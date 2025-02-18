@@ -37,6 +37,10 @@ public:
         newsNode->prevAddress = tail;
         size++;
 
+        if (newNews.publication_date > max_date) {
+            max_date = newNews.publication_date;
+        }
+
         if (head == nullptr) {
             head = newsNode;
             tail = static_cast<NewsNode*>(head);
@@ -47,8 +51,28 @@ public:
         }
     }
 
+    void insert_empty() override {
+        auto* newsNode = new NewsNode;
+        newsNode->data = nullptr;;
+        newsNode->nextAddress = nullptr;
+        newsNode->prevAddress = tail;
+        size++;
+
+        if (head == nullptr) {
+            head = newsNode;
+            tail = static_cast<NewsNode*>(head);
+            return;
+        }else {
+            if (tail != nullptr) {
+                tail->nextAddress = newsNode;
+                tail = newsNode;
+            }
+        }
+
+    }
+
      News* get_at_location(int location) override {
-        NewsNode* current = static_cast<NewsNode*>(head);
+        auto* current = static_cast<NewsNode*>(head);
         for (int i = 0; i < location; i++) {
             current = current->nextAddress;
         }
@@ -59,7 +83,7 @@ public:
     }
 
     NewsNode* get_node_at_location(int location) {
-        NewsNode* current = static_cast<NewsNode*>(head);
+        auto* current = static_cast<NewsNode*>(head);
         for (int i = 0; i < location; i++) {
             if (current == nullptr) {
                 return nullptr;
@@ -76,6 +100,10 @@ public:
         newsNode->prevAddress = nullptr;
         size++;
 
+        if (newNews.publication_date > max_date) {
+            max_date = newNews.publication_date;
+        }
+
         if (location == 0) {
             newsNode->nextAddress = static_cast<NewsNode*>(head);
             newsNode->nextAddress->prevAddress = newsNode;
@@ -83,7 +111,7 @@ public:
             return;
         }
 
-        NewsNode* current = static_cast<NewsNode*>(head);
+        auto* current = static_cast<NewsNode*>(head);
         for (int i = 0; i < location - 1; i++) {
             if (current == nullptr) {
                 return;
@@ -94,6 +122,14 @@ public:
         newsNode->nextAddress = current->nextAddress;
         newsNode->prevAddress = current;
         current->nextAddress = newsNode;
+    }
+
+    void put_at_location(News newNews, int location) override {
+        NewsNode* node_ptr = get_node_at_location(location);
+        if (node_ptr == nullptr) {
+            return;
+        }
+        node_ptr->data = new News(newNews);
     }
 
     void swap_news(int i, int j) override {
@@ -159,9 +195,15 @@ public:
         return new NewsLinkedList(new_head, new_tail, size - mid_point - 1);
     }
 
-    ~NewsLinkedList() {
-
+    void* allocate_empty_copy() override {
+        auto* to_return = new NewsLinkedList();
+        for (int i = 0; i < size; i++) {
+            to_return->insert_empty();
+        }
+        to_return->size = this->size;
+        return to_return;
     }
+
 };
 
 
