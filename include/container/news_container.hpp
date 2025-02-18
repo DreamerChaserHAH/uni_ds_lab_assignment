@@ -70,8 +70,10 @@ class NewsContainer{
             if (subject == "worldnews") {
                 news1.genre = NewsGenre::WORLD_NEWS;
             }
-            else {
+            else if (subject == "politicsNews") {
                 news1.genre = NewsGenre::POLITICS;
+            }else {
+                news1.genre = NewsGenre::OTHERS;
             }
 
             struct tm tm = {};

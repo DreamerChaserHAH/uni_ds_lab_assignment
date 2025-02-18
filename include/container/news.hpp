@@ -11,7 +11,8 @@
 
 enum NewsGenre {
     WORLD_NEWS,
-    POLITICS
+    POLITICS,
+    OTHERS
 };
 
 struct News {

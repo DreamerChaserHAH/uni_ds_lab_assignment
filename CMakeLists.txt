@@ -9,6 +9,7 @@ add_executable(array_implementation src/array_implementation.cpp include/contain
         include/container/news.hpp)
 add_executable(linked_list_implementation src/linked_list_implementation.cpp include/container/linked_list.hpp include/algorithms/search.hpp include/algorithms/sort.hpp)
 add_executable(cross_implementation src/cross_implementation.cpp include/container/array.hpp include/container/linked_list.hpp include/algorithms/search.hpp include/algorithms/sort.hpp)
+add_executable(news_data_set_cleaner src/news_data_set_clean.cpp)
 
 add_executable(tests-news-linked-list tests/news_linked_list_test.cpp)
 #add_executable(tests-news-array tests/news_array_test.cpp)
