@@ -11,8 +11,7 @@
 #include <sstream>
 #include <ctime>
 #include <iostream>
-
-#include "news.hpp"
+#include "container/news.hpp"
 
 inline void parse_date(const std::string& date_str, struct tm& tm) {
     std::istringstream ss(date_str);

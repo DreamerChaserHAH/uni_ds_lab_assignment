@@ -9,8 +9,6 @@
 #include <string>
 #include <ctime>
 
-#include "news_container.hpp"
-
 enum NewsGenre {
     WORLD_NEWS,
     POLITICS,

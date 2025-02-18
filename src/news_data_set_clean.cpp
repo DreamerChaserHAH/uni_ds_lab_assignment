@@ -7,6 +7,8 @@
 #include <iostream>
 #include <sstream>
 #include <ctime>
+#include <iomanip>
+#include <algorithm>
 
 bool is_normal_character(const char& s) {
     return !(s >= 'A' && s <= 'Z') && !(s >= 'a' && s <= 'z') && !(s >= '0' && s <= '9') && s != ' ' && s != '\'' && s != '(' && s != ')' && s != ',' && s != '.' && s != ':' && s != ';' && s != '?' && s != '!';
