@@ -11,26 +11,25 @@
 
 #pragma once
 
-#include "container/array.hpp"
 #include "container/news_container.hpp"
 
-void bubble_sort(NewsContainer& news_container) {
+inline void bubble_sort(NewsContainer& news_container) {
 
 }
 
-void selection_sort(NewsContainer& news_container) {
+inline void selection_sort(NewsContainer& news_container) {
 
 }
 
-void insertion_sort(NewsContainer& news_container) {
+inline void insertion_sort(NewsContainer& news_container) {
 
 }
 
-void merge_sort(NewsContainer& news_container) {
+inline void merge_sort(NewsContainer& news_container) {
 
 }
 
-void quick_sort(NewsContainer& news_container) {
+inline void quick_sort(NewsContainer& news_container) {
 
     /// Here's the quick sort algorithm implementation working with the NewsContainer (both linkedlist and array)
     /// 1. Set the last element as pivot
@@ -60,12 +59,15 @@ void quick_sort(NewsContainer& news_container) {
     void* right_pointer = news_container.move_to_prev(tail_pointer);
 
     do {
+        News left, right;
         /// # Step 3
-        while (true) {
+        while (left_pointer_index <= news_container.size - 2) {
             News* news_at_memory = news_container.get_news_at_memory(left_pointer);
             if (news_at_memory == nullptr) {
                 break;
             }
+            left = *news_at_memory;
+
             if (news_at_memory->publication_date > pivot_date) {
                 break;
             }
@@ -77,11 +79,12 @@ void quick_sort(NewsContainer& news_container) {
             left_pointer_index++;
         }
 
-        while (true) {
+        while (right_pointer_index >= 0) {
             News* news_at_memory = news_container.get_news_at_memory(right_pointer);
             if (news_at_memory == nullptr) {
                 break;
             }
+            right = *news_at_memory;
             if (news_at_memory->publication_date < pivot_date) {
                 break;
             }
@@ -113,17 +116,60 @@ void quick_sort(NewsContainer& news_container) {
     }
 
 }
-void counting_sort(NewsContainer& news_container) {
+
+inline void counting_sort(NewsContainer& news_container) {
+    /// 1. Understand which element has the highest publication date
+    /// 2. Create an temporary array with max + 1 elements
+    /// 3. Store the occurence of each unique input
+    /// 4. Cumlative sum each element and put into each index
+    /// 5. Generate the final sorted container
+
+    void *tail_pointer = news_container.get_tail();
+    /// # Step 1
+    time_t max_date = news_container.get_max_date();
+
+    /// # Step 2
+    long* count_array = new long[max_date + 1];
+    for (time_t i = 0; i <= max_date; i++) {
+        count_array[i] = 0;
+    }
+
+    /// # Step 3
+    void* current_pointer = news_container.head;
+    while (current_pointer != nullptr) {
+        News* current_news = news_container.get_news_at_memory(current_pointer);
+        if (current_news == nullptr) {
+            break;
+        }
+        count_array[current_news->publication_date]++;
+        current_pointer = news_container.move_to_next(current_pointer);
+    }
+
+    /// # Step 4
+    for (time_t i = 1; i <= max_date; i++) {
+        count_array[i] += count_array[i - 1];
+    }
+
+    /// 5. Step 5
+    auto* sorted_container = static_cast<NewsContainer*>(news_container.allocate_empty_copy());
+    for (int j = news_container.size - 1; j >= 0; j--) {
+        News* current_news = news_container.get_at_location(j);
+        if (current_news == nullptr) {
+            break;
+        }
+        int index = count_array[current_news->publication_date];
+        sorted_container->put_at_location(*current_news, index - 1);
+        count_array[current_news->publication_date]--;
+    }
+    delete[] count_array;
+    news_container = *sorted_container;
+}
+
+inline void heap_sort(NewsContainer& news_container) {
 
 }
 
-void radix_sort(NewsContainer& news_container) {
-
-}
-
-
-
-void bucket_sort(NewsContainer& news_container) {
+inline void bucket_sort(NewsContainer& news_container) {
 
     /*
      step 1 - find min and max publication year
@@ -150,7 +196,7 @@ void bucket_sort(NewsContainer& news_container) {
 
     // step 2 - Create buckets manually using raw arrays
     int bucket_sizes[bucket_count] = {0};  // Track number of elements in each bucket
-    const int MAX_BUCKET_SIZE = 100;  // Adjust based on dataset
+    const int MAX_BUCKET_SIZE = 20000;  // Adjust based on dataset
     News** buckets = new News*[bucket_count];
 
     for (int i = 0; i < bucket_count; i++) {
@@ -203,7 +249,5 @@ void bucket_sort(NewsContainer& news_container) {
         delete[] buckets[i];
     }
     delete[] buckets;
-}
-
 }
 

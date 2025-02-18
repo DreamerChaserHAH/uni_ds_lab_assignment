@@ -120,6 +120,7 @@ void test_linked_list_load_from_file() {
     parse_date("December 28, 2017", tm);
     test1example.publication_date = mktime(&tm);
 
+
     assert(news_array_container.get_at_location(0) != nullptr);
     assert(test1example == *news_array_container.get_at_location(0));
 }

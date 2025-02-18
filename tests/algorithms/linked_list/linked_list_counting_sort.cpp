@@ -2,13 +2,11 @@
 #include "container/linked_list.hpp"
 #include <assert.h>
 
-
-
-void test_quick_sort_with_linked_list_1() {
+void test_counting_sort_with_linked_list_1() {
 
     NewsLinkedList news_linked_list_container;
     news_linked_list_container.load_from_file("test_data/test_source_file.csv");
-    quick_sort(news_linked_list_container);
+    counting_sort(news_linked_list_container);
 
     News test1example;
     test1example.title = "\"Title 2\"";
@@ -21,11 +19,11 @@ void test_quick_sort_with_linked_list_1() {
     assert(test1example == *news_linked_list_container.get_at_location(0));
 }
 
-void test_quick_sort_with_linked_list_2() {
+void test_counting_sort_with_linked_list_2() {
 
     NewsLinkedList news_linked_list_container;
     news_linked_list_container.load_from_file("test_data/test_source_file.csv");
-    quick_sort(news_linked_list_container);
+    counting_sort(news_linked_list_container);
 
 
     /// Title 3,Holy Shit,worldnews,"March 14, 2016"
@@ -40,7 +38,7 @@ void test_quick_sort_with_linked_list_2() {
 }
 
 int main() {
-    test_quick_sort_with_linked_list_1();
-    test_quick_sort_with_linked_list_2();
+    test_counting_sort_with_linked_list_1();
+    test_counting_sort_with_linked_list_2();
     return 0;
 }
