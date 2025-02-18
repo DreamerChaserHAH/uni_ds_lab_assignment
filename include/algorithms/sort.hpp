@@ -1,6 +1,6 @@
 /// <summary>
 /// 1. Bubble Sort (Livi)
-/// 2. Selection Sort
+/// 2. Selection Sort (Livi)
 /// 3. Insertion Sort (Abbirami)
 /// 4. Merge Sort (Abbirami)
 /// 5. Quick Sort (Htet Aung Hlaing)
@@ -22,7 +22,25 @@ inline void selection_sort(NewsContainer& news_container) {
 }
 
 inline void insertion_sort(NewsContainer& news_container) {
+    /// Here's the insertion sort algorithm implementation working with the NewsContainer (both linkedlist and array)
+    /// 1. Start from the second element and compare it with the previous element
+    /// 2. If the previous element is greater than the current element, swap the two elements
+    /// 3. Continue this process until the current element is greater than the previous element
+    /// 4. Repeat the process for all elements
+    /// References: https://www.youtube.com/watch?v=JU767SDMDvA
 
+    for (int i = 1; i < news_container.size; i++) {
+        News* current_news = news_container.get_at_location(i);
+        if (current_news == nullptr) {
+            break;
+        }
+        News temp = *current_news;
+        int j = i - 1;
+        while (j >= 0 && news_container.get_at_location(j)->publication_date > current_news->publication_date) {
+            news_container.swap_news(j, j + 1);
+            j--;
+        }
+    }
 }
 
 inline void merge_sort(NewsContainer& news_container) {
