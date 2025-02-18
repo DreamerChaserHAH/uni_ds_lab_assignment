@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.30)
+cmake_minimum_required(VERSION 3.29)
 project(Labwork)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -18,6 +18,7 @@ add_executable(tests-linked-list-quick-sort tests/algorithms/linked_list/linked_
 add_executable(tests-linked-list-bucket-sort tests/algorithms/linked_list/linked_list_bucket_sort.cpp)
 add_executable(tests-linked-list-counting-sort tests/algorithms/linked_list/linked_list_counting_sort.cpp)
 add_executable(tests-linked-list-heap-sort tests/algorithms/linked_list/linked_list_heap_sort.cpp)
+add_executable(tests-linked-list-merge-sort tests/algorithms/linked_list/linked_list_merge_sort.cpp)
 
 enable_testing()
 
@@ -27,3 +28,4 @@ add_test(linked_list_quick_sort_test tests-linked-list-quick-sort)
 add_test(linked_list_bucket_sort_test tests-linked-list-bucket-sort)
 add_test(linked_list_counting_sort_test tests-linked-list-counting-sort)
 add_test(linked_list_heap_sort_test tests-linked-list-heap-sort)
+add_test(linked_list_merge_sort_test tests-linked-list-merge-sort)

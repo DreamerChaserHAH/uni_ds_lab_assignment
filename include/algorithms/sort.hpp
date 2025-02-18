@@ -195,7 +195,7 @@ inline void bucket_sort(NewsContainer& news_container) {
     int bucket_count = max_year - min_year + 1;
 
     // step 2 - Create buckets manually using raw arrays
-    int bucket_sizes[bucket_count] = {0};  // Track number of elements in each bucket
+    int* bucket_sizes = new int[bucket_count]();  // Track number of elements in each bucket
     const int MAX_BUCKET_SIZE = 20000;  // Adjust based on dataset
     News** buckets = new News*[bucket_count];
 
