@@ -124,6 +124,42 @@ public:
         current->nextAddress = newsNode;
     }
 
+    void delete_at_location(int location) override {
+        NewsNode* node = get_node_at_location(location);
+        if (node == nullptr) {
+            return;
+        }
+
+        node->prevAddress->nextAddress = node->nextAddress;
+        node->nextAddress->prevAddress = node->prevAddress;
+        if (node == tail) {
+            tail = node->prevAddress;
+        }
+
+        if (node == head) {
+            head = node->nextAddress;
+        }
+
+        delete node;
+    }
+
+    void overwrite_at_position(NewsContainer *value_container, int starting_location) override {
+        int new_container_size = value_container->size;
+        NewsNode* current_node = get_node_at_location(starting_location);
+        if (current_node == nullptr) {
+            return;
+        }
+        int index = 0;
+        while (true) {
+            if (index >= new_container_size) {
+                break;
+            }
+            current_node->data = value_container->get_at_location(index);
+            current_node = current_node->nextAddress;
+            index++;
+        }
+    }
+
     void put_at_location(News newNews, int location) override {
         NewsNode* node_ptr = get_node_at_location(location);
         if (node_ptr == nullptr) {

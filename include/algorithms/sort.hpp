@@ -26,7 +26,65 @@ inline void insertion_sort(NewsContainer& news_container) {
 }
 
 inline void merge_sort(NewsContainer& news_container) {
+    if (news_container.size <= 1) {
+        return;
+    }
+    int size = news_container.size;
+    int half_point = size / 2;
+    if (news_container.size % 2 == 1) {
+        half_point += 1;
+    }
+    NewsContainer* left_container = nullptr;
+    NewsContainer* right_container = nullptr;
 
+    if (size == 2) {
+        left_container = static_cast<NewsContainer *>(news_container.split_left(1));
+        right_container = static_cast<NewsContainer *>(news_container.split_right(0));
+    }else {
+        left_container = static_cast<NewsContainer*>(news_container.split_left(news_container.size % 2 == 1 ? half_point : half_point + 1));
+        right_container = static_cast<NewsContainer*>(news_container.split_right(news_container.size % 2 == 1? half_point - 1: half_point));
+    }
+
+    if (left_container == nullptr || right_container == nullptr) {
+        return;
+    }
+
+    int left_size = left_container->size;
+    int right_size = right_container->size;
+
+    merge_sort(*left_container);
+    merge_sort(*right_container);
+
+    // Merge the two sides
+    int number_of_elements = left_container->size + right_container->size;
+    auto* final_container = static_cast<NewsContainer *>(news_container.allocate_empty_copy());
+    int left_index = 0;
+    int right_index = 0;
+    for (int i = 0; i < number_of_elements; i++) {
+        if (left_index > left_container->size - 1) {
+            final_container->put_at_location(*right_container->get_at_location(right_index), i);
+            right_index++;
+            continue;
+        }
+        if (right_index > right_container->size - 1) {
+            final_container->put_at_location(*left_container->get_at_location(left_index), i);
+            left_index++;
+            continue;
+        }
+
+        News* left_news = left_container->get_at_location(left_index);
+        News* right_news = right_container->get_at_location(right_index);
+
+        if (left_news->publication_date > right_news->publication_date) {
+            final_container->put_at_location(*right_news, i);
+            right_index++;
+            continue;
+        }
+        final_container->put_at_location(*left_news, i);
+        left_index++;
+    }
+
+    news_container.overwrite_at_position(final_container, 0);
 }
 
 inline void quick_sort(NewsContainer& news_container) {
