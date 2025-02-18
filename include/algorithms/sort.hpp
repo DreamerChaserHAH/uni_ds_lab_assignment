@@ -4,7 +4,7 @@
 /// 3. Insertion Sort (Abbirami)
 /// 4. Merge Sort (Abbirami)
 /// 5. Quick Sort (Htet Aung Hlaing)
-/// 6. Radix Sort (Kaung)
+/// 6. Heap Sort (Kaung)
 /// 7. Counting Sort (Htet Aung Hlaing)
 /// 8. Bucket Sort (Kaung)
 /// </summary>
@@ -241,8 +241,52 @@ inline void counting_sort(NewsContainer& news_container) {
     news_container = *sorted_container;
 }
 
-inline void heap_sort(NewsContainer& news_container) {
 
+//heap_sort
+//step one - build max heap
+//step two - swap the largest element with the last element
+//step three - reduce heap size
+//step four - heapify the remaining heap
+//step five - repeat the same process
+
+inline void heapify(NewsContainer& news_container, int i, int n) {
+    int largest = i; // initialize largest root
+    int left = 2*i +1; //left child index
+    int right = 2*i +2; // right child index
+
+    News* largestNews = news_container.get_at_location(largest);
+    News* leftNews = (left < n) ? news_container.get_at_location(left) : nullptr;
+    News* rightNews = (right < n)? news_container.get_at_location(right) : nullptr;
+
+    if (leftNews &&leftNews -> publication_date > largestNews -> publication_date) {
+        largest = left;
+        largestNews = leftNews;
+    }
+
+    if (rightNews &&rightNews -> publication_date > largestNews -> publication_date) {
+        largest = right;
+    }
+
+    if (largest != i) {
+        news_container.swap_news(i,largest);
+        heapify(news_container,n,largest);
+
+    }
+
+}
+
+inline void heap_sort(NewsContainer& news_container) {
+    int n = news_container.size;
+    //reduce the heap size
+    for (int i = n/2-1; i >=0 ; i--) {
+        heapify(news_container,n,i);
+    }
+    // extract elements one by one form the heap
+    for (int i = n-1; i > 0; i--) {
+        news_container.swap_news(0,i); // move the max heap to the end
+
+        heapify(news_container,i,0); // heapify the reduced heap (excluding the sorted heap)
+    }
 }
 
 inline void bucket_sort(NewsContainer& news_container) {
