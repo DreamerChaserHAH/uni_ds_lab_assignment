@@ -14,11 +14,57 @@
 #include "container/news_container.hpp"
 
 inline void bubble_sort(NewsContainer& news_container) {
+    int n = news_container.size;
+    bool swapped;
+
+    // Step 1: Loop through the entire list multiple times
+    for (int i = 0; i < n - 1; i++) {
+        swapped = false;
+
+        // Step 2: Compare adjacent elements and swap if needed
+        for (int j = 0; j < n - i - 1; j++) {
+            News* news1 = news_container.get_at_location(j);
+            News* news2 = news_container.get_at_location(j + 1);
+
+            if (news1 && news2 && news1->publication_date > news2->publication_date) {
+                news_container.swap_news(j, j + 1);
+                swapped = true;
+            }
+        }
+
+        // Step 3: If no swaps were made in this pass, the list is sorted
+        if (!swapped) {
+            break;
+        }
+    }
 
 }
 
 inline void selection_sort(NewsContainer& news_container) {
+    int n = news_container.size;  
 
+    // Step 1: Iterate over each element in the container
+    for (int i = 0; i < n - 1; i++) {
+        int min_index = i;  // Assume the first unsorted element is the smallest
+
+        // Step 2: Find the minimum element in the remaining unsorted array
+        for (int j = i + 1; j < n; j++) {
+            News* current_news = news_container.get_at_location(j);
+            News* min_news = news_container.get_at_location(min_index);
+            
+            if (current_news && min_news) {
+                // Compare publication dates to find the earliest one
+                if (current_news->publication_date < min_news->publication_date) {
+                    min_index = j;  // Update index of new minimum element
+                }
+            }
+        }
+
+        // Step 3: Swap the found minimum element with the first element of the unsorted part
+        if (min_index != i) {
+            news_container.swap_news(i, min_index);
+        }
+    }
 }
 
 inline void insertion_sort(NewsContainer& news_container) {
