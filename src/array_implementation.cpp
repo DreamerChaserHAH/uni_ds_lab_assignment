@@ -17,6 +17,7 @@ void sort_with_bubble_sort() {
     bubble_sort(news_container);
     auto end_time = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end_time - now;
+    news_container.display();
     std::cout << "Bubble Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
@@ -30,6 +31,7 @@ void sort_with_selection_sort() {
     selection_sort(news_container);
     auto end_time = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end_time - now;
+    news_container.display();
     std::cout << "Selection Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
@@ -43,6 +45,7 @@ void sort_with_quick_sort() {
     quick_sort(news_container);
     auto end_time = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end_time - now;
+    news_container.display();
     std::cout << "Quick Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
@@ -56,6 +59,7 @@ void sort_with_counting_sort() {
     counting_sort(news_container);
     auto end_time = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end_time - now;
+    news_container.display();
     std::cout << "Counting Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
@@ -69,6 +73,7 @@ void sort_with_merge_sort() {
     merge_sort(news_container);
     auto end_time = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end_time - now;
+    news_container.display();
     std::cout << "Merge Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
@@ -82,6 +87,7 @@ void sort_with_insertion_sort() {
     insertion_sort(news_container);
     auto end_time = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end_time - now;
+    news_container.display();
     std::cout << "Insertion Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
@@ -95,6 +101,7 @@ void sort_with_bucket_sort() {
     bucket_sort(news_container);
     auto end_time = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end_time - now;
+    news_container.display();
     std::cout << "Bucket Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
@@ -108,6 +115,7 @@ void sort_with_heap_sort() {
     heap_sort(news_container);
     auto end_time = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end_time - now;
+    news_container.display();
     std::cout << "Heap Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
@@ -122,7 +130,7 @@ int main() {
     //sort_with_merge_sort();
     //sort_with_insertion_sort();
 
-    sort_with_bucket_sort();
+    //sort_with_bucket_sort();
     //sort_with_heap_sort();
 
     std::cout << "Hello from Array List Implementation File" << std::endl;

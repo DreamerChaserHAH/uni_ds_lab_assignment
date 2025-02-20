@@ -126,8 +126,17 @@ class NewsContainer{
         return max_date;
     }
 
-    void display_article(){
-
+    /// <summary>
+    /// Display all elements contained inside the container
+    /// </summary>
+    void display(){
+        void* current = head;
+        std::cout  << "Publication Date" << std::setw(20) << "Title" << std::setw(200) << "Content" << std::setw(200) << "Genre" << std::setw(20) << std::endl;
+        for (int i = 0; i < size; i++) {
+            News* news = get_news_at_memory(current);
+            std::cout << std::put_time(localtime(&news->publication_date), "%b %d, %Y") << std::setw(20) << " " << news->title << std::setw(200) << news->content << std::setw(200) << news->genre << std::setw(20) << std::endl;
+            current = move_to_next(current);
+        }
     }
 
     virtual void insert(News newNews) = 0;
