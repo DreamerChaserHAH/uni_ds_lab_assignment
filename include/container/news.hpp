@@ -20,6 +20,7 @@ struct News {
     std::string content;
     NewsGenre genre;
     time_t publication_date;
+    bool is_true = false;
 
     int getYear() const {
         struct tm* timeinfo = localtime(&publication_date);

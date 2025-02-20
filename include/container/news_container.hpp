@@ -48,7 +48,7 @@ class NewsContainer{
     /// filepath: the path of the file we are reading
     /// description: load the data from the designated file into this particular linked list
     /// </summary>
-    void load_from_file(const std::string& filepath) {
+    void load_from_file(const std::string& filepath, bool are_true_news) {
         std::ifstream target_file(filepath);
 
         if (!target_file.is_open()) {
@@ -114,7 +114,7 @@ class NewsContainer{
             struct tm tm = {};
             parse_date(date, tm);
             news1.publication_date = mktime(&tm);
-            //this->display_article();
+            news1.is_true = are_true_news;
             this->insert(news1);
         }
     }

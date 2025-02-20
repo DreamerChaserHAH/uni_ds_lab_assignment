@@ -13,6 +13,25 @@
 
 #include "container/news_container.hpp"
 
+enum SORT_CRITERIA {
+    GENRE,
+    PUBLICATION_DATE,
+    TRUE_NEWS
+};
+
+inline long get_criteria_value(News* news, SORT_CRITERIA criteria) {
+    switch (criteria) {
+        case GENRE:
+            return news->genre;
+        case PUBLICATION_DATE:
+            return news->publication_date;
+        case TRUE_NEWS:
+            return news->is_true;
+        default:
+            return 0;
+    }
+}
+
 inline void bubble_sort(NewsContainer& news_container) {
     int n = news_container.size;
     bool swapped;
@@ -100,7 +119,7 @@ inline void insertion_sort(NewsContainer& news_container) {
     }
 }
 
-inline void merge_sort(NewsContainer& news_container) {
+inline void merge_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) {
     if (news_container.size <= 1) {
         return;
     }
@@ -127,8 +146,8 @@ inline void merge_sort(NewsContainer& news_container) {
     int left_size = left_container->size;
     int right_size = right_container->size;
 
-    merge_sort(*left_container);
-    merge_sort(*right_container);
+    merge_sort(*left_container, criteria);
+    merge_sort(*right_container, criteria);
 
     // Merge the two sides
     int number_of_elements = left_container->size + right_container->size;
@@ -150,7 +169,7 @@ inline void merge_sort(NewsContainer& news_container) {
         News* left_news = left_container->get_at_location(left_index);
         News* right_news = right_container->get_at_location(right_index);
 
-        if (left_news->publication_date > right_news->publication_date) {
+        if (get_criteria_value(left_news, criteria) > get_criteria_value(right_news, criteria)) {
             final_container->put_at_location(*right_news, i);
             right_index++;
             continue;
@@ -162,7 +181,7 @@ inline void merge_sort(NewsContainer& news_container) {
     news_container.overwrite_at_position(final_container, 0);
 }
 
-inline void quick_sort(NewsContainer& news_container) {
+inline void quick_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) {
 
     /// Here's the quick sort algorithm implementation working with the NewsContainer (both linkedlist and array)
     /// 1. Set the last element as pivot
@@ -185,7 +204,7 @@ inline void quick_sort(NewsContainer& news_container) {
     if (pivot_news_pointer == nullptr) {
         return;
     }
-    time_t pivot_date = pivot_news_pointer->publication_date;
+    long pivot_value = get_criteria_value(pivot_news_pointer, criteria);
 
     /// # Step 2
     int left_pointer_index = 0;
@@ -204,7 +223,7 @@ inline void quick_sort(NewsContainer& news_container) {
             }
             left = *news_at_memory;
 
-            if (news_at_memory->publication_date > pivot_date) {
+            if (get_criteria_value(news_at_memory, criteria) > pivot_value) {
                 break;
             }
 
@@ -221,7 +240,7 @@ inline void quick_sort(NewsContainer& news_container) {
                 break;
             }
             right = *news_at_memory;
-            if (news_at_memory->publication_date < pivot_date) {
+            if (get_criteria_value(news_at_memory, criteria) < pivot_value) {
                 break;
             }
 
@@ -247,26 +266,32 @@ inline void quick_sort(NewsContainer& news_container) {
     if (left_pointer_index > 0) {
         auto* left_container = static_cast<NewsContainer*>(news_container.split_left(left_pointer_index));
         auto* right_container = static_cast<NewsContainer*>(news_container.split_right(left_pointer_index));
-        quick_sort(*left_container);
-        quick_sort(*right_container);
+        quick_sort(*left_container, criteria);
+        quick_sort(*right_container, criteria);
     }
 
 }
 
-inline void counting_sort(NewsContainer& news_container) {
+inline void counting_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) {
     /// 1. Understand which element has the highest publication date
     /// 2. Create an temporary array with max + 1 elements
     /// 3. Store the occurence of each unique input
     /// 4. Cumlative sum each element and put into each index
     /// 5. Generate the final sorted container
 
-    void *tail_pointer = news_container.get_tail();
     /// # Step 1
-    time_t max_date = news_container.get_max_date();
+    long max_value = 0;
+    if (criteria == SORT_CRITERIA::PUBLICATION_DATE) {
+        max_value = news_container.get_max_date();
+    }else if (criteria == SORT_CRITERIA::TRUE_NEWS) {
+        max_value = 1;
+    }else {
+        max_value = 4;
+    }
 
     /// # Step 2
-    long* count_array = new long[max_date + 1];
-    for (time_t i = 0; i <= max_date; i++) {
+    long* count_array = new long[max_value + 1];
+    for (time_t i = 0; i <= max_value; i++) {
         count_array[i] = 0;
     }
 
@@ -277,12 +302,12 @@ inline void counting_sort(NewsContainer& news_container) {
         if (current_news == nullptr) {
             break;
         }
-        count_array[current_news->publication_date]++;
+        count_array[get_criteria_value(current_news, criteria)]++;
         current_pointer = news_container.move_to_next(current_pointer);
     }
 
     /// # Step 4
-    for (time_t i = 1; i <= max_date; i++) {
+    for (time_t i = 1; i <= max_value; i++) {
         count_array[i] += count_array[i - 1];
     }
 
@@ -293,9 +318,9 @@ inline void counting_sort(NewsContainer& news_container) {
         if (current_news == nullptr) {
             break;
         }
-        int index = count_array[current_news->publication_date];
+        int index = count_array[get_criteria_value(current_news, criteria)];
         sorted_container->put_at_location(*current_news, index - 1);
-        count_array[current_news->publication_date]--;
+        count_array[get_criteria_value(current_news, criteria)]--;
     }
     delete[] count_array;
     news_container = *sorted_container;
