@@ -76,18 +76,18 @@ inline void insertion_sort(NewsContainer& news_container) {
     /// References: https://www.youtube.com/watch?v=JU767SDMDvA
 
     for (int i = 1; i < news_container.size; i++) {
-        News* current_news = news_container.get_at_location(i);
-        if (current_news == nullptr) {
+        News* current_news_address = news_container.get_at_location(i);
+        if (current_news_address == nullptr) {
             break;
         }
-        News temp = *current_news;
+        News current_news = *current_news_address;
         int j = i - 1;
         void* compare_news_node = news_container.get_node_at_location(j);
         News* compare_news = news_container.get_news_at_memory(compare_news_node);
         if (compare_news == nullptr) {
             break;
         }
-        while (j >= 0 && compare_news->publication_date > current_news->publication_date) {
+        while (j >= 0 && compare_news->publication_date > current_news.publication_date) {
             news_container.swap_news(j, j + 1);
             compare_news_node = news_container.move_to_prev(compare_news_node);
             compare_news = news_container.get_news_at_memory(compare_news_node);
@@ -177,6 +177,9 @@ inline void quick_sort(NewsContainer& news_container) {
     void* head_pointer = news_container.head;
     void* tail_pointer = news_container.get_tail();
 
+    if (news_container.size == 0) {
+        return;
+    }
     /// # Step 1
     News* pivot_news_pointer = news_container.get_news_at_memory(tail_pointer);
     if (pivot_news_pointer == nullptr) {
@@ -235,6 +238,7 @@ inline void quick_sort(NewsContainer& news_container) {
             break;
         }
 
+        std::cout << left_pointer_index << std::endl;
         news_container.swap_news(left_pointer_index, right_pointer_index);
     }while (true);
 
@@ -243,7 +247,6 @@ inline void quick_sort(NewsContainer& news_container) {
     if (left_pointer_index > 0) {
         auto* left_container = static_cast<NewsContainer*>(news_container.split_left(left_pointer_index));
         auto* right_container = static_cast<NewsContainer*>(news_container.split_right(left_pointer_index));
-
         quick_sort(*left_container);
         quick_sort(*right_container);
     }
@@ -373,7 +376,7 @@ inline void bucket_sort(NewsContainer& news_container) {
 
     // step 2 - Create buckets manually using raw arrays
     int* bucket_sizes = new int[bucket_count]();  // Track number of elements in each bucket
-    const int MAX_BUCKET_SIZE = 20000;  // Adjust based on dataset
+    const int MAX_BUCKET_SIZE = 200000;  // Adjust based on dataset
     News** buckets = new News*[bucket_count];
 
     for (int i = 0; i < bucket_count; i++) {

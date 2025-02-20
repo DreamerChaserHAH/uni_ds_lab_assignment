@@ -5,7 +5,33 @@
 #include "ctime"
 #include <chrono>
 
-int sort_with_quick_sort() {
+void sort_with_bubble_sort() {
+    NewsLinkedList news_container = NewsLinkedList();
+    std::cout << "Loading from file..." << std::endl;
+    news_container.load_from_file("../data/cleaned/fake.csv");
+    news_container.load_from_file("../data/cleaned/true.csv");
+    std::cout << "Starting Bubble Sort" << endl;
+    auto now = std::chrono::system_clock::now();
+    bubble_sort(news_container);
+    auto end_time = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end_time - now;
+    std::cout << "Bubble Sort took: " << elapsed_seconds.count() << "s" << std::endl;
+}
+
+void sort_with_selection_sort() {
+    NewsLinkedList news_container = NewsLinkedList();
+    std::cout << "Loading from file..." << std::endl;
+    news_container.load_from_file("../data/cleaned/fake.csv");
+    news_container.load_from_file("../data/cleaned/true.csv");
+    std::cout << "Starting Selection Sort" << endl;
+    auto now = std::chrono::system_clock::now();
+    selection_sort(news_container);
+    auto end_time = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end_time - now;
+    std::cout << "Selection Sort took: " << elapsed_seconds.count() << "s" << std::endl;
+}
+
+void sort_with_quick_sort() {
     NewsLinkedList news_container = NewsLinkedList();
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv");
@@ -18,7 +44,7 @@ int sort_with_quick_sort() {
     std::cout << "Quick Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
-int sort_with_counting_sort() {
+void sort_with_counting_sort() {
     NewsLinkedList news_container = NewsLinkedList();
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv");
@@ -31,7 +57,7 @@ int sort_with_counting_sort() {
     std::cout << "Counting Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
-int sort_with_merge_sort() {
+void sort_with_merge_sort() {
     NewsLinkedList news_container = NewsLinkedList();
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv");
@@ -44,7 +70,7 @@ int sort_with_merge_sort() {
     std::cout << "Merge Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
-int sort_with_insertion_sort() {
+void sort_with_insertion_sort() {
     NewsLinkedList news_container = NewsLinkedList();
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv");
@@ -57,7 +83,7 @@ int sort_with_insertion_sort() {
     std::cout << "Insertion Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
-int sort_with_bucket_sort() {
+void sort_with_bucket_sort() {
     NewsLinkedList news_container = NewsLinkedList();
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv");
@@ -70,7 +96,7 @@ int sort_with_bucket_sort() {
     std::cout << "Bucket Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
-int sort_with_heap_sort() {
+void sort_with_heap_sort() {
     NewsLinkedList news_container = NewsLinkedList();
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv");
@@ -84,13 +110,17 @@ int sort_with_heap_sort() {
 }
 
 int main() {
+
+    //sort_with_bubble_sort();
+    //sort_with_selection_sort();
+
     //sort_with_quick_sort();
     //sort_with_counting_sort();
 
     //sort_with_merge_sort();
-    sort_with_insertion_sort();
+    //sort_with_insertion_sort();
 
-    //sort_with_bucket_sort();
+    sort_with_bucket_sort();
     //sort_with_heap_sort();
 
     std::cout << "Hello from Linked List Implementation File" << std::endl;
