@@ -82,10 +82,21 @@ inline void insertion_sort(NewsContainer& news_container) {
         }
         News temp = *current_news;
         int j = i - 1;
-        while (j >= 0 && news_container.get_at_location(j)->publication_date > current_news->publication_date) {
+        void* compare_news_node = news_container.get_node_at_location(j);
+        News* compare_news = news_container.get_news_at_memory(compare_news_node);
+        if (compare_news == nullptr) {
+            break;
+        }
+        while (j >= 0 && compare_news->publication_date > current_news->publication_date) {
             news_container.swap_news(j, j + 1);
+            compare_news_node = news_container.move_to_prev(compare_news_node);
+            compare_news = news_container.get_news_at_memory(compare_news_node);
+            if (compare_news == nullptr) {
+                break;
+            }
             j--;
         }
+        std::cout << "Insertion Sort Element: " << i << " Inserted At: " << j << std::endl;
     }
 }
 

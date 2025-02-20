@@ -4,8 +4,6 @@
 #pragma once
 using namespace std;
 
-#include <string>
-
 #include "news.hpp"
 #include "news_container.hpp"
 
@@ -79,10 +77,15 @@ public:
         if (current == nullptr) {
             return nullptr;
         }
+
+        if (current->data == nullptr) {
+            return nullptr;
+        }
+
         return (current->data);
     }
 
-    NewsNode* get_node_at_location(int location) {
+    void* get_node_at_location(int location) override {
         auto* current = static_cast<NewsNode*>(head);
         for (int i = 0; i < location; i++) {
             if (current == nullptr) {
@@ -125,13 +128,19 @@ public:
     }
 
     void delete_at_location(int location) override {
-        NewsNode* node = get_node_at_location(location);
+        auto* node = static_cast<NewsNode *>(get_node_at_location(location));
         if (node == nullptr) {
             return;
         }
 
-        node->prevAddress->nextAddress = node->nextAddress;
-        node->nextAddress->prevAddress = node->prevAddress;
+        if (node->prevAddress != nullptr) {
+            node->prevAddress->nextAddress = node->nextAddress;
+        }
+
+        if (node->nextAddress != nullptr) {
+            node->nextAddress->prevAddress = node->prevAddress;
+        }
+
         if (node == tail) {
             tail = node->prevAddress;
         }
@@ -139,13 +148,13 @@ public:
         if (node == head) {
             head = node->nextAddress;
         }
-
+        delete node->data;
         delete node;
     }
 
     void overwrite_at_position(NewsContainer *value_container, int starting_location) override {
         int new_container_size = value_container->size;
-        NewsNode* current_node = get_node_at_location(starting_location);
+        auto* current_node = static_cast<NewsNode*>(get_node_at_location(starting_location));
         if (current_node == nullptr) {
             return;
         }
@@ -161,7 +170,7 @@ public:
     }
 
     void put_at_location(News newNews, int location) override {
-        NewsNode* node_ptr = get_node_at_location(location);
+        auto* node_ptr = static_cast<NewsNode*>(get_node_at_location(location));
         if (node_ptr == nullptr) {
             return;
         }
@@ -169,10 +178,24 @@ public:
     }
 
     void swap_news(int i, int j) override {
-        NewsNode* node1 = get_node_at_location(i);
-        NewsNode* node2 = get_node_at_location(j);
+        auto* node1 = static_cast<NewsNode *>(get_node_at_location(i));
+        NewsNode* node2 = nullptr;
 
-        if (node1 == nullptr || node2 == nullptr) {
+        if (node1 == nullptr) {
+            return;
+        }
+
+        if (j == i + 1) {
+            node2 = node1->nextAddress;
+        }
+        else if (j == i - 1) {
+            node2 = node1->prevAddress;
+        }
+        else {
+            node2 = static_cast<NewsNode*>(get_node_at_location(j));
+        }
+
+        if (node2 == nullptr) {
             return;
         }
 
@@ -197,21 +220,28 @@ public:
         if (memory == nullptr) {
             return nullptr;
         }
+
         return static_cast<NewsNode*>(memory)->data;
     }
 
     void* move_to_next(void *current) override {
+        if (current == tail) {
+            return nullptr;
+        }
         return static_cast<NewsNode*>(current)->nextAddress;
     }
 
     void* move_to_prev(void *current) override{
+        if (current == head) {
+            return nullptr;
+        }
         return static_cast<NewsNode*>(current)->prevAddress;
     }
 
     void* split_left(int mid_point) override {
         auto* current = static_cast<NewsNode*>(head);
         NewsNode* new_head = current;
-        NewsNode* new_tail = get_node_at_location(mid_point - 1);
+        auto* new_tail = static_cast<NewsNode*>(get_node_at_location(mid_point - 1));
 
         if (current == nullptr) {
             return nullptr;
@@ -222,7 +252,7 @@ public:
 
     void* split_right(int mid_point) override {
         auto* current = static_cast<NewsNode*>(head);
-        NewsNode* new_head = get_node_at_location(mid_point + 1);
+        auto* new_head = static_cast<NewsNode *>(get_node_at_location(mid_point + 1));
         NewsNode* new_tail = tail;
 
         if (current == nullptr) {

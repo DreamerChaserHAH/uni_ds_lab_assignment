@@ -84,14 +84,14 @@ int sort_with_heap_sort() {
 }
 
 int main() {
-    sort_with_quick_sort();
-    sort_with_counting_sort();
+    //sort_with_quick_sort();
+    //sort_with_counting_sort();
 
-    sort_with_merge_sort();
+    //sort_with_merge_sort();
     sort_with_insertion_sort();
 
-    sort_with_bucket_sort();
-    sort_with_heap_sort();
+    //sort_with_bucket_sort();
+    //sort_with_heap_sort();
 
     std::cout << "Hello from Linked List Implementation File" << std::endl;
 }

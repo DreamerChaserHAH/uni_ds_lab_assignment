@@ -14,10 +14,19 @@ add_executable(news_data_set_cleaner src/news_data_set_clean.cpp)
 add_executable(tests-news-linked-list tests/news_linked_list_test.cpp)
 #add_executable(tests-news-array tests/news_array_test.cpp)
 
+# Livi's Implementations
+add_executable(tests-linked-list-bubble-sort tests/algorithms/linked_list/linked_list_bubble_sort.cpp)
+add_executable(tests-linked-list-selection-sort tests/algorithms/linked_list/linked_list_selection_sort.cpp)
+
+# Htet Aung Hlaing's Implementation
 add_executable(tests-linked-list-quick-sort tests/algorithms/linked_list/linked_list_quick_sort.cpp)
-add_executable(tests-linked-list-bucket-sort tests/algorithms/linked_list/linked_list_bucket_sort.cpp)
 add_executable(tests-linked-list-counting-sort tests/algorithms/linked_list/linked_list_counting_sort.cpp)
+
+# Htet Kaung Myat Oo's Implementation
+add_executable(tests-linked-list-bucket-sort tests/algorithms/linked_list/linked_list_bucket_sort.cpp)
 add_executable(tests-linked-list-heap-sort tests/algorithms/linked_list/linked_list_heap_sort.cpp)
+
+# Abbirami's Implementation
 add_executable(tests-linked-list-merge-sort tests/algorithms/linked_list/linked_list_merge_sort.cpp)
 add_executable(tests-linked-list-insertion-sort tests/algorithms/linked_list/linked_list_insertion_sort.cpp)
 
@@ -25,6 +34,8 @@ enable_testing()
 
 add_test(news_linked_list_test tests-news-linked-list)
 #add_test(news_array_test tests-news-array)
+add_test(linked_list_bubble_sort_test tests-linked-list-bubble-sort)
+add_test(linked_list_selection_sort_test tests-linked-list-selection-sort)
 add_test(linked_list_quick_sort_test tests-linked-list-quick-sort)
 add_test(linked_list_bucket_sort_test tests-linked-list-bucket-sort)
 add_test(linked_list_counting_sort_test tests-linked-list-counting-sort)

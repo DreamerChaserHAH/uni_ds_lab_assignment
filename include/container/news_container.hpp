@@ -134,7 +134,9 @@ class NewsContainer{
     virtual void insert_empty() = 0;
     virtual void insert_at_location(News newNews, int location) = 0;
     virtual void delete_at_location(int location) = 0;
+
     virtual News* get_at_location(int location) = 0;
+    virtual void* get_node_at_location(int location) = 0;
 
     virtual void overwrite_at_position(NewsContainer* value_container, int starting_location) = 0;
     /// <summary>
@@ -147,7 +149,7 @@ class NewsContainer{
     /// </summary>
     virtual void swap_news(int i, int j) = 0;
 
-    void swap_news(News* news1, News* news2) {
+    static void swap_news(News* news1, News* news2) {
         News temp = *news1;
         *news1 = *news2;
         *news2 = temp;
