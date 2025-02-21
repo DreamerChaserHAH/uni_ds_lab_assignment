@@ -270,6 +270,10 @@ public:
         return to_return;
     }
 
+    void* allocate_empty() override {
+        return new NewsLinkedList();
+    }
+
 };
 
 

@@ -18,8 +18,13 @@ enum NewsGenre {
 enum CRITERIA {
     GENRE,
     PUBLICATION_DATE,
-    IS_TRUE_NEWS
+    IS_TRUE_NEWS,
+    PUBLICATION_YEAR,
+    PUBLICATION_MONTH
 };
+
+struct News;
+inline long get_criteria_value(News* news, CRITERIA criteria);
 
 struct News {
     std::string title;
@@ -95,6 +100,21 @@ struct News {
     bool operator==(const News & news) const = delete;
 };
 
-
+inline long get_criteria_value(News* news, CRITERIA criteria) {
+    switch (criteria) {
+        case GENRE:
+            return news->genre;
+        case PUBLICATION_DATE:
+            return news->publication_date;
+        case IS_TRUE_NEWS:
+            return news->is_true;
+        case PUBLICATION_YEAR:
+            return news->get_year();
+        case PUBLICATION_MONTH:
+            return news->get_month();
+        default:
+            return 0;
+    }
+}
 
 

@@ -13,19 +13,6 @@
 
 #include "container/news_container.hpp"
 
-inline long get_criteria_value(News* news, CRITERIA criteria) {
-    switch (criteria) {
-        case GENRE:
-            return news->genre;
-        case PUBLICATION_DATE:
-            return news->publication_date;
-        case IS_TRUE_NEWS:
-            return news->is_true;
-        default:
-            return 0;
-    }
-}
-
 inline void bubble_sort(NewsContainer& news_container, CRITERIA criteria) {
     int n = news_container.size;
     bool swapped;

@@ -103,10 +103,10 @@ class NewsContainer{
             News news1;
             news1.title = title;
             news1.content = text;
-            if (subject == "worldnews") {
+            if (subject == "\"worldnews\"") {
                 news1.genre = NewsGenre::WORLD_NEWS;
             }
-            else if (subject == "politicsNews") {
+            else if (subject == "\"politicsNews\"") {
                 news1.genre = NewsGenre::POLITICS;
             }else {
                 news1.genre = NewsGenre::OTHERS;
@@ -139,6 +139,20 @@ class NewsContainer{
             std::cout <<  "["  << ((news->is_true)? "TRUE NEWS] Genre: ": "FALSE NEWS] Genre:") << news->genre << std::put_time(localtime(&news->publication_date), "%b %d, %Y") << std::setw(20) << " " << news->title << std::setw(200) << news->content << std::setw(20) << "\n";
             current = move_to_next(current);
         }
+    }
+
+    /// <summary>
+    /// Write the elements into a file
+    /// </summary>
+    void write_to_file(const std::string& file_path) {
+        std::ofstream output_file(file_path);
+        void* current = head;
+        for (int i = 0; i < size; i++) {
+            News* news = get_news_at_memory(current);
+            output_file <<  "["  << ((news->is_true)? "TRUE NEWS] Genre: ": "FALSE NEWS] Genre:") << news->genre << std::put_time(localtime(&news->publication_date), "%b %d, %Y") << std::setw(20) << " " << news->title << std::setw(200) << news->content << std::setw(20) << "\n";
+            current = move_to_next(current);
+        }
+        output_file.close();
     }
 
     virtual void insert(News newNews) = 0;
@@ -200,4 +214,9 @@ class NewsContainer{
     /// Create a container of the same type with the same amount of elements
     /// </summary>
     virtual void* allocate_empty_copy() = 0;
+
+    /// <summary>
+    /// Allocate Empty Container of the same type
+    /// </summary>
+    virtual void* allocate_empty() = 0;
 };
