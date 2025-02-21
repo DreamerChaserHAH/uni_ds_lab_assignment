@@ -332,13 +332,10 @@ inline void heapify(NewsContainer& news_container, int i, int n, CRITERIA criter
     int left = 2 * i + 1;
     int right = 2 * i + 2;
 
-    auto get_year = [](News* news) {
-        return news ? news->get_year() : INT_MIN;
+    auto get_value = [criteria](News* news) {
+        return news ? get_criteria_value(news, criteria) : INT_MIN;
     };
 
-    auto get_date = [](News* news) {
-        return news ? news->publication_date : LONG_MIN;
-    };
 
     News* largestNews = news_container.get_at_location(largest);
     News* leftNews = (left < n) ? news_container.get_at_location(left) : nullptr;
@@ -346,8 +343,7 @@ inline void heapify(NewsContainer& news_container, int i, int n, CRITERIA criter
 
     // Compare left child
     if (leftNews) {
-        if (get_year(leftNews) > get_year(largestNews) ||
-            (get_year(leftNews) == get_year(largestNews) && get_date(leftNews) > get_date(largestNews))) {
+        if (leftNews->is_equal_or_greater_than(*largestNews, criteria)) {
             largest = left;
             largestNews = leftNews;
             }
@@ -355,8 +351,7 @@ inline void heapify(NewsContainer& news_container, int i, int n, CRITERIA criter
 
     // Compare right child
     if (rightNews) {
-        if (get_year(rightNews) > get_year(largestNews) ||
-            (get_year(rightNews) == get_year(largestNews) && get_date(rightNews) > get_date(largestNews))) {
+        if (rightNews->is_equal_or_greater_than(*largestNews, criteria)) {
             largest = right;
             largestNews = rightNews;
             }
@@ -396,17 +391,17 @@ inline void bucket_sort(NewsContainer& news_container, CRITERIA criteria) {
     if (news_container.size == 0) return;  // Handle empty container
 
     // Step 1: Find min and max YEAR
-    int min_year = INT_MAX, max_year = INT_MIN;
+    long min_value = INT_MAX, max_value = INT_MIN;
     for (int i = 0; i < news_container.size; i++) {
         News* news = news_container.get_at_location(i);
         if (news) {
-            int year = news->get_year();  // Get just the year
-            if (year < min_year) min_year = year;
-            if (year > max_year) max_year = year;
+            long value = get_criteria_value(news, criteria);  // Get just the year
+            if (value < min_value) min_value = value;
+            if (value > max_value) max_value = value;
         }
     }
 
-    int bucket_count = max_year - min_year + 1;  // Each bucket represents a year
+    int bucket_count = max_value - min_value + 1;  // Each bucket represents a year
 
     // Step 2: Create dynamic buckets for each year
     News** buckets = new News*[bucket_count];
@@ -422,7 +417,7 @@ inline void bucket_sort(NewsContainer& news_container, CRITERIA criteria) {
     for (int i = 0; i < news_container.size; i++) {
         News* news = news_container.get_at_location(i);
         if (news) {
-            int year_index = news->get_year() - min_year;  // Bucket index
+            int year_index = news->get_year() - min_value;  // Bucket index
 
             // Resize bucket if needed
             if (bucket_sizes[year_index] >= bucket_capacities[year_index]) {

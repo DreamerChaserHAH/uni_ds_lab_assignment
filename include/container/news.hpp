@@ -34,7 +34,7 @@ struct News {
             case GENRE:
                 return genre > news.genre;
             case PUBLICATION_DATE:
-                return (get_year() > news.get_year()) ? true: get_date_in_year() > news.get_date_in_year();
+                return (get_year() > news.get_year()) ? true: (get_year() == news.get_year()? get_date_in_year() > news.get_date_in_year(): false);
             case IS_TRUE_NEWS:
                 return is_true > news.is_true;
             default:
@@ -47,7 +47,7 @@ struct News {
             case GENRE:
                 return genre < news.genre;
             case PUBLICATION_DATE:
-                return get_year() < news.get_year() ? true: get_date_in_year() < news.get_date_in_year();
+                return (get_year() < news.get_year()) ? true: (get_year() == news.get_year()? get_date_in_year() < news.get_date_in_year(): false);
             case IS_TRUE_NEWS:
                 return is_true < news.is_true;
             default:
@@ -60,7 +60,7 @@ struct News {
             case GENRE:
                 return genre >= news.genre;
             case PUBLICATION_DATE:
-                return get_year() >= news.get_year() ? true: get_date_in_year() >= news.get_date_in_year();
+                return (get_year() > news.get_year()) ? true: (get_year() == news.get_year() ? get_date_in_year() >= news.get_date_in_year(): false);
             case IS_TRUE_NEWS:
                 return is_true >= news.is_true;
             default:
@@ -73,7 +73,7 @@ struct News {
             case GENRE:
                 return genre <= news.genre;
             case PUBLICATION_DATE:
-                return get_year() <= news.get_year() ? true: get_date_in_year() <= news.get_date_in_year();
+                return (get_year() < news.get_year()) ? true: (get_year() == news.get_year() ? get_date_in_year() <= news.get_date_in_year(): false);
             case IS_TRUE_NEWS:
                 return is_true <= news.is_true;
             default:

@@ -132,14 +132,14 @@ int main() {
     //sort_with_bubble_sort();
     //sort_with_selection_sort();
 
-    //sort_with_quick_sort(CRITERIA::PUBLICATION_DATE);
-    //sort_with_counting_sort(SORT_CRITERIA::TRUE_NEWS);
+    //sort_with_quick_sort(CRITERIA::IS_TRUE_NEWS);
+    //sort_with_counting_sort(CRITERIA::GENRE);
 
-    //sort_with_merge_sort(CRITERIA::PUBLICATION_DATE);
-    //sort_with_insertion_sort(CRITERIA::PUBLICATION_DATE);
+    //sort_with_merge_sort(CRITERIA::IS_TRUE_NEWS);
+    //sort_with_insertion_sort(CRITERIA::IS_TRUE_NEWS);
 
-    sort_with_bucket_sort(CRITERIA::PUBLICATION_DATE);
-    //sort_with_heap_sort(CRITERIA::PUBLICATION_DATE);
+    //sort_with_bucket_sort(CRITERIA::PUBLICATION_DATE);
+    sort_with_heap_sort(CRITERIA::PUBLICATION_DATE);
 
     std::cout << "Hello from Array List Implementation File" << std::endl;
 }

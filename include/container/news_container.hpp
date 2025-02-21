@@ -136,7 +136,7 @@ class NewsContainer{
         std::cout  << "Publication Date" << std::setw(20) << "Title" << std::setw(200) << "Content" << std::setw(200) << "Genre" << std::setw(20) << std::endl;
         for (int i = 0; i < size; i++) {
             News* news = get_news_at_memory(current);
-            std::cout << std::put_time(localtime(&news->publication_date), "%b %d, %Y") << std::setw(20) << " " << news->title << std::setw(200) << news->content << std::setw(200) << news->genre << std::setw(20) << std::endl;
+            std::cout <<  "["  << ((news->is_true)? "TRUE NEWS] Genre: ": "FALSE NEWS] Genre:") << news->genre << std::put_time(localtime(&news->publication_date), "%b %d, %Y") << std::setw(20) << " " << news->title << std::setw(200) << news->content << std::setw(20) << "\n";
             current = move_to_next(current);
         }
     }

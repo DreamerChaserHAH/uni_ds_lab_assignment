@@ -105,7 +105,7 @@ void sort_with_bucket_sort(CRITERIA criteria) {
 }
 
 void sort_with_heap_sort(CRITERIA criteria) {
-    NewsArray news_container;
+    NewsLinkedList news_container;
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv", false);
     news_container.load_from_file("../data/cleaned/true.csv", true);
@@ -129,10 +129,10 @@ int main() {
    // sort_with_quick_sort();
     //sort_with_counting_sort();
 
-    //sort_with_merge_sort();
+    sort_with_merge_sort(CRITERIA::PUBLICATION_DATE);
     //sort_with_insertion_sort();
 
-    sort_with_bucket_sort(CRITERIA::PUBLICATION_DATE);
+    //sort_with_bucket_sort(CRITERIA::PUBLICATION_DATE);
     //sort_with_heap_sort(CRITERIA::PUBLICATION_DATE);
 
     std::cout << "Hello from Linked List Implementation File" << std::endl;
