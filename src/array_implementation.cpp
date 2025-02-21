@@ -96,28 +96,38 @@ void sort_with_bucket_sort() {
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv", false);
     news_container.load_from_file("../data/cleaned/true.csv", true);
-    std::cout << "Starting Bucket Sort" << endl;
+    std::cout << "Starting Bucket Sort" << std::endl;
+
     auto now = std::chrono::system_clock::now();
-    bucket_sort(news_container);
+    // Choose the criteria: here we're sorting by publication_date.
+    SORT_CRITERIA criteria = PUBLICATION_DATE;
+    bucket_sort(news_container, criteria);
     auto end_time = std::chrono::system_clock::now();
+
     std::chrono::duration<double> elapsed_seconds = end_time - now;
     news_container.display();
     std::cout << "Bucket Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
 void sort_with_heap_sort() {
-    NewsArray news_container = NewsArray();
+    NewsArray news_container;
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv", false);
     news_container.load_from_file("../data/cleaned/true.csv", true);
-    std::cout << "Starting Heap Sort" << endl;
+    std::cout << "Starting Heap Sort" << std::endl;
+
     auto now = std::chrono::system_clock::now();
-    heap_sort(news_container);
+    // Choose the criteria: here we're sorting by publication_date.
+    SORT_CRITERIA criteria = PUBLICATION_DATE;
+    heap_sort(news_container, criteria);
     auto end_time = std::chrono::system_clock::now();
+
     std::chrono::duration<double> elapsed_seconds = end_time - now;
     news_container.display();
     std::cout << "Heap Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
+
+
 
 int main() {
 
@@ -125,7 +135,7 @@ int main() {
     //sort_with_selection_sort();
 
     //sort_with_quick_sort(SORT_CRITERIA::TRUE_NEWS);
-    sort_with_counting_sort(SORT_CRITERIA::TRUE_NEWS);
+    //sort_with_counting_sort(SORT_CRITERIA::TRUE_NEWS);
 
     //sort_with_merge_sort(SORT_CRITERIA::TRUE_NEWS);
     //sort_with_insertion_sort();

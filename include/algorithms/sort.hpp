@@ -279,6 +279,7 @@ inline void counting_sort(NewsContainer& news_container, SORT_CRITERIA& criteria
     /// 4. Cumlative sum each element and put into each index
     /// 5. Generate the final sorted container
 
+    void *tail_pointer = news_container.get_tail();
     /// # Step 1
     long max_value = 0;
     if (criteria == SORT_CRITERIA::PUBLICATION_DATE) {
@@ -334,105 +335,129 @@ inline void counting_sort(NewsContainer& news_container, SORT_CRITERIA& criteria
 //step four - heapify the remaining heap
 //step five - repeat the same process
 
-inline void heapify(NewsContainer& news_container, int i, int n) {
-    int largest = i; // initialize largest root
-    int left = 2*i +1; //left child index
-    int right = 2*i +2; // right child index
+inline void heapify(NewsContainer& news_container, int i, int n, SORT_CRITERIA& criteria) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    auto get_year = [](News* news) {
+        return news ? news->getYear() : INT_MIN;
+    };
+
+    auto get_date = [](News* news) {
+        return news ? news->publication_date : LONG_MIN;
+    };
 
     News* largestNews = news_container.get_at_location(largest);
     News* leftNews = (left < n) ? news_container.get_at_location(left) : nullptr;
-    News* rightNews = (right < n)? news_container.get_at_location(right) : nullptr;
+    News* rightNews = (right < n) ? news_container.get_at_location(right) : nullptr;
 
-    if (leftNews &&leftNews -> publication_date > largestNews -> publication_date) {
-        largest = left;
-        largestNews = leftNews;
+    // Compare left child
+    if (leftNews) {
+        if (get_year(leftNews) > get_year(largestNews) ||
+            (get_year(leftNews) == get_year(largestNews) && get_date(leftNews) > get_date(largestNews))) {
+            largest = left;
+            largestNews = leftNews;
+            }
     }
 
-    if (rightNews &&rightNews -> publication_date > largestNews -> publication_date) {
-        largest = right;
+    // Compare right child
+    if (rightNews) {
+        if (get_year(rightNews) > get_year(largestNews) ||
+            (get_year(rightNews) == get_year(largestNews) && get_date(rightNews) > get_date(largestNews))) {
+            largest = right;
+            largestNews = rightNews;
+            }
     }
 
     if (largest != i) {
-        news_container.swap_news(i,largest);
-        heapify(news_container,n,largest);
-
+        news_container.swap_news(i, largest);
+        heapify(news_container, largest, n, criteria);
     }
-
 }
 
-inline void heap_sort(NewsContainer& news_container) {
+inline void heap_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) {
     int n = news_container.size;
-    //reduce the heap size
-    for (int i = n/2-1; i >=0 ; i--) {
-        heapify(news_container,n,i);
-    }
-    // extract elements one by one form the heap
-    for (int i = n-1; i > 0; i--) {
-        news_container.swap_news(0,i); // move the max heap to the end
 
-        heapify(news_container,i,0); // heapify the reduced heap (excluding the sorted heap)
+    // year first, then full date
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(news_container, i, n, criteria);
+    }
+
+    // Extract elements one by one and place at the end
+    for (int i = n - 1; i > 0; i--) {
+        news_container.swap_news(0, i);
+        heapify(news_container, 0, i, criteria);
     }
 }
 
-inline void bucket_sort(NewsContainer& news_container) {
 
     /*
-     step 1 - find min and max publication year
-     step 2 - create new bucket
-     step 3 - distribute articles into the correct year bucket
-     step 4 - sort each bucket using insertion sort (by full publication_date)
-     step 5 - merged sorted bucket into 'news_container'
-     step 6 - delete the bucket
+     step 1 - Find min and max YEAR
+     step 2 - Create dynamic buckets for each year
+     step 3 - Distribute articles into buckets by YEAR
+     step 4 - Sort each bucket (each year) by month and day
+     step 5 - Merge sorted buckets back into news_container
+     step 6 - Free allocated memory
      */
-    if (news_container.size == 0) return;  // Edge case: empty container
+inline void bucket_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) {
+    if (news_container.size == 0) return;  // Handle empty container
 
-    // Step 1: Find min and max publication year
+    // Step 1: Find min and max YEAR
     int min_year = INT_MAX, max_year = INT_MIN;
     for (int i = 0; i < news_container.size; i++) {
         News* news = news_container.get_at_location(i);
         if (news) {
-            int year = news->getYear();
-            min_year = std::min(min_year, year);
-            max_year = std::max(max_year, year);
+            int year = news->getYear();  // Get just the year
+            if (year < min_year) min_year = year;
+            if (year > max_year) max_year = year;
         }
     }
 
-    int bucket_count = max_year - min_year + 1;
+    int bucket_count = max_year - min_year + 1;  // Each bucket represents a year
 
-    // step 2 - Create buckets manually using raw arrays
-    int* bucket_sizes = new int[bucket_count]();  // Track number of elements in each bucket
-    const int MAX_BUCKET_SIZE = 200000;  // Adjust based on dataset
+    // Step 2: Create dynamic buckets for each year
     News** buckets = new News*[bucket_count];
+    int* bucket_sizes = new int[bucket_count]();
+    int* bucket_capacities = new int[bucket_count]();
 
     for (int i = 0; i < bucket_count; i++) {
-        buckets[i] = new News[MAX_BUCKET_SIZE];  // Allocate array for each bucket
+        bucket_capacities[i] = 10;  // Start small
+        buckets[i] = new News[bucket_capacities[i]];
     }
 
-    // Step 3: Distribute articles into the correct bucket
+    // Step 3: Distribute articles into buckets by YEAR
     for (int i = 0; i < news_container.size; i++) {
         News* news = news_container.get_at_location(i);
         if (news) {
-            int year = news->getYear();
-            int index = year - min_year;
+            int year_index = news->getYear() - min_year;  // Bucket index
 
-            if (bucket_sizes[index] >= MAX_BUCKET_SIZE) {
-                std::cerr << "Bucket overflow for year " << year << "!" << std::endl;
-                continue;
+            // Resize bucket if needed
+            if (bucket_sizes[year_index] >= bucket_capacities[year_index]) {
+                int new_capacity = bucket_capacities[year_index] * 2;
+                News* new_bucket = new News[new_capacity];
+
+                for (int j = 0; j < bucket_sizes[year_index]; j++) {
+                    new_bucket[j] = buckets[year_index][j];
+                }
+
+                delete[] buckets[year_index];
+                buckets[year_index] = new_bucket;
+                bucket_capacities[year_index] = new_capacity;
             }
 
-            buckets[index][bucket_sizes[index]] = *news;  // Store news in bucket
-            bucket_sizes[index]++;
+            // Insert news into correct year bucket
+            buckets[year_index][bucket_sizes[year_index]++] = *news;
         }
     }
 
-    // Step 4: Sort each bucket using Insertion Sort (by full `publication_date`)
+    // Step 4: Sort each bucket (each year) by month and day
     for (int i = 0; i < bucket_count; i++) {
         int size = bucket_sizes[i];
+
         for (int j = 1; j < size; j++) {
             News key = buckets[i][j];
             int k = j - 1;
-
-            // Sort by full `publication_date`
             while (k >= 0 && buckets[i][k].publication_date > key.publication_date) {
                 buckets[i][k + 1] = buckets[i][k];
                 k--;
@@ -441,11 +466,11 @@ inline void bucket_sort(NewsContainer& news_container) {
         }
     }
 
-    // Step 5: Merge sorted buckets back into `news_container`
+    // Step 5: Merge sorted buckets back into news_container
     int index = 0;
     for (int i = 0; i < bucket_count; i++) {
         for (int j = 0; j < bucket_sizes[i]; j++) {
-            news_container.insert_at_location(buckets[i][j], index++);
+            news_container.put_at_location(buckets[i][j], index++);
         }
     }
 
@@ -454,5 +479,8 @@ inline void bucket_sort(NewsContainer& news_container) {
         delete[] buckets[i];
     }
     delete[] buckets;
+    delete[] bucket_sizes;
+    delete[] bucket_capacities;
 }
+
 

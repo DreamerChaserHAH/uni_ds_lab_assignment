@@ -5,7 +5,7 @@
 /// 3. Interpolation Search
 /// 4. Jump Search (Abbirami)
 /// 5. Hash Table
-/// 6. Exponential Search
+/// 6. Exponential Search (Kaung)
 /// 7. Sublist Search
 /// 8. Fibonacci Search
 /// </summary>
@@ -36,6 +36,10 @@ inline NewsContainer* jump_search(NewsContainer* original, SEARCH_CRITERIA crite
 }
 
 inline NewsContainer* two_pointer_range_search(NewsContainer* original, SEARCH_CRITERIA criteria) {
+    return nullptr;
+}
+
+inline NewsContainer* exponential_search(NewsContainer* original, SEARCH_CRITERIA criteria) {
     return nullptr;
 }
 

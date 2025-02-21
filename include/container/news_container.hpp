@@ -12,9 +12,10 @@
 #include <ctime>
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 #include "container/news.hpp"
 
-inline bool parse_date(const std::string& date_str, struct tm& tm) {
+inline void parse_date(const std::string& date_str, struct tm& tm) {
     std::istringstream ss(date_str);
     ss >> std::get_time(&tm, "\"%b %d, %Y\"");
     if (ss.fail()) {
