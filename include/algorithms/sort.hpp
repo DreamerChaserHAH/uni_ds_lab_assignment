@@ -13,26 +13,20 @@
 
 #include "container/news_container.hpp"
 
-enum SORT_CRITERIA {
-    GENRE,
-    PUBLICATION_DATE,
-    TRUE_NEWS
-};
-
-inline long get_criteria_value(News* news, SORT_CRITERIA criteria) {
+inline long get_criteria_value(News* news, CRITERIA criteria) {
     switch (criteria) {
         case GENRE:
             return news->genre;
         case PUBLICATION_DATE:
             return news->publication_date;
-        case TRUE_NEWS:
+        case IS_TRUE_NEWS:
             return news->is_true;
         default:
             return 0;
     }
 }
 
-inline void bubble_sort(NewsContainer& news_container) {
+inline void bubble_sort(NewsContainer& news_container, CRITERIA criteria) {
     int n = news_container.size;
     bool swapped;
 
@@ -45,7 +39,7 @@ inline void bubble_sort(NewsContainer& news_container) {
             News* news1 = news_container.get_at_location(j);
             News* news2 = news_container.get_at_location(j + 1);
 
-            if (news1 && news2 && news1->publication_date > news2->publication_date) {
+            if (news1 && news2 && news1->is_greater_than(*news2, criteria)) {
                 news_container.swap_news(j, j + 1);
                 swapped = true;
             }
@@ -59,7 +53,7 @@ inline void bubble_sort(NewsContainer& news_container) {
 
 }
 
-inline void selection_sort(NewsContainer& news_container) {
+inline void selection_sort(NewsContainer& news_container, CRITERIA criteria) {
     int n = news_container.size;  
 
     // Step 1: Iterate over each element in the container
@@ -73,7 +67,7 @@ inline void selection_sort(NewsContainer& news_container) {
             
             if (current_news && min_news) {
                 // Compare publication dates to find the earliest one
-                if (current_news->publication_date < min_news->publication_date) {
+                if (current_news->is_lower_than(*min_news, criteria)) {
                     min_index = j;  // Update index of new minimum element
                 }
             }
@@ -86,7 +80,7 @@ inline void selection_sort(NewsContainer& news_container) {
     }
 }
 
-inline void insertion_sort(NewsContainer& news_container) {
+inline void insertion_sort(NewsContainer& news_container, CRITERIA criteria) {
     /// Here's the insertion sort algorithm implementation working with the NewsContainer (both linkedlist and array)
     /// 1. Start from the second element and compare it with the previous element
     /// 2. If the previous element is greater than the current element, swap the two elements
@@ -102,15 +96,13 @@ inline void insertion_sort(NewsContainer& news_container) {
         News current_news = *current_news_address;
         int j = i - 1;
         void* compare_news_node = news_container.get_node_at_location(j);
-        News* compare_news = news_container.get_news_at_memory(compare_news_node);
-        if (compare_news == nullptr) {
+        if (compare_news_node == nullptr) {
             break;
         }
-        while (j >= 0 && compare_news->publication_date > current_news.publication_date) {
+        while (j >= 0 && news_container.get_news_at_memory(compare_news_node)->is_greater_than(current_news, criteria)) {
             news_container.swap_news(j, j + 1);
             compare_news_node = news_container.move_to_prev(compare_news_node);
-            compare_news = news_container.get_news_at_memory(compare_news_node);
-            if (compare_news == nullptr) {
+            if (compare_news_node == nullptr) {
                 break;
             }
             j--;
@@ -119,7 +111,7 @@ inline void insertion_sort(NewsContainer& news_container) {
     }
 }
 
-inline void merge_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) {
+inline void merge_sort(NewsContainer& news_container, CRITERIA criteria) {
     if (news_container.size <= 1) {
         return;
     }
@@ -169,7 +161,7 @@ inline void merge_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) {
         News* left_news = left_container->get_at_location(left_index);
         News* right_news = right_container->get_at_location(right_index);
 
-        if (get_criteria_value(left_news, criteria) > get_criteria_value(right_news, criteria)) {
+        if (left_news->is_greater_than(*right_news, criteria)) {
             final_container->put_at_location(*right_news, i);
             right_index++;
             continue;
@@ -181,7 +173,7 @@ inline void merge_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) {
     news_container.overwrite_at_position(final_container, 0);
 }
 
-inline void quick_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) {
+inline void quick_sort(NewsContainer& news_container, CRITERIA criteria) {
 
     /// Here's the quick sort algorithm implementation working with the NewsContainer (both linkedlist and array)
     /// 1. Set the last element as pivot
@@ -272,7 +264,7 @@ inline void quick_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) {
 
 }
 
-inline void counting_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) {
+inline void counting_sort(NewsContainer& news_container, CRITERIA criteria) {
     /// 1. Understand which element has the highest publication date
     /// 2. Create an temporary array with max + 1 elements
     /// 3. Store the occurence of each unique input
@@ -282,9 +274,9 @@ inline void counting_sort(NewsContainer& news_container, SORT_CRITERIA& criteria
     void *tail_pointer = news_container.get_tail();
     /// # Step 1
     long max_value = 0;
-    if (criteria == SORT_CRITERIA::PUBLICATION_DATE) {
+    if (criteria == CRITERIA::PUBLICATION_DATE) {
         max_value = news_container.get_max_date();
-    }else if (criteria == SORT_CRITERIA::TRUE_NEWS) {
+    }else if (criteria == CRITERIA::IS_TRUE_NEWS) {
         max_value = 1;
     }else {
         max_value = 4;
@@ -335,13 +327,13 @@ inline void counting_sort(NewsContainer& news_container, SORT_CRITERIA& criteria
 //step four - heapify the remaining heap
 //step five - repeat the same process
 
-inline void heapify(NewsContainer& news_container, int i, int n, SORT_CRITERIA& criteria) {
+inline void heapify(NewsContainer& news_container, int i, int n, CRITERIA criteria) {
     int largest = i;
     int left = 2 * i + 1;
     int right = 2 * i + 2;
 
     auto get_year = [](News* news) {
-        return news ? news->getYear() : INT_MIN;
+        return news ? news->get_year() : INT_MIN;
     };
 
     auto get_date = [](News* news) {
@@ -376,7 +368,7 @@ inline void heapify(NewsContainer& news_container, int i, int n, SORT_CRITERIA& 
     }
 }
 
-inline void heap_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) {
+inline void heap_sort(NewsContainer& news_container, CRITERIA criteria) {
     int n = news_container.size;
 
     // year first, then full date
@@ -400,7 +392,7 @@ inline void heap_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) {
      step 5 - Merge sorted buckets back into news_container
      step 6 - Free allocated memory
      */
-inline void bucket_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) {
+inline void bucket_sort(NewsContainer& news_container, CRITERIA criteria) {
     if (news_container.size == 0) return;  // Handle empty container
 
     // Step 1: Find min and max YEAR
@@ -408,7 +400,7 @@ inline void bucket_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) 
     for (int i = 0; i < news_container.size; i++) {
         News* news = news_container.get_at_location(i);
         if (news) {
-            int year = news->getYear();  // Get just the year
+            int year = news->get_year();  // Get just the year
             if (year < min_year) min_year = year;
             if (year > max_year) max_year = year;
         }
@@ -430,7 +422,7 @@ inline void bucket_sort(NewsContainer& news_container, SORT_CRITERIA& criteria) 
     for (int i = 0; i < news_container.size; i++) {
         News* news = news_container.get_at_location(i);
         if (news) {
-            int year_index = news->getYear() - min_year;  // Bucket index
+            int year_index = news->get_year() - min_year;  // Bucket index
 
             // Resize bucket if needed
             if (bucket_sizes[year_index] >= bucket_capacities[year_index]) {

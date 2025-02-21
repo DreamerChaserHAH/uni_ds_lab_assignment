@@ -14,6 +14,7 @@ class NewsArray : public NewsContainer {
 private:
     int capacity;
     News* head_pointer;
+    News temp;
 
     void resize() {
         capacity *= 2;
@@ -132,9 +133,9 @@ public:
         if (i < 0 || i >= size || j < 0 || j >= size) {
             throw std::out_of_range("Invalid location");
         }
-        News temp = static_cast<News*>(head)[i];
-        static_cast<News*>(head)[i] = static_cast<News*>(head)[j];
-        static_cast<News*>(head)[j] = temp;
+        temp = head_pointer[i];
+        head_pointer[i] = head_pointer[j];
+        head_pointer[j] = temp;
     }
 
     void* get_tail() override {

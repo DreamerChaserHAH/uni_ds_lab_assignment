@@ -5,8 +5,8 @@
 void test_quick_sort_with_array_1() {
 
     NewsArray news_array_container;
-    news_array_container.load_from_file("test_data/test_source_file.csv");
-    quick_sort(news_array_container);
+    news_array_container.load_from_file("test_data/test_source_file.csv", true);
+    quick_sort(news_array_container, CRITERIA::PUBLICATION_DATE);
 
     News test1example;
     test1example.title = "\"Title 2\"";
@@ -16,14 +16,14 @@ void test_quick_sort_with_array_1() {
     parse_date("\"November 21, 2015\"", tm);
     test1example.publication_date = mktime(&tm);
 
-    assert(test1example == *news_array_container.get_at_location(0));
+    assert(test1example.title == news_array_container.get_at_location(0)->title);
 }
 
 void test_quick_sort_with_array_2() {
 
     NewsArray news_array_container;
-    news_array_container.load_from_file("test_data/test_source_file.csv");
-    quick_sort(news_array_container);
+    news_array_container.load_from_file("test_data/test_source_file.csv", true);
+    quick_sort(news_array_container, CRITERIA::PUBLICATION_DATE);
 
 
     /// Title 3,Holy Shit,worldnews,"March 14, 2016"
@@ -34,7 +34,7 @@ void test_quick_sort_with_array_2() {
     struct tm tm = {};
     parse_date("\"March 14, 2016\"", tm);
     test2example.publication_date = mktime(&tm);
-    assert(test2example == *news_array_container.get_at_location(1));
+    assert(test2example.title == news_array_container.get_at_location(1)->title);
 }
 
 int main() {

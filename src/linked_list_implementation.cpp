@@ -5,44 +5,42 @@
 #include "ctime"
 #include <chrono>
 
-#include "container/array.hpp"
 
-void sort_with_bubble_sort() {
+void sort_with_bubble_sort(CRITERIA criteria) {
     NewsLinkedList news_container = NewsLinkedList();
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv", false);
     news_container.load_from_file("../data/cleaned/true.csv", true);
     std::cout << "Starting Bubble Sort" << endl;
     auto now = std::chrono::system_clock::now();
-    bubble_sort(news_container);
+    bubble_sort(news_container, criteria);
     auto end_time = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end_time - now;
     news_container.display();
     std::cout << "Bubble Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
-void sort_with_selection_sort() {
+void sort_with_selection_sort(CRITERIA criteria) {
     NewsLinkedList news_container = NewsLinkedList();
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv", false);
     news_container.load_from_file("../data/cleaned/true.csv", true);
     std::cout << "Starting Selection Sort" << endl;
     auto now = std::chrono::system_clock::now();
-    selection_sort(news_container);
+    selection_sort(news_container, criteria);
     auto end_time = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end_time - now;
     news_container.display();
     std::cout << "Selection Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
-void sort_with_quick_sort() {
+void sort_with_quick_sort(CRITERIA criteria) {
     NewsLinkedList news_container = NewsLinkedList();
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv", false);
     news_container.load_from_file("../data/cleaned/true.csv", true);
     std::cout << "Starting Quick Sort" << endl;
     auto now = std::chrono::system_clock::now();
-    SORT_CRITERIA criteria;
     quick_sort(news_container,criteria);
     auto end_time = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end_time - now;
@@ -50,29 +48,27 @@ void sort_with_quick_sort() {
     std::cout << "Quick Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
-void sort_with_counting_sort() {
+void sort_with_counting_sort(CRITERIA criteria) {
     NewsLinkedList news_container = NewsLinkedList();
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv", false);
     news_container.load_from_file("../data/cleaned/true.csv", true);
     std::cout << "Starting Counting Sort" << endl;
     auto now = std::chrono::system_clock::now();
-    SORT_CRITERIA criteria;
-    counting_sort(news_container,criteria);
+    counting_sort(news_container, criteria);
     auto end_time = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end_time - now;
     news_container.display();
     std::cout << "Counting Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
-void sort_with_merge_sort() {
+void sort_with_merge_sort(CRITERIA criteria) {
     NewsLinkedList news_container = NewsLinkedList();
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv", false);
     news_container.load_from_file("../data/cleaned/true.csv", true);
     std::cout << "Starting Merge Sort" << endl;
     auto now = std::chrono::system_clock::now();
-    SORT_CRITERIA criteria;
     merge_sort(news_container,criteria);
     auto end_time = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end_time - now;
@@ -80,28 +76,27 @@ void sort_with_merge_sort() {
     std::cout << "Merge Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
-void sort_with_insertion_sort() {
+void sort_with_insertion_sort(CRITERIA criteria) {
     NewsLinkedList news_container = NewsLinkedList();
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv", false);
     news_container.load_from_file("../data/cleaned/true.csv", true);
     std::cout << "Starting Insertion Sort" << endl;
     auto now = std::chrono::system_clock::now();
-    insertion_sort(news_container);
+    insertion_sort(news_container, criteria);
     auto end_time = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end_time - now;
     news_container.display();
     std::cout << "Insertion Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
-void sort_with_bucket_sort() {
+void sort_with_bucket_sort(CRITERIA criteria) {
     NewsLinkedList news_container = NewsLinkedList();
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv", false);
     news_container.load_from_file("../data/cleaned/true.csv", true);
     std::cout << "Starting Bucket Sort" << endl;
     auto now = std::chrono::system_clock::now();
-    SORT_CRITERIA criteria;
     bucket_sort(news_container,criteria);
     auto end_time = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed_seconds = end_time - now;
@@ -109,7 +104,7 @@ void sort_with_bucket_sort() {
     std::cout << "Bucket Sort took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
-void sort_with_heap_sort() {
+void sort_with_heap_sort(CRITERIA criteria) {
     NewsArray news_container;
     std::cout << "Loading from file..." << std::endl;
     news_container.load_from_file("../data/cleaned/fake.csv", false);
@@ -117,9 +112,7 @@ void sort_with_heap_sort() {
     std::cout << "Starting Heap Sort" << std::endl;
 
     auto now = std::chrono::system_clock::now();
-    SORT_CRITERIA criteria;
-    // Choose which criteria you want:
-    heap_sort(news_container,criteria);
+    heap_sort(news_container, criteria);
     auto end_time = std::chrono::system_clock::now();
 
     std::chrono::duration<double> elapsed_seconds = end_time - now;
@@ -139,8 +132,8 @@ int main() {
     //sort_with_merge_sort();
     //sort_with_insertion_sort();
 
-    //sort_with_bucket_sort();
-    sort_with_heap_sort();
+    sort_with_bucket_sort(CRITERIA::PUBLICATION_DATE);
+    //sort_with_heap_sort(CRITERIA::PUBLICATION_DATE);
 
     std::cout << "Hello from Linked List Implementation File" << std::endl;
 }

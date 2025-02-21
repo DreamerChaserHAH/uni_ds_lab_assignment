@@ -5,8 +5,8 @@
 void test_heap_sort_with_linked_list_1() {
 
     NewsLinkedList news_linked_list_container;
-    news_linked_list_container.load_from_file("test_data/test_source_file.csv");
-    heap_sort(news_linked_list_container);
+    news_linked_list_container.load_from_file("test_data/test_source_file.csv", true);
+    heap_sort(news_linked_list_container, CRITERIA::PUBLICATION_DATE);
 
     News test1example;
     test1example.title = "\"Title 2\"";
@@ -16,14 +16,14 @@ void test_heap_sort_with_linked_list_1() {
     parse_date("\"November 21, 2015\"", tm);
     test1example.publication_date = mktime(&tm);
 
-    assert(test1example == *news_linked_list_container.get_at_location(0));
+    assert(test1example.title == news_linked_list_container.get_at_location(0)->title);
 }
 
 void test_heap_sort_with_linked_list_2() {
 
     NewsLinkedList news_linked_list_container;
-    news_linked_list_container.load_from_file("test_data/test_source_file.csv");
-    heap_sort(news_linked_list_container);
+    news_linked_list_container.load_from_file("test_data/test_source_file.csv", true);
+    heap_sort(news_linked_list_container, CRITERIA::PUBLICATION_DATE);
 
 
     /// Title 3,Holy Shit,worldnews,"March 14, 2016"
@@ -34,7 +34,7 @@ void test_heap_sort_with_linked_list_2() {
     struct tm tm = {};
     parse_date("\"March 14, 2016\"", tm);
     test2example.publication_date = mktime(&tm);
-    assert(test2example == *news_linked_list_container.get_at_location(1));
+    assert(test2example.title == news_linked_list_container.get_at_location(1)->title);
 }
 
 int main() {

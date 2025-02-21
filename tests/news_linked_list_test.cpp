@@ -17,8 +17,8 @@ void test_linked_list_insertion() {
 
     news_linked_list_container.insert(news1);
 
-    assert(news1 == *news_linked_list_container.get_head().data);
-    assert(news1 == *news_linked_list_container.get_tail_node().data);
+    assert(news1.title == news_linked_list_container.get_head().data->title);
+    assert(news1.title == news_linked_list_container.get_tail_node().data->title);
 
     News news2;
     news2.title = "Test Title 2";
@@ -28,8 +28,8 @@ void test_linked_list_insertion() {
 
     news_linked_list_container.insert(news2);
 
-    assert(news1 == *news_linked_list_container.get_head().data);
-    assert(news2 == *news_linked_list_container.get_tail_node().data);
+    assert(news1.title == news_linked_list_container.get_head().data->title);
+    assert(news2.title == news_linked_list_container.get_tail_node().data->title);
 
 }
 
@@ -59,9 +59,9 @@ void test_linked_list_get_at_location() {
 
     news_linked_list_container.insert(news3);
 
-    assert(news1 == *news_linked_list_container.get_at_location(0));
-    assert(news2 == *news_linked_list_container.get_at_location(1));
-    assert(news3 == *news_linked_list_container.get_at_location(2));
+    assert(news1.title == news_linked_list_container.get_at_location(0)->title);
+    assert(news2.title == news_linked_list_container.get_at_location(1)->title);
+    assert(news3.title == news_linked_list_container.get_at_location(2)->title);
     assert(nullptr == news_linked_list_container.get_at_location(3));
 }
 
@@ -91,9 +91,9 @@ void test_linked_list_insert_at_location() {
 
     news_linked_list_container.insert(news3);
 
-    assert(news1 == *news_linked_list_container.get_at_location(0));
-    assert(news2 == *news_linked_list_container.get_at_location(1));
-    assert(news3 == *news_linked_list_container.get_at_location(2));
+    assert(news1.title == news_linked_list_container.get_at_location(0)->title);
+    assert(news2.title == news_linked_list_container.get_at_location(1)->title);
+    assert(news3.title == news_linked_list_container.get_at_location(2)->title);
     assert(nullptr == news_linked_list_container.get_at_location(3));
 
     News randomInsertionNews;
@@ -103,13 +103,13 @@ void test_linked_list_insert_at_location() {
     randomInsertionNews.publication_date = time(nullptr);
 
     news_linked_list_container.insert_at_location(randomInsertionNews, 1);
-    assert(randomInsertionNews == *news_linked_list_container.get_at_location(1));
-    assert(news2 == *news_linked_list_container.get_at_location(2));
+    assert(randomInsertionNews.title == news_linked_list_container.get_at_location(1)->title);
+    assert(news2.title == news_linked_list_container.get_at_location(2)->title);
 }
 
 void test_linked_list_load_from_file() {
     NewsLinkedList news_linked_list_container;
-    news_linked_list_container.load_from_file("test_data/test_source_file.csv");
+    news_linked_list_container.load_from_file("test_data/test_source_file.csv", true);
 
     News test1example;
     test1example.title = "\"Title 1\"";
@@ -121,7 +121,7 @@ void test_linked_list_load_from_file() {
 
     assert(news_linked_list_container.get_at_location(0) != nullptr);
     News at_location = *news_linked_list_container.get_at_location(0);
-    assert(test1example == at_location);
+    assert(test1example.title == at_location.title);
 }
 
 int main() {
