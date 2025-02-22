@@ -96,12 +96,95 @@ inline NewsContainer* linear_search(NewsContainer* original, CRITERIA criteria) 
     return nullptr;
 }
 
-inline NewsContainer* binary_search(NewsContainer* original, CRITERIA criteria, std::string& target) {
-    if (original == nullptr) {
+inline NewsContainer* binary_search(NewsContainer* original, SEARCH_CRITERIA criteria, std::string search_content) {
+    if (original == nullptr || original->size == 0) {
         return nullptr;
     }
-    return nullptr;
+
+    long search_value = -1;
+    CRITERIA main_criteria;
+    switch (criteria) {
+        case SEARCH_PUBLICATION_YEAR:
+            search_value = std::stoi(search_content);
+            main_criteria = PUBLICATION_YEAR;
+            break;
+        case SEARCH_PUBLICATION_MONTH:
+            search_value = std::stoi(search_content);
+            main_criteria = PUBLICATION_MONTH;
+            break;
+        case SEARCH_PUBLICATION_GENRE:
+            // Assuming "POLITICS" corresponds to the POLITICS enum value
+            search_value = (search_content == "POLITICS") ? NewsGenre::POLITICS : NewsGenre::WORLD_NEWS;
+            main_criteria = GENRE;
+            break;
+        case SEARCH_TRUE_OR_FALSE_NEWS:
+            search_value = (search_content == "true") ? 1 : 0;
+            main_criteria = IS_TRUE_NEWS;
+            break;
+        default:
+            return nullptr;
+    }
+
+    int left = 0, right = original->size - 1, mid = 0;
+    int found_index = -1;
+    while (left <= right) {
+        mid = left + (right - left) / 2;
+        News* mid_news = original->get_at_location(mid);
+        if (!mid_news)
+            break;
+        long mid_val = get_criteria_value(mid_news, main_criteria);
+        if (mid_val == search_value) {
+            found_index = mid;
+            break;
+        } else if (mid_val < search_value) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+
+    // If no matching element was found, return nullptr.
+    if (found_index == -1) {
+        return nullptr;
+    }
+
+    // Expand to find the entire range of matching items.
+    int start = found_index;
+    while (start > 0) {
+        News* prev_news = original->get_at_location(start - 1);
+        if (prev_news && get_criteria_value(prev_news, main_criteria) == search_value)
+            start--;
+        else
+            break;
+    }
+
+    int end = found_index;
+    while (end < original->size - 1) {
+        News* next_news = original->get_at_location(end + 1);
+        if (next_news && get_criteria_value(next_news, main_criteria) == search_value)
+            end++;
+        else
+            break;
+    }
+
+    // Create a new container and copy the matching news.
+    auto* result = static_cast<NewsContainer*>(original->allocate_empty());
+    for (int i = start; i <= end; i++) {
+        News* news_item = original->get_at_location(i);
+        if (news_item) {
+            result->insert(*news_item);
+        }
+    }
+    if (result->size == 0) {
+        return nullptr;
+    }
+    return result;
 }
+
+
+
+
+
 
 inline NewsContainer* jump_search(NewsContainer* original, CRITERIA criteria) {
     return nullptr;

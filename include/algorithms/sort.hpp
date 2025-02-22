@@ -458,3 +458,4 @@ inline void bucket_sort(NewsContainer& news_container, CRITERIA criteria) {
 }
 
 
+

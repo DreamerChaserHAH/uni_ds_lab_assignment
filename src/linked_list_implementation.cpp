@@ -129,7 +129,7 @@ int main() {
    // sort_with_quick_sort();
     //sort_with_counting_sort();
 
-    sort_with_merge_sort(CRITERIA::PUBLICATION_DATE);
+    //sort_with_merge_sort(CRITERIA::PUBLICATION_DATE);
     //sort_with_insertion_sort();
 
     //sort_with_bucket_sort(CRITERIA::PUBLICATION_DATE);
