@@ -72,8 +72,7 @@ inline void insertion_sort(NewsContainer& news_container, CRITERIA criteria) {
     /// 1. Start from the second element and compare it with the previous element
     /// 2. If the previous element is greater than the current element, swap the two elements
     /// 3. Continue this process until the current element is greater than the previous element
-    /// 4. Repeat the process for all elements
-    /// References: https://www.youtube.com/watch?v=JU767SDMDvA
+    /// 4. Repeat the process for all element
 
     for (int i = 1; i < news_container.size; i++) {
         News* current_news_address = news_container.get_at_location(i);
