@@ -1,6 +1,3 @@
-//
-// Created by Victor Mak on 18/02/2025.
-//
 
 #include <fstream>
 #include <string>
@@ -11,7 +8,11 @@
 #include <algorithm>
 
 bool is_normal_character(const char& s) {
-    return !(s >= 'A' && s <= 'Z') && !(s >= 'a' && s <= 'z') && !(s >= '0' && s <= '9') && s != ' ' && s != '\'' && s != '(' && s != ')' && s != ',' && s != '.' && s != ':' && s != ';' && s != '?' && s != '!';
+    return !(s >= 'A' && s <= 'Z') && !(s >= 'a' && s <= 'z')
+    && !(s >= '0' && s <= '9') && s != ' '
+    && s != '\'' && s != '(' && s != ')'
+    && s != ',' && s != '.' && s != ':'
+    && s != ';' && s != '?' && s != '!';
 }
 
 std::string remove_whitespace(const std::string& input) {
@@ -51,7 +52,6 @@ bool parse_date(const std::string& date_str, struct tm& tm) {
     }
     return true;
 }
-
 
 std::string trim(const std::string& input) {
     auto start = input.begin();
@@ -156,7 +156,7 @@ void clean_csv(std::string input_file_path, std::string output_file_path) {
         }
         previous_date = date;
         std::ostringstream formatted_date;
-        formatted_date << std::put_time(&tm, "%B %d, %Y");
+        formatted_date << std::put_time(&tm, "%B %d, %Y");S
         date = formatted_date.str();
         // Write cleaned data to new CSV file
         output_file << "\"" << title << "\",\"" << text << "\",\"" << subject << "\",\"" << date << "\"\n";
@@ -177,3 +177,5 @@ int main() {
     clean_csv("../data/uncleaned/fake.csv", "../data/cleaned/fake.csv");
     return 0;
 }
+
+

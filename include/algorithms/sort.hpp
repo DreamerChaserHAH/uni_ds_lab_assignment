@@ -102,6 +102,7 @@ inline void merge_sort(NewsContainer& news_container, CRITERIA criteria) {
     if (news_container.size <= 1) {
         return;
     }
+    // splitting the list at the midpoint
     int size = news_container.size;
     int half_point = size / 2;
     if (news_container.size % 2 == 1) {
@@ -125,6 +126,7 @@ inline void merge_sort(NewsContainer& news_container, CRITERIA criteria) {
     int left_size = left_container->size;
     int right_size = right_container->size;
 
+    //recursive sort the halves
     merge_sort(*left_container, criteria);
     merge_sort(*right_container, criteria);
 
@@ -147,7 +149,7 @@ inline void merge_sort(NewsContainer& news_container, CRITERIA criteria) {
 
         News* left_news = left_container->get_at_location(left_index);
         News* right_news = right_container->get_at_location(right_index);
-
+        //do comparison to find and insert smaller value
         if (left_news->is_greater_than(*right_news, criteria)) {
             final_container->put_at_location(*right_news, i);
             right_index++;
@@ -156,7 +158,7 @@ inline void merge_sort(NewsContainer& news_container, CRITERIA criteria) {
         final_container->put_at_location(*left_news, i);
         left_index++;
     }
-
+    //overwrite original list with this sorted list
     news_container.overwrite_at_position(final_container, 0);
 }
 
