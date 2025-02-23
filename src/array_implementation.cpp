@@ -373,10 +373,10 @@ void report_keyword_demographics_for_fake_government_news() {
 int main() {
 
     //sort_with_bubble_sort(CRITERIA::PUBLICATION_MONTH);
-    sort_with_selection_sort(PUBLICATION_DATE);
+    //sort_with_selection_sort(PUBLICATION_DATE);
 
     //sort_with_quick_sort(CRITERIA::PUBLICATION_DATE);
-    //sort_with_counting_sort(CRITERIA::GENRE);
+    //sort_with_counting_sort(CRITERIA::PUBLICATION_DATE);
 
     //sort_with_merge_sort(CRITERIA::IS_TRUE_NEWS);
     //sort_with_insertion_sort(CRITERIA::IS_TRUE_NEWS);
@@ -389,7 +389,7 @@ int main() {
     //report_fake_political_news_in_each_month_in_2016_linear();
     //report_fake_political_news_in_each_month_in_2016_exponential();
 
-    report_keyword_demographics_for_fake_government_news();
+    //report_keyword_demographics_for_fake_government_news();
 
     std::cout << "Hello from Array List Implementation File" << std::endl;
 }

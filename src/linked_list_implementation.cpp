@@ -188,7 +188,7 @@ int main() {
     //sort_with_bucket_sort(CRITERIA::PUBLICATION_DATE);
     //sort_with_heap_sort(CRITERIA::PUBLICATION_DATE);
 
-    report_fake_political_news_in_each_month_in_2016();
+    //report_fake_political_news_in_each_month_in_2016();
 
     std::cout << "Hello from Linked List Implementation File" << std::endl;
 }

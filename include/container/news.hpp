@@ -19,16 +19,6 @@ enum CRITERIA {
     PUBLICATION_MONTH
 };
 
-enum NewsGenre {
-    MIDDLE_EAST = 0,
-    US_NEWS = 1,
-    WORLD_NEWS = 2,
-    GOVERNMENT = 3,
-    LEFT_NEWS = 4,
-    GENERAL = 5,
-    UNCATEGORIZED = 6
-};
-
 struct News {
     std::string title;
     std::string content;
