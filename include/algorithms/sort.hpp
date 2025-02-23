@@ -185,7 +185,6 @@ inline void quick_sort(NewsContainer& news_container, CRITERIA criteria) {
         return;
     }
     long pivot_value = news_container.get_criteria_value(pivot_news_pointer, criteria);
-
     /// # Step 2
     int left_pointer_index = 0;
     void* left_pointer = head_pointer;

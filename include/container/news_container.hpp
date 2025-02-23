@@ -49,10 +49,10 @@ class NewsContainer{
 
     int distinct_number_of_genres;
 
-    NewsContainer(): size(0), head(nullptr), max_date(0), genre_index(new GenreIndex[30]) {}
+    NewsContainer(): size(0), head(nullptr), max_date(0), genre_index(new GenreIndex[30]), distinct_number_of_genres(0) {}
 
     //an alternative constructor that allows us to set the head pointer
-    NewsContainer(int size, void* head, time_t max_date): size(size), head(head), max_date(max_date){}
+    NewsContainer(int size, void* head, time_t max_date): size(size), head(head), max_date(max_date), distinct_number_of_genres(0){}
 
     virtual ~NewsContainer() = default;
 
@@ -123,6 +123,7 @@ class NewsContainer{
                 return gi;
             }
         }
+        return -1;
     }
 
     long get_criteria_value(News* news, CRITERIA criteria) {

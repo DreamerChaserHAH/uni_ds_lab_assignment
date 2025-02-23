@@ -56,6 +56,10 @@ inline NewsContainer* two_pointer_search(NewsContainer* news_container, SEARCH_C
             return nullptr;
     }
 
+    if (search_value == -1) {
+        return nullptr;
+    }
+
     int left_index = 0;
     int right_index = news_container->size - 1;
 
@@ -126,6 +130,10 @@ inline NewsContainer* linear_search(NewsContainer* news_container, SEARCH_CRITER
             return nullptr;
     }
 
+    if (search_value == -1) {
+        return nullptr;
+    }
+
     auto* result = static_cast<NewsContainer *>(news_container->allocate_empty());
     for (int i = 0; i < news_container->size; i++) {
         News* news_item = news_container->get_at_location(i);
@@ -169,6 +177,10 @@ inline NewsContainer* binary_search(NewsContainer* news_container, SEARCH_CRITER
             break;
         default:
             return nullptr;
+    }
+
+    if (search_value == -1) {
+        return nullptr;
     }
 
     int left = 0, right = news_container->size - 1, mid = 0;
@@ -264,6 +276,10 @@ inline NewsContainer* exponential_search(NewsContainer* news_container, SEARCH_C
         break;
         default:
             return nullptr;
+    }
+
+    if (search_value == -1) {
+        return nullptr;
     }
 
     // 3. Check the first element for a quick match.

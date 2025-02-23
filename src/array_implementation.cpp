@@ -373,7 +373,7 @@ void report_keyword_demographics_for_fake_government_news() {
 int main() {
 
     //sort_with_bubble_sort(CRITERIA::PUBLICATION_MONTH);
-    //sort_with_selection_sort();
+    sort_with_selection_sort(PUBLICATION_DATE);
 
     //sort_with_quick_sort(CRITERIA::PUBLICATION_DATE);
     //sort_with_counting_sort(CRITERIA::GENRE);
