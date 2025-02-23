@@ -210,7 +210,27 @@ public:
                     } while (sortChoice != 9);
                 }
                 else if (subChoice == 2) {
-                    execute_search(linear_search, "Linear Search");
+                    int searchChoice;
+                    do {
+                        cout << "\n=== Searching Algorithms ===\n";
+                        cout << "1. Linear Search\n2. Binary Search\n3. Exponential Search\n4. Two-Pointer Search\n5. Back to Main Menu\n";
+                        cout << "Enter your choice: ";
+                        cin >> searchChoice;
+
+                        if (cin.fail() || searchChoice < 1 || searchChoice > 5) {
+                            cout << "Invalid input! Please enter a valid option.\n";
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            continue;
+                        }
+
+                        switch (searchChoice) {
+                            case 1: execute_search(linear_search, "Linear Search"); break;
+                            case 2: execute_search(binary_search, "Binary Search"); break;
+                            case 3: execute_search(exponential_search, "Exponential Search"); break;
+                            case 4: execute_search(two_pointer_search, "Two-Pointer Search"); break;
+                        }
+                    } while (searchChoice != 5);
                 }
                 else if (subChoice == 3) {
                     display_data();
