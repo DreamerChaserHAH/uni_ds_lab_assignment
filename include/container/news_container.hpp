@@ -188,36 +188,32 @@ inline void NewsContainer::update_distincts(News* oldNews, News* newNews) {
     /// delete the news and update details
     /// check if genre is in the genre index already or not
 
-    if (oldNews == nullptr) {
-        return;
-    }
-
-    for (int i = 0; i < distinct_number_of_genres; i++) {
-        if (genre_index[i].genre_name == oldNews->genre) {
-            genre_index[i].count--;
-            break;
+    if (oldNews != nullptr) {
+        for (int i = 0; i < distinct_number_of_genres; i++) {
+            if (genre_index[i].genre_name == oldNews->genre) {
+                genre_index[i].count--;
+                break;
+            }
         }
     }
 
-    if (newNews == nullptr) {
-        return;
-    }
-
-    /// check if genre is in the genre index already or not
-    bool genre_exists = false;
-    for (int i = 0; i < distinct_number_of_genres; i++) {
-        if (genre_index[i].genre_name == newNews->genre) {
-            genre_index[i].count++;
-            genre_exists = true;
-            break;
+    if (newNews != nullptr) {
+        /// check if genre is in the genre index already or not
+        bool genre_exists = false;
+        for (int i = 0; i < distinct_number_of_genres; i++) {
+            if (genre_index[i].genre_name == newNews->genre) {
+                genre_index[i].count++;
+                genre_exists = true;
+                break;
+            }
         }
-    }
 
-    //if it does not exist create a new genre and add 1 into there
-    if (!genre_exists) {
-        genre_index[distinct_number_of_genres].genre_name = newNews->genre;
-        genre_index[distinct_number_of_genres].count = 1;
-        distinct_number_of_genres++;
+        //if it does not exist create a new genre and add 1 into there
+        if (!genre_exists) {
+            genre_index[distinct_number_of_genres].genre_name = newNews->genre;
+            genre_index[distinct_number_of_genres].count = 1;
+            distinct_number_of_genres++;
+        }
     }
 }
 

@@ -45,10 +45,10 @@ void prompt_benchmark_sub_menu() {
         cout << "2. Selection Sort Benchmark (Livi)" << std::endl;
         cout << "3. Quick Sort Benchmark (Htet Aung Hlaing)" << std::endl;
         cout << "4. Counting Sort Benchmark (Htet Aung Hlaing)" << std::endl;
-        cout << "5. Bucket Sort Benchmark (Htet Kaung Myat Oo" << std::endl;
-        cout << "6. Heap Sort Benchmark (Htet Kaung Myat Oo)" << std::endl;
-        cout << "7. Merge Sort Benchmark (Abbirami)" << std::endl;
-        cout << "8. Insertion Sort Benchmark (Abbirami)" << std::endl;
+        cout << "5. Merge Sort Benchmark (Abbirami)" << std::endl;
+        cout << "6. Insertion Sort Benchmark (Abbirami)" << std::endl;
+        cout << "7. Heap Sort Benchmark (Htet Kaung Myat Oo)" << std::endl;
+        cout << "8. Bucket Sort Benchmark (Htet Kaung Myat Oo" << std::endl;
 
         cout << "**CHOOSE SEARCHING BENCHMARK**" << std::endl;
         cout << "9. Linear Search (Abbirami)" << std::endl;
@@ -91,7 +91,8 @@ void prompt_benchmark_sub_menu() {
                 linked_list_implementation::sort_with_heap_sort_benchmark( PUBLICATION_DATE);
                 break;
             case 8:
-                linked_list_implementation::sort_with_bucket_sort_benchmark( PUBLICATION_DATE);
+                linked_list_implementation::sort_with_bucket_sort_benchmark( PUBLICATION_YEAR);
+                std::cout << "Sorted using Bucket Sort on PUBLICATION YEAR" << std::endl;
                 break;
             case 9:
                 linked_list_implementation::report_fake_political_news_in_each_month_in_2016_linear_benchmark ();
@@ -174,7 +175,7 @@ inline SEARCH_CRITERIA prompt_choose_search_criteria() {
             case 3:
                 return SEARCH_CRITERIA::SEARCH_PUBLICATION_GENRE;
             case 4:
-                return SEARCH_CRITERIA::SEARCH_PUBLICATION_GENRE;
+                return SEARCH_CRITERIA::SEARCH_TRUE_OR_FALSE_NEWS;
             default:
                 std::cout << "Wrong Input" << std::endl;
             break;
@@ -307,6 +308,9 @@ void prompt_searching_algorithm_sub_menu(NewsLinkedList* news_container) {
                 news_container = dynamic_cast<NewsLinkedList*>(two_pointer_search(news_container, search_criteria, search_content));
                 news_container->display();
                 break;
+            case 5:
+                exit_input_loop = true;
+                break;
             default:
                 std::cout << "Wrong Input" << std::endl;
                 break;
@@ -328,8 +332,9 @@ int main() {
         cout << "3. Apply Searching Algorithm" << std::endl;
         cout << "4. Display Keywords" << std::endl;
         cout << "5. Display Total Number of Articles" << std::endl;
-        cout << "6. Benchmarking" << std::endl;
-        cout << "7. Exit Application" << std::endl;
+        cout << "6. Print News Container" << std::endl;
+        cout << "7. Benchmarking" << std::endl;
+        cout << "8. Exit Application" << std::endl;
         cout << ">";
         std::string input_string;
         cin >> input_string;
@@ -370,10 +375,17 @@ int main() {
                 news_linked_list->display_total_number_of_articles();
                 break;
             case 6:
+                if (news_linked_list == nullptr) {
+                    std::cout << "Linked List is Empty!" << std::endl;
+                    break;
+                }
+                news_linked_list->display();
+                break;
+            case 7:
                 //benchmarking
                 prompt_benchmark_sub_menu();
                 break;
-            case 7:
+            case 8:
                 std::cout << "Application received quit signal" << std::endl;
                 end_application = true;
                 break;

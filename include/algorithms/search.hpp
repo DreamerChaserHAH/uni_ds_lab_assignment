@@ -70,7 +70,7 @@ inline NewsContainer* two_pointer_search(NewsContainer* news_container, SEARCH_C
         }
 
         long current_value = news_container->get_criteria_value(left_news, main_criteria);
-        if (current_value >= search_value) {
+        if (current_value == search_value) {
             break;
         }
         left_index++;
@@ -82,7 +82,7 @@ inline NewsContainer* two_pointer_search(NewsContainer* news_container, SEARCH_C
             break;
         }
 
-        if (news_container->get_criteria_value(right_news, main_criteria) <= search_value) {
+        if (news_container->get_criteria_value(right_news, main_criteria) == search_value) {
             break;
         }
         right_index--;

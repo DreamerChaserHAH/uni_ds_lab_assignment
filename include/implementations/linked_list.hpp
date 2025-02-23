@@ -105,7 +105,7 @@ namespace linked_list_implementation {
         news_container.load_from_file(true);
         std::cout << "Starting Bucket Sort" << endl;
         auto now = std::chrono::system_clock::now();
-        bucket_sort(news_container,criteria);
+        bucket_sort(news_container, criteria);
         auto end_time = std::chrono::system_clock::now();
         std::chrono::duration<double> elapsed_seconds = end_time - now;
         news_container.display();

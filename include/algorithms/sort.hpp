@@ -251,7 +251,7 @@ inline void quick_sort(NewsContainer& news_container, CRITERIA criteria) {
 }
 
 inline void counting_sort(NewsContainer& news_container, CRITERIA criteria) {
-    /// 1. Understand which element has the highest publication date
+    /// 1. Understand which element has the highest value
     /// 2. Create an temporary array with max + 1 elements
     /// 3. Store the occurence of each unique input
     /// 4. Cumlative sum each element and put into each index
@@ -399,7 +399,7 @@ inline void bucket_sort(NewsContainer& news_container, CRITERIA criteria) {
     }
 
     // The number of buckets is (max_year - min_year + 1).
-    int bucket_count = max_value - min_value + 1;
+    long bucket_count = max_value - min_value + 1;
 
     // 2. Create dynamic buckets. Each bucket is a dynamic array of News objects.
     //    We also keep track of each bucket's size and capacity for potential resizing.

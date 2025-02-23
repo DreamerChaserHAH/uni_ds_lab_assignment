@@ -46,10 +46,10 @@ void prompt_benchmark_sub_menu() {
         cout << "2. Selection Sort Benchmark (Livi)" << std::endl;
         cout << "3. Quick Sort Benchmark (Htet Aung Hlaing)" << std::endl;
         cout << "4. Counting Sort Benchmark (Htet Aung Hlaing)" << std::endl;
-        cout << "5. Bucket Sort Benchmark (Htet Kaung Myat Oo" << std::endl;
-        cout << "6. Heap Sort Benchmark (Htet Kaung Myat Oo)" << std::endl;
-        cout << "7. Merge Sort Benchmark (Abbirami)" << std::endl;
-        cout << "8. Insertion Sort Benchmark (Abbirami)" << std::endl;
+        cout << "5. Merge Sort Benchmark (Abbirami)" << std::endl;
+        cout << "6. Insertion Sort Benchmark (Abbirami)" << std::endl;
+        cout << "7. Heap Sort Benchmark (Htet Kaung Myat Oo)" << std::endl;
+        cout << "8. Bucket Sort Benchmark (Htet Kaung Myat Oo" << std::endl;
 
         cout << "**CHOOSE SEARCHING BENCHMARK**" << std::endl;
         cout << "9. Linear Search (Abbirami)" << std::endl;
@@ -92,7 +92,7 @@ void prompt_benchmark_sub_menu() {
                 array_implementation::sort_with_heap_sort_benchmark(PUBLICATION_DATE);
                 break;
             case 8:
-                array_implementation::sort_with_bucket_sort_benchmark(PUBLICATION_DATE);
+                array_implementation::sort_with_bucket_sort_benchmark(PUBLICATION_YEAR);
                 break;
             case 9:
                 array_implementation::report_fake_political_news_in_each_month_in_2016_linear_benchmark();
@@ -150,7 +150,8 @@ inline CRITERIA prompt_choose_sorting_criteria() {
 
 inline SEARCH_CRITERIA prompt_choose_search_criteria() {
     int choice = -1;
-    while (true) {
+    bool do_not_end_program = true;
+    while (do_not_end_program) {
         std::cout << "Choose a criteria to initiate searching" << std::endl;
         std::cout << "1. Publication Year" << std::endl;
         std::cout << "2. Publication Month" << std::endl;
@@ -175,7 +176,10 @@ inline SEARCH_CRITERIA prompt_choose_search_criteria() {
             case 3:
                 return SEARCH_CRITERIA::SEARCH_PUBLICATION_GENRE;
             case 4:
-                return SEARCH_CRITERIA::SEARCH_PUBLICATION_GENRE;
+                return SEARCH_CRITERIA::SEARCH_TRUE_OR_FALSE_NEWS;
+            case 5:
+                do_not_end_program = false;
+                break;
             default:
                 std::cout << "Wrong Input" << std::endl;
             break;
@@ -308,6 +312,9 @@ void prompt_searching_algorithm_sub_menu(NewsArray* news_container) {
                 news_container = dynamic_cast<NewsArray*>(two_pointer_search(news_container, search_criteria, search_content));
                 news_container->display();
                 break;
+            case 5:
+                exit_input_loop = true;
+                break;
             default:
                 std::cout << "Wrong Input" << std::endl;
                 break;
@@ -329,8 +336,9 @@ int main() {
         cout << "3. Apply Searching Algorithm" << std::endl;
         cout << "4. Display Keywords" << std::endl;
         cout << "5. Display Total Number of Articles" << std::endl;
-        cout << "6. Benchmarking" << std::endl;
-        cout << "7. Exit Application" << std::endl;
+        cout << "6. Print out News Array" << std::endl;
+        cout << "7. Benchmarking" << std::endl;
+        cout << "8. Exit Application" << std::endl;
         cout << ">";
         std::string input_string;
         cin >> input_string;
@@ -358,23 +366,29 @@ int main() {
                 break;
             case 4:
                 if (news_array == nullptr) {
-                    std::cout << "Linked List is Empty!" << std::endl;
+                    std::cout << "Array is Empty!" << std::endl;
                     break;
                 }
                 news_array->display_keyword_demographics();
                 break;
             case 5:
                 if (news_array == nullptr) {
-                    std::cout << "Linked List is Empty!" << std::endl;
+                    std::cout << "Array is Empty!" << std::endl;
                     break;
                 }
                 news_array->display_total_number_of_articles();
                 break;
             case 6:
+                if (news_array == nullptr) {
+                    std::cout << "Array is Empty!" << std::endl;
+                    break;
+                }
+                break;
+            case 7:
                 //benchmarking
                 prompt_benchmark_sub_menu();
                 break;
-            case 7:
+            case 8:
                 std::cout << "Application received quit signal" << std::endl;
                 end_application = true;
                 break;

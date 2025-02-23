@@ -74,7 +74,7 @@ public:
 
     }
 
-     News* get_at_location(int location) override {
+    News* get_at_location(int location) override {
         auto* current = static_cast<NewsNode*>(head);
         for (int i = 0; i < location; i++) {
             current = current->nextAddress;
@@ -284,7 +284,4 @@ public:
     void* allocate_empty() override {
         return new NewsLinkedList();
     }
-
 };
-
-
