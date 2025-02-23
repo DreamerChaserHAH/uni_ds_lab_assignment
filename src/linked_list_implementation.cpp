@@ -176,8 +176,8 @@ void report_fake_political_news_in_each_month_in_2016() {
 
 int main() {
 
-    //sort_with_bubble_sort();
-    //sort_with_selection_sort();
+    sort_with_bubble_sort(CRITERIA::PUBLICATION_DATE);
+    //sort_with_selection_sort(CRITERIA::PUBLICATION_DATE);
 
    // sort_with_quick_sort();
     //sort_with_counting_sort();

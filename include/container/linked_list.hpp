@@ -258,7 +258,7 @@ public:
             return nullptr;
         }
 
-        return new NewsLinkedList(new_head, new_tail, mid_point, max_date, distinct_number_of_genres, distinct_number_of_keyword, genre_index, keyword_index);
+        return new NewsLinkedList(new_head, new_tail, mid_point, max_date, distinct_number_of_genres, genre_index);
     }
 
     void* split_right(int mid_point) override {

@@ -11,7 +11,7 @@
 
 #pragma once
 
-#include "container/news_container.hpp"
+#include "../../include/container/news_container.hpp"
 
 inline void bubble_sort(NewsContainer& news_container, CRITERIA criteria) {
     int n = news_container.size;
