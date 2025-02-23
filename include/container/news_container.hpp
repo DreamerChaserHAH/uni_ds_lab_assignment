@@ -37,8 +37,8 @@ inline void parse_date(const std::string& date_str, struct tm& tm) {
     }
 }
 
-const std::string unimportant_keywords[30] = {"the", "to", "of", "and", "a", "in", "that", "s", "is", "for", "on", "it", "was", "with", "he", "as", "by", "are", "this", "have",
-"from", "t", "will", "about", "but", "be", "at", "an"};
+const std::string unimportant_keywords[51] = {"the", "to", "of", "and", "a", "in", "that", "s", "is", "for", "on", "it", "was", "with", "he", "as", "by", "are", "this", "have",
+"from", "t", "will", "about", "but", "be", "at", "an", "i", "me", "my", "mine", "he", "his", "him", "she", "her", "hers", "they", "them", "theirs", "it", "its", "we", "ours", "us", "our", "you", "yours", "their", "your"};
 
 struct GenreIndex {
     std::string genre_name;
@@ -87,6 +87,9 @@ class NewsContainer {
 
         /// load from the file
         void load_from_file(const std::string& filepath, bool are_true_news);
+
+        /// load from the file by continuously checking whether if the file path is correct or not
+        void load_from_file(bool are_true_news);
 
         /// display the keywords inside
         void display_keyword_demographics();
@@ -343,6 +346,24 @@ inline void NewsContainer::write_to_file(const std::string& file_path) {
     }
     output_file.close();
 }
+
+inline void NewsContainer::load_from_file(bool are_true_news) {
+    std::string file_path;
+    while (true) {
+        std::cin >> file_path;
+        std::ifstream target_file(file_path);
+
+        if (!target_file.is_open()) {
+            std::cerr << "Error opening file!" << std::endl;
+        }else {
+            target_file.close();
+            break;
+        }
+    }
+
+    load_from_file(file_path, are_true_news);
+}
+
 
 inline void NewsContainer::load_from_file(const std::string& filepath, bool are_true_news) {
     std::ifstream target_file(filepath);

@@ -14,11 +14,11 @@
 
 
 namespace linked_list_implementation {
-    void sort_with_bubble_sort(CRITERIA criteria) {
+    inline void sort_with_bubble_sort_benchmark(std::string false_file_path, std::string true_file_path, CRITERIA criteria) {
         NewsLinkedList news_container = NewsLinkedList();
         std::cout << "Loading from file..." << std::endl;
-        news_container.load_from_file("../data/cleaned/fake.csv", false);
-        news_container.load_from_file("../data/cleaned/true.csv", true);
+        news_container.load_from_file(false_file_path , false);
+        news_container.load_from_file(true_file_path, true);
         std::cout << "Starting Bubble Sort" << endl;
         auto now = std::chrono::system_clock::now();
         bubble_sort(news_container, criteria);
@@ -28,11 +28,11 @@ namespace linked_list_implementation {
         std::cout << "Bubble Sort took: " << elapsed_seconds.count() << "s" << std::endl;
     }
 
-    void sort_with_selection_sort(CRITERIA criteria) {
+    inline void sort_with_selection_sort_benchmark(std::string false_file_path, std::string true_file_path, CRITERIA criteria) {
         NewsLinkedList news_container = NewsLinkedList();
         std::cout << "Loading from file..." << std::endl;
-        news_container.load_from_file("../data/cleaned/fake.csv", false);
-        news_container.load_from_file("../data/cleaned/true.csv", true);
+        news_container.load_from_file(false_file_path , false);
+        news_container.load_from_file(true_file_path, true);
         std::cout << "Starting Selection Sort" << endl;
         auto now = std::chrono::system_clock::now();
         selection_sort(news_container, criteria);
@@ -42,11 +42,11 @@ namespace linked_list_implementation {
         std::cout << "Selection Sort took: " << elapsed_seconds.count() << "s" << std::endl;
     }
 
-    void sort_with_quick_sort(CRITERIA criteria) {
+    inline void sort_with_quick_sort_benchmark(std::string false_file_path, std::string true_file_path, CRITERIA criteria) {
         NewsLinkedList news_container = NewsLinkedList();
         std::cout << "Loading from file..." << std::endl;
-        news_container.load_from_file("../data/cleaned/fake.csv", false);
-        news_container.load_from_file("../data/cleaned/true.csv", true);
+        news_container.load_from_file(false_file_path , false);
+        news_container.load_from_file(true_file_path, true);
         std::cout << "Starting Quick Sort" << endl;
         auto now = std::chrono::system_clock::now();
         quick_sort(news_container,criteria);
@@ -56,11 +56,11 @@ namespace linked_list_implementation {
         std::cout << "Quick Sort took: " << elapsed_seconds.count() << "s" << std::endl;
     }
 
-    void sort_with_counting_sort(CRITERIA criteria) {
+    inline void sort_with_counting_sort_benchmark(std::string false_file_path, std::string true_file_path, CRITERIA criteria) {
         NewsLinkedList news_container = NewsLinkedList();
         std::cout << "Loading from file..." << std::endl;
-        news_container.load_from_file("../data/cleaned/fake.csv", false);
-        news_container.load_from_file("../data/cleaned/true.csv", true);
+        news_container.load_from_file(false_file_path , false);
+        news_container.load_from_file(true_file_path, true);
         std::cout << "Starting Counting Sort" << endl;
         auto now = std::chrono::system_clock::now();
         counting_sort(news_container, criteria);
@@ -70,11 +70,11 @@ namespace linked_list_implementation {
         std::cout << "Counting Sort took: " << elapsed_seconds.count() << "s" << std::endl;
     }
 
-    void sort_with_merge_sort(CRITERIA criteria) {
+    inline void sort_with_merge_sort_benchmark(std::string false_file_path, std::string true_file_path, CRITERIA criteria) {
         NewsLinkedList news_container = NewsLinkedList();
         std::cout << "Loading from file..." << std::endl;
-        news_container.load_from_file("../data/cleaned/fake.csv", false);
-        news_container.load_from_file("../data/cleaned/true.csv", true);
+        news_container.load_from_file(false_file_path , false);
+        news_container.load_from_file(true_file_path, true);
         std::cout << "Starting Merge Sort" << endl;
         auto now = std::chrono::system_clock::now();
         merge_sort(news_container,criteria);
@@ -84,11 +84,11 @@ namespace linked_list_implementation {
         std::cout << "Merge Sort took: " << elapsed_seconds.count() << "s" << std::endl;
     }
 
-    void sort_with_insertion_sort(CRITERIA criteria) {
+    inline void sort_with_insertion_sort_benchmark(std::string false_file_path, std::string true_file_path, CRITERIA criteria) {
         NewsLinkedList news_container = NewsLinkedList();
         std::cout << "Loading from file..." << std::endl;
-        news_container.load_from_file("../data/cleaned/fake.csv", false);
-        news_container.load_from_file("../data/cleaned/true.csv", true);
+        news_container.load_from_file(false_file_path , false);
+        news_container.load_from_file(true_file_path, true);
         std::cout << "Starting Insertion Sort" << endl;
         auto now = std::chrono::system_clock::now();
         insertion_sort(news_container, criteria);
@@ -98,11 +98,11 @@ namespace linked_list_implementation {
         std::cout << "Insertion Sort took: " << elapsed_seconds.count() << "s" << std::endl;
     }
 
-    void sort_with_bucket_sort(CRITERIA criteria) {
+    inline void sort_with_bucket_sort_benchmark(std::string false_file_path, std::string true_file_path, CRITERIA criteria) {
         NewsLinkedList news_container = NewsLinkedList();
         std::cout << "Loading from file..." << std::endl;
-        news_container.load_from_file("../data/cleaned/fake.csv", false);
-        news_container.load_from_file("../data/cleaned/true.csv", true);
+        news_container.load_from_file(false_file_path , false);
+        news_container.load_from_file(true_file_path, true);
         std::cout << "Starting Bucket Sort" << endl;
         auto now = std::chrono::system_clock::now();
         bucket_sort(news_container,criteria);
@@ -112,11 +112,11 @@ namespace linked_list_implementation {
         std::cout << "Bucket Sort took: " << elapsed_seconds.count() << "s" << std::endl;
     }
 
-    void sort_with_heap_sort(CRITERIA criteria) {
+    inline void sort_with_heap_sort_benchmark(std::string false_file_path, std::string true_file_path, CRITERIA criteria) {
         NewsLinkedList news_container;
         std::cout << "Loading from file..." << std::endl;
-        news_container.load_from_file("../data/cleaned/fake.csv", false);
-        news_container.load_from_file("../data/cleaned/true.csv", true);
+        news_container.load_from_file(false_file_path , false);
+        news_container.load_from_file(true_file_path, true);
         std::cout << "Starting Heap Sort" << std::endl;
 
         auto now = std::chrono::system_clock::now();
@@ -128,14 +128,13 @@ namespace linked_list_implementation {
         std::cout << "Heap Sort took: " << elapsed_seconds.count() << "s" << std::endl;
     }
 
-    void report_fake_political_news_in_each_month_in_2016() {
+    inline void report_fake_political_news_in_each_month_in_2016_two_pointer_search_benchmark(std::string false_file_path, std::string true_file_path) {
         auto* news_container = new NewsLinkedList();
         std::cout << "Loading from file..." << std::endl;
-        news_container->load_from_file("../data/cleaned/fake.csv", false);
-        news_container->load_from_file("../data/cleaned/true.csv", true);
+        news_container->load_from_file(false_file_path, false);
+        news_container->load_from_file(true_file_path, true);
 
         auto now = std::chrono::system_clock::now();
-
         std::cout << "Getting all news in 2016..." << std::endl;
         quick_sort(*news_container, CRITERIA::PUBLICATION_DATE);
         NewsLinkedList news_2016_array = *dynamic_cast<NewsLinkedList*>(two_pointer_search(news_container, SEARCH_CRITERIA::SEARCH_PUBLICATION_YEAR, "2016"));
@@ -182,11 +181,11 @@ namespace linked_list_implementation {
         std::cout << "The entire process took: " << elapsed_seconds.count() << "s" << std::endl;
     }
 
-    void report_fake_political_news_in_each_month_in_2016_linear() {
+    inline void report_fake_political_news_in_each_month_in_2016_linear_benchmark(std::string false_file_path, std::string true_file_path) {
         auto* news_container = new NewsLinkedList();
         std::cout << "Loading from file..." << std::endl;
-        news_container->load_from_file("../data/cleaned/fake.csv", false);
-        news_container->load_from_file("../data/cleaned/true.csv", true);
+        news_container->load_from_file(false_file_path, false);
+        news_container->load_from_file(true_file_path, true);
 
         auto now = std::chrono::system_clock::now();
 
@@ -231,11 +230,11 @@ namespace linked_list_implementation {
         std::cout << "The entire process took: " << elapsed_seconds.count() << "s" << std::endl;
     }
 
-    void report_fake_political_news_in_each_month_in_2016_binary() {
+    inline void report_fake_political_news_in_each_month_in_2016_binary_benchmark(std::string false_file_path, std::string true_file_path) {
         auto* news_container = new NewsLinkedList();
         std::cout << "Loading from file..." << std::endl;
-        news_container->load_from_file("../data/cleaned/fake.csv", false);
-        news_container->load_from_file("../data/cleaned/true.csv", true);
+        news_container->load_from_file(false_file_path, false);
+        news_container->load_from_file(true_file_path, true);
 
         auto now = std::chrono::system_clock::now();
 
@@ -285,11 +284,11 @@ namespace linked_list_implementation {
         std::cout << "The entire process took: " << elapsed_seconds.count() << "s" << std::endl;
     }
 
-    void report_fake_political_news_in_each_month_in_2016_exponential() {
+    inline void report_fake_political_news_in_each_month_in_2016_exponential_benchmark(std::string false_file_path, std::string true_file_path) {
         auto* news_container = new NewsLinkedList();
         std::cout << "Loading from file..." << std::endl;
-        news_container->load_from_file("../data/cleaned/fake.csv", false);
-        news_container->load_from_file("../data/cleaned/true.csv", true);
+        news_container->load_from_file(false_file_path, false);
+        news_container->load_from_file(true_file_path, true);
 
         auto now = std::chrono::system_clock::now();
 
