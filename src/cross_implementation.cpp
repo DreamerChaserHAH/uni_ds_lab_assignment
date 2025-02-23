@@ -1,5 +1,6 @@
 #include <iostream>
 #include <chrono>
+#include <limits> // For input validation
 #include "../include/algorithms/sort.hpp"
 #include "../include/algorithms/search.hpp"
 #include "../include/container/array.hpp"
@@ -33,10 +34,20 @@ private:
 
     CRITERIA select_sort_criteria() {
         int criteriaChoice;
-        cout << "\n=== Sorting Criteria ===\n";
-        cout << "1. Genre\n2. Publication Date\n3. Is True News\n4. Publication Year\n5. Publication Month\n";
-        cout << "Enter your choice: ";
-        cin >> criteriaChoice;
+        while (true) {
+            cout << "\n=== Sorting Criteria ===\n";
+            cout << "1. Genre\n2. Publication Date\n3. Is True News\n4. Publication Year\n5. Publication Month\n";
+            cout << "Enter your choice: ";
+            cin >> criteriaChoice;
+
+            if (cin.fail() || criteriaChoice < 1 || criteriaChoice > 5) {
+                cout << "Invalid input! Please enter a number between 1 and 5.\n";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            } else {
+                break;
+            }
+        }
 
         switch (criteriaChoice) {
             case 1: return GENRE;
@@ -44,26 +55,34 @@ private:
             case 3: return IS_TRUE_NEWS;
             case 4: return PUBLICATION_YEAR;
             case 5: return PUBLICATION_MONTH;
-            default: cout << "Invalid choice. Defaulting to Publication Date.\n";
-                     return PUBLICATION_DATE;
         }
+        return PUBLICATION_DATE; // Default case (should never reach)
     }
 
     SEARCH_CRITERIA select_search_criteria() {
         int criteriaChoice;
-        cout << "\n=== Searching Criteria ===\n";
-        cout << "1. Publication Year\n2. Publication Month\n3. Genre\n4. True/False News\n";
-        cout << "Enter your choice: ";
-        cin >> criteriaChoice;
+        while (true) {
+            cout << "\n=== Searching Criteria ===\n";
+            cout << "1. Publication Year\n2. Publication Month\n3. Genre\n4. True/False News\n";
+            cout << "Enter your choice: ";
+            cin >> criteriaChoice;
+
+            if (cin.fail() || criteriaChoice < 1 || criteriaChoice > 4) {
+                cout << "Invalid input! Please enter a number between 1 and 4.\n";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            } else {
+                break;
+            }
+        }
 
         switch (criteriaChoice) {
             case 1: return SEARCH_PUBLICATION_YEAR;
             case 2: return SEARCH_PUBLICATION_MONTH;
             case 3: return SEARCH_PUBLICATION_GENRE;
             case 4: return SEARCH_TRUE_OR_FALSE_NEWS;
-            default: cout << "Invalid choice. Defaulting to Publication Year.\n";
-                     return SEARCH_PUBLICATION_YEAR;
         }
+        return SEARCH_PUBLICATION_YEAR; // Default case
     }
 
     void execute_sort(void (*sort_function)(NewsContainer&, CRITERIA), string sort_name) {
@@ -89,17 +108,16 @@ private:
 
         cout << "Starting " << search_name << " for \"" << search_value << "\"...\n";
         auto start_time = chrono::system_clock::now();
-        news_container = search_function(news_container, selectedCriteria, search_value);
+        NewsContainer* result = search_function(news_container, selectedCriteria, search_value);
         auto end_time = chrono::system_clock::now();
         chrono::duration<double> elapsed_seconds = end_time - start_time;
 
-        if (news_container && news_container->size > 0) {
-            news_container->display();
+        if (result && result->size > 0) {
+            result->display();
         } else {
-            cout << "No results found.\n";
+            cout << "Invalid search value or no results found.\nReturning to main menu...\n";
         }
         cout << search_name << " took: " << elapsed_seconds.count() << "s" << endl;
-        cout << "Returning to main menu...\n";
     }
 
     void display_data() {
@@ -130,13 +148,15 @@ public:
             cout << "Enter choice: ";
             cin >> choice;
 
-            if (choice == 3) {
-                exitProgram();
+            if (cin.fail() || (choice != 1 && choice != 2 && choice != 3)) {
+                cout << "Invalid input! Please enter 1, 2, or 3.\n";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                continue;
             }
 
-            if (choice != 1 && choice != 2) {
-                cout << "Invalid choice. Please enter 1 or 2.\n";
-                continue;
+            if (choice == 3) {
+                exitProgram();
             }
 
             useArray = (choice == 1);
@@ -154,6 +174,13 @@ public:
                 cout << "Enter your choice: ";
                 cin >> subChoice;
 
+                if (cin.fail() || subChoice < 1 || subChoice > 6) {
+                    cout << "Invalid input! Please enter a valid option.\n";
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    continue;
+                }
+
                 if (subChoice == 1) {
                     int sortChoice;
                     do {
@@ -162,6 +189,13 @@ public:
                         cout << "5. Heap Sort\n6. Counting Sort\n7. Bucket Sort\n8. Insertion Sort\n9. Back to Main Menu\n";
                         cout << "Enter your choice: ";
                         cin >> sortChoice;
+
+                        if (cin.fail() || sortChoice < 1 || sortChoice > 9) {
+                            cout << "Invalid input! Please enter a valid option.\n";
+                            cin.clear();
+                            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            continue;
+                        }
 
                         switch (sortChoice) {
                             case 1: execute_sort(bubble_sort, "Bubble Sort"); break;
@@ -172,33 +206,11 @@ public:
                             case 6: execute_sort(counting_sort, "Counting Sort"); break;
                             case 7: execute_sort(bucket_sort, "Bucket Sort"); break;
                             case 8: execute_sort(insertion_sort, "Insertion Sort"); break;
-                            case 9: cout << "Returning to Main Menu...\n"; break;
-                            default: cout << "Invalid choice. Try again.\n";
                         }
                     } while (sortChoice != 9);
                 }
                 else if (subChoice == 2) {
-                    int searchChoice;
-                    do {
-                        cout << "\n=== Searching Algorithms ===\n";
-                        cout << "1. Linear Search\n2. Binary Search\n3. Interpolation Search\n4. Jump Search\n";
-                        cout << "5. Hash Table\n6. Exponential Search\n7. Sublist Search\n8. Fibonacci Search\n9. Back to Main Menu\n";
-                        cout << "Enter your choice: ";
-                        cin >> searchChoice;
-
-                        switch (searchChoice) {
-                            case 1: execute_search(linear_search, "Linear Search"); break;
-                            case 2: execute_search(binary_search, "Binary Search"); break;
-                            case 3: /* Implement Interpolation Search */ break;
-                            case 4: execute_search(two_pointer_search, "Jump Search"); break;
-                            case 5: /* Implement Hash Table Search */ break;
-                            case 6: execute_search(exponential_search, "Exponential Search"); break;
-                            case 7: break;
-                            case 8:  break;
-                            case 9: cout << "Returning to Main Menu...\n"; break;
-                            default: cout << "Invalid choice. Try again.\n";
-                        }
-                    } while (searchChoice != 9);
+                    execute_search(linear_search, "Linear Search");
                 }
                 else if (subChoice == 3) {
                     display_data();
