@@ -236,7 +236,6 @@ inline void quick_sort(NewsContainer& news_container, CRITERIA criteria) {
             break;
         }
 
-        std::cout << left_pointer_index << std::endl;
         news_container.swap_news(left_pointer_index, right_pointer_index);
     }while (true);
 
@@ -266,7 +265,7 @@ inline void counting_sort(NewsContainer& news_container, CRITERIA criteria) {
     }else if (criteria == CRITERIA::IS_TRUE_NEWS) {
         max_value = 1;
     }else {
-        max_value = 4;
+        max_value = 10000;
     }
 
     /// # Step 2

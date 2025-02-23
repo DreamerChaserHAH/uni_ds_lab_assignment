@@ -8,7 +8,7 @@
 bool News::is_greater_than(News& news, CRITERIA criteria, NewsContainer* news_container) {
     switch (criteria) {
         case GENRE:
-            return news_container->get_genre_critiera_value(this) > news_container->get_genre_critiera_value(&news);
+            return news_container->get_genre_criteria_value(this) > news_container->get_genre_criteria_value(&news);
         case PUBLICATION_DATE:
             return (get_year() > news.get_year()) ? true: (get_year() == news.get_year()? get_date_in_year() > news.get_date_in_year(): false);
         case IS_TRUE_NEWS:
@@ -21,7 +21,7 @@ bool News::is_greater_than(News& news, CRITERIA criteria, NewsContainer* news_co
 bool News::is_lower_than(News &news, CRITERIA criteria, NewsContainer *news_container) {
     switch (criteria) {
         case GENRE:
-            return news_container->get_genre_critiera_value(this) < news_container->get_genre_critiera_value(&news);
+            return news_container->get_genre_criteria_value(this) < news_container->get_genre_criteria_value(&news);
         case PUBLICATION_DATE:
             return (get_year() < news.get_year()) ? true: (get_year() == news.get_year()? get_date_in_year() < news.get_date_in_year(): false);
         case IS_TRUE_NEWS:
@@ -34,7 +34,7 @@ bool News::is_lower_than(News &news, CRITERIA criteria, NewsContainer *news_cont
 bool News::is_equal_or_greater_than(News &news, CRITERIA criteria, NewsContainer *news_container) {
     switch (criteria) {
         case GENRE:
-            return news_container->get_genre_critiera_value(this) >= news_container->get_genre_critiera_value(&news);
+            return news_container->get_genre_criteria_value(this) >= news_container->get_genre_criteria_value(&news);
         case PUBLICATION_DATE:
             return (get_year() > news.get_year()) ? true: (get_year() == news.get_year() ? get_date_in_year() >= news.get_date_in_year(): false);
         case IS_TRUE_NEWS:
@@ -47,7 +47,7 @@ bool News::is_equal_or_greater_than(News &news, CRITERIA criteria, NewsContainer
 bool News::is_equal_or_lower_than(News &news, CRITERIA criteria, NewsContainer *news_container) {
     switch (criteria) {
         case GENRE:
-            return news_container->get_genre_critiera_value(this) <= news_container->get_genre_critiera_value(&news);
+            return news_container->get_genre_criteria_value(this) <= news_container->get_genre_criteria_value(&news);
         case PUBLICATION_DATE:
             return (get_year() < news.get_year()) ? true: (get_year() == news.get_year() ? get_date_in_year() <= news.get_date_in_year(): false);
         case IS_TRUE_NEWS:
