@@ -159,9 +159,6 @@ void clean_csv(std::string input_file_path, std::string output_file_path) {
         date = formatted_date.str();
         // Write cleaned data to new CSV file
         output_file << "\"" << title << "\",\"" << text << "\",\"" << subject << "\",\"" << date << "\"\n";
-
-        // Print to console (optional)
-        //std::cout << newTitle << "\t" << newText << "\t" << subject << "\t" << newDate << std::endl;
     }
 
     // Close files
