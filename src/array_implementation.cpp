@@ -227,8 +227,7 @@ void report_fake_political_news_in_each_month_in_2016_binary() {
     std::cout << "Reloading 2016 Political News array" << std::endl;
     // Step 4: Ensure the container is sorted by month
     merge_sort(news_2016_political_array, CRITERIA::PUBLICATION_DATE);
-
-
+    
     int percentage_per_month[12] = {0};
     for (int i = 0; i < 12; i++) {
         std::string month = std::to_string(i + 1);
@@ -256,8 +255,103 @@ void report_fake_political_news_in_each_month_in_2016_binary() {
 
 }
 
+void report_fake_political_news_in_each_month_in_2016_jump() {
+    NewsArray news_container = NewsArray();
+    cout << "Loading from file..." << endl;
+    news_container.load_from_file("../data/cleaned/fake.csv", false);
+    news_container.load_from_file("../data/cleaned/true.csv", true);
 
+    auto now = chrono::system_clock::now();
 
+    cout << "Filtering all news in 2016 using Jump Search..." << endl;
+    merge_sort(news_container, CRITERIA::PUBLICATION_DATE);
+    NewsArray news_2016_array = *dynamic_cast<NewsArray*>(jump_search(&news_container, SEARCH_PUBLICATION_YEAR, "2016"));
+
+    cout << "Filtering Political News in 2016 using Jump Search..." << endl;
+    merge_sort(news_2016_array, CRITERIA::GENRE);
+    NewsArray news_2016_political_array = *dynamic_cast<NewsArray*>(jump_search(&news_2016_array, SEARCH_PUBLICATION_GENRE, "POLITICS"));
+
+    cout << "Filtering Fake News in 2016 Political News using Jump Search..." << endl;
+    counting_sort(news_2016_political_array, CRITERIA::IS_TRUE_NEWS);
+    NewsArray fake_2016_political_news_container = *dynamic_cast<NewsArray*>(jump_search(&news_2016_political_array, SEARCH_TRUE_OR_FALSE_NEWS, "false"));
+
+    cout << "Reloading 2016 Political News array sorted by date..." << endl;
+    merge_sort(news_2016_political_array, CRITERIA::PUBLICATION_DATE);
+
+    int percentage_per_month[12] = {0};
+    for (int i = 0; i < 12; i++) {
+        string month = to_string(i + 1);
+        NewsArray total_news_in_month = *dynamic_cast<NewsArray*>(jump_search(&news_2016_political_array, SEARCH_PUBLICATION_MONTH, month));
+        NewsArray fake_news_in_month = *dynamic_cast<NewsArray*>(jump_search(&fake_2016_political_news_container, SEARCH_PUBLICATION_MONTH, month));
+        if (total_news_in_month.size > 0)
+            percentage_per_month[i] = (fake_news_in_month.size / (double)total_news_in_month.size) * 100;
+        else
+            percentage_per_month[i] = 0;
+    }
+
+    // Use a loop to display the month percentages.
+    const char* months[12] = {"January", "February", "March", "April", "May", "June",
+                              "July", "August", "September", "October", "November", "December"};
+    cout << "Percentage of Fake Political News in 2016 (Jump Search):" << endl << endl;
+    for (int i = 0; i < 12; i++) {
+        cout << months[i] << " | "
+             << setfill('*') << setw(percentage_per_month[i]) << " "
+             << percentage_per_month[i] << "%" << endl;
+    }
+
+    auto end_time = chrono::system_clock::now();
+    chrono::duration<double> elapsed_seconds = end_time - now;
+    cout << "Jump Search process took: " << elapsed_seconds.count() << "s" << endl;
+}
+
+void report_fake_political_news_in_each_month_in_2016_exponential() {
+    NewsArray news_container = NewsArray();
+    cout << "Loading from file..." << endl;
+    news_container.load_from_file("../data/cleaned/fake.csv", false);
+    news_container.load_from_file("../data/cleaned/true.csv", true);
+
+    auto now = chrono::system_clock::now();
+
+    cout << "Filtering all news in 2016 using Exponential Search..." << endl;
+    // Ensure the container is sorted by publication date.
+    merge_sort(news_container, CRITERIA::PUBLICATION_DATE);
+    NewsArray news_2016_array = *dynamic_cast<NewsArray*>(exponential_search(&news_container, SEARCH_PUBLICATION_YEAR, "2016"));
+
+    cout << "Filtering Political News in 2016 using Exponential Search..." << endl;
+    merge_sort(news_2016_array, CRITERIA::GENRE);
+    NewsArray news_2016_political_array = *dynamic_cast<NewsArray*>(exponential_search(&news_2016_array, SEARCH_PUBLICATION_GENRE, "POLITICS"));
+
+    cout << "Filtering Fake News in 2016 Political News using Exponential Search..." << endl;
+    counting_sort(news_2016_political_array, CRITERIA::IS_TRUE_NEWS);
+    NewsArray fake_2016_political_news_container = *dynamic_cast<NewsArray*>(exponential_search(&news_2016_political_array, SEARCH_TRUE_OR_FALSE_NEWS, "false"));
+
+    cout << "Reloading 2016 Political News array sorted by date..." << endl;
+    merge_sort(news_2016_political_array, CRITERIA::PUBLICATION_DATE);
+
+    int percentage_per_month[12] = {0};
+    for (int i = 0; i < 12; i++) {
+        string month = to_string(i + 1);
+        NewsArray total_news_in_month = *dynamic_cast<NewsArray*>(exponential_search(&news_2016_political_array, SEARCH_PUBLICATION_MONTH, month));
+        NewsArray fake_news_in_month = *dynamic_cast<NewsArray*>(exponential_search(&fake_2016_political_news_container, SEARCH_PUBLICATION_MONTH, month));
+        if (total_news_in_month.size > 0)
+            percentage_per_month[i] = (fake_news_in_month.size / (double)total_news_in_month.size) * 100;
+        else
+            percentage_per_month[i] = 0;
+    }
+
+    const char* months[12] = {"January", "February", "March", "April", "May", "June",
+                              "July", "August", "September", "October", "November", "December"};
+    cout << "Percentage of Fake Political News in 2016 (Exponential Search):" << endl << endl;
+    for (int i = 0; i < 12; i++) {
+        cout << months[i] << " | "
+             << setfill('*') << setw(percentage_per_month[i]) << " "
+             << percentage_per_month[i] << "%" << endl;
+    }
+
+    auto end_time = chrono::system_clock::now();
+    chrono::duration<double> elapsed_seconds = end_time - now;
+    cout << "Exponential Search process took: " << elapsed_seconds.count() << "s" << endl;
+}
 
 int main() {
 
@@ -274,7 +368,9 @@ int main() {
     //sort_with_heap_sort(CRITERIA::PUBLICATION_DATE);
 
     //report_fake_political_news_in_each_month_in_2016();
-    report_fake_political_news_in_each_month_in_2016_binary();
+    //report_fake_political_news_in_each_month_in_2016_binary();
+    //report_fake_political_news_in_each_month_in_2016_jump();
+    //report_fake_political_news_in_each_month_in_2016_exponential();
 
     std::cout << "Hello from Array List Implementation File" << std::endl;
 }

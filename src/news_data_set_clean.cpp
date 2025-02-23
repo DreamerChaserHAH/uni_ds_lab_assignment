@@ -156,7 +156,7 @@ void clean_csv(std::string input_file_path, std::string output_file_path) {
         }
         previous_date = date;
         std::ostringstream formatted_date;
-        formatted_date << std::put_time(&tm, "%B %d, %Y");S
+        formatted_date << std::put_time(&tm, "%B %d, %Y");
         date = formatted_date.str();
         // Write cleaned data to new CSV file
         output_file << "\"" << title << "\",\"" << text << "\",\"" << subject << "\",\"" << date << "\"\n";
