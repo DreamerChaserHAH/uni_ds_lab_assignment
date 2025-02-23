@@ -351,6 +351,25 @@ void report_fake_political_news_in_each_month_in_2016_linear() {
     std::cout << "The entire process took: " << elapsed_seconds.count() << "s" << std::endl;
 }
 
+void report_keyword_demographics_for_fake_government_news() {
+    auto* news_container = new NewsArray();
+    std::cout << "Loading from file..." << std::endl;
+    news_container->load_from_file("../data/cleaned/fake.csv", false);
+    news_container->load_from_file("../data/cleaned/true.csv", true);
+
+    auto now = std::chrono::system_clock::now();
+    std::cout << "Finding False News" << std::endl;
+    NewsArray false_news = *dynamic_cast<NewsArray*>(linear_search(news_container, SEARCH_CRITERIA::SEARCH_TRUE_OR_FALSE_NEWS, "false"));
+    std::cout << "There are a total of " << false_news.size << " false news" << std::endl;
+
+    std::cout << "Finding False Government News" << std::endl;
+    NewsArray false_government_news = *dynamic_cast<NewsArray*>(linear_search(&false_news, SEARCH_CRITERIA::SEARCH_PUBLICATION_GENRE, "government news"));
+    std::cout << "There are a total of " << false_government_news.size << " false government news" << std::endl;
+
+    std::cout << "Loading Keywords" << std::endl;
+    false_government_news.display_keyword_demographics();
+}
+
 int main() {
 
     //sort_with_bubble_sort(CRITERIA::PUBLICATION_MONTH);
@@ -368,7 +387,9 @@ int main() {
     //report_fake_political_news_in_each_month_in_2016();
     //report_fake_political_news_in_each_month_in_2016_binary();
     //report_fake_political_news_in_each_month_in_2016_linear();
-    report_fake_political_news_in_each_month_in_2016_exponential();
+    //report_fake_political_news_in_each_month_in_2016_exponential();
+
+    report_keyword_demographics_for_fake_government_news();
 
     std::cout << "Hello from Array List Implementation File" << std::endl;
 }

@@ -46,10 +46,8 @@ class NewsContainer{
     int size;
 
     GenreIndex* genre_index;
-    KeywordIndex* keyword_index;
 
     int distinct_number_of_genres;
-    int distinct_number_of_keyword;
 
     NewsContainer(): size(0), head(nullptr), max_date(0), genre_index(new GenreIndex[30]) {}
 
@@ -141,6 +139,75 @@ class NewsContainer{
                 return news->get_month();
             default:
                 return 0;
+        }
+    }
+
+    void display_keyword_demographics() {
+        int distinct_number_of_keywords = 0;
+        KeywordIndex* keyword_index = new KeywordIndex[10000];
+
+        bool reached_quarter = false;
+        bool reached_halved = false;
+        bool reached_three_quarters = false;
+        for (int i = 0; i < size; i++) {
+            News* news = get_at_location(i);
+            std::string content = news->content;
+            std::istringstream ss(content);
+            std::string word;
+
+            if (!reached_quarter && i >= size / 4) {
+                std::cout << "25% of the data has been processed" << std::endl;
+                reached_quarter = true;
+            }
+
+            if (!reached_halved && i >= size / 2) {
+                std::cout << "50% of the data has been processed" << std::endl;
+                reached_halved = true;
+            }
+
+            if (!reached_three_quarters && i >= size * 3 / 4) {
+                std::cout << "75% of the data has been processed" << std::endl;
+                reached_three_quarters = true;
+            }
+
+            while (ss >> word) {
+
+                //turn word into lowercase
+                std::transform(word.begin(), word.end(), word.begin(), ::tolower);
+
+                bool keyword_exists = false;
+                for (int j = 0; j < distinct_number_of_keywords; j++) {
+                    if (keyword_index[j].keyword == word) {
+                        keyword_index[j].count++;
+                        keyword_exists = true;
+                        break;
+                    }
+                }
+
+                if (!keyword_exists) {
+                    keyword_index[distinct_number_of_keywords].keyword = word;
+                    keyword_index[distinct_number_of_keywords].count = 1;
+                    distinct_number_of_keywords++;
+                }
+            }
+        }
+
+        std::cout << "Sorting Keywords Descending" << std::endl;
+        //now sort the keyword demographics descending
+        for (int i = 0; i < distinct_number_of_keywords; i++) {
+            for (int j = i + 1; j < distinct_number_of_keywords; j++) {
+                if (keyword_index[i].count < keyword_index[j].count) {
+                    KeywordIndex temp = keyword_index[i];
+                    keyword_index[i] = keyword_index[j];
+                    keyword_index[j] = temp;
+                }
+            }
+        }
+
+        //now print and display the keyword demographics
+        std::cout << "Most Common 20 Keywords Demographics" << std::endl;
+        for (int i = 0; i < 20; i++) {
+            std::cout << keyword_index[i].keyword << " : " << keyword_index[i].count << std::endl;
         }
     }
 

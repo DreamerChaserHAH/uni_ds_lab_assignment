@@ -17,15 +17,13 @@ class NewsLinkedList : public NewsContainer{
 private:
     NewsNode* tail;
 
-    NewsLinkedList(NewsNode* head_pointer, NewsNode* tail_pointer, int size, time_t max_date, int distinct_number_of_genres, int distinct_number_of_keyword, GenreIndex* genre_index, KeywordIndex* keyword_index) {
+    NewsLinkedList(NewsNode* head_pointer, NewsNode* tail_pointer, int size, time_t max_date, int distinct_number_of_genres, GenreIndex* genre_index) {
         this->head = head_pointer;
         this->size = size;
         this->tail = tail_pointer;
         this->max_date = max_date;
         this->distinct_number_of_genres = distinct_number_of_genres;
-        this->distinct_number_of_keyword = distinct_number_of_keyword;
         this->genre_index = genre_index;
-        this->keyword_index = keyword_index;
     }
 
 public:
@@ -271,7 +269,7 @@ public:
         if (current == nullptr) {
             return nullptr;
         }
-        return new NewsLinkedList(new_head, new_tail, size - mid_point - 1, max_date, distinct_number_of_genres, distinct_number_of_keyword, genre_index, keyword_index);
+        return new NewsLinkedList(new_head, new_tail, size - mid_point - 1, max_date, distinct_number_of_genres, genre_index);
     }
 
     void* allocate_empty_copy() override {

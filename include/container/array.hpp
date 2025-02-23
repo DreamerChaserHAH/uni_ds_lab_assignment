@@ -38,16 +38,14 @@ public:
         head_pointer = static_cast<News*>(head);
     }
 
-    NewsArray(News* head, int capacity, int size, time_t max_date, int distinct_number_of_genres, int distinct_number_of_keyword, GenreIndex* genre_index, KeywordIndex* keyword_index) {
+    NewsArray(News* head, int capacity, int size, time_t max_date, int distinct_number_of_genres, GenreIndex* genre_index) {
         this->head = head;
         this->capacity = capacity;
         this->size = size;
         head_pointer = static_cast<News*>(head);
         this->max_date = max_date;
         this->distinct_number_of_genres = distinct_number_of_genres;
-        this->distinct_number_of_keyword = distinct_number_of_keyword;
         this->genre_index = genre_index;
-        this->keyword_index = keyword_index;
     }
 
     ~NewsArray() override{
@@ -193,14 +191,14 @@ public:
         ///split the array to the left excluding the midpoint
         ///the return pointer must be related to the current array
 
-        return new NewsArray(static_cast<News*>(head), mid_point, mid_point, max_date, distinct_number_of_genres, distinct_number_of_keyword, genre_index, keyword_index);
+        return new NewsArray(static_cast<News*>(head), mid_point, mid_point, max_date, distinct_number_of_genres, genre_index);
     }
 
     void* split_right(int mid_point) override{
         //split the array to the right excluding the midpoint
         //the return pointer must be related to the current array
 
-        return new NewsArray(static_cast<News*>(head) + mid_point + 1, size - (mid_point + 1), size - (mid_point + 1), max_date, distinct_number_of_genres, distinct_number_of_keyword, genre_index, keyword_index);
+        return new NewsArray(static_cast<News*>(head) + mid_point + 1, size - (mid_point + 1), size - (mid_point + 1), max_date, distinct_number_of_genres, genre_index);
     }
 
     void* allocate_empty_copy() override {
