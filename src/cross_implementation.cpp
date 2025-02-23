@@ -10,14 +10,10 @@ using namespace std;
 
 class MenuSystem {
 private:
-    NewsContainer* news_container;
+    NewsContainer* news_container = nullptr;
     bool useArray;
 
     NewsContainer* load_news_data(bool useArray) {
-        if (news_container) {
-            delete news_container;
-        }
-
         if (useArray) {
             news_container = new NewsArray();
         } else {
@@ -120,8 +116,16 @@ private:
         cout << search_name << " took: " << elapsed_seconds.count() << "s" << endl;
     }
 
+    void display_number_of_articles() {
+        if (news_container != nullptr) {
+            news_container->display_total_number_of_articles();
+        } else {
+            cout << "No data available. Please load data first.\n";
+        }
+    }
+
     void display_data() {
-        if (news_container) {
+        if (news_container != nullptr) {
             cout << "Displaying News Data:\n";
             news_container->display();
         } else {
@@ -141,7 +145,7 @@ public:
         int choice;
 
         while (true) {
-            cout << "===== PERFORMANCE OF SEARCH AND SORT ALGORITHMS =====\n";
+            cout << "===== PERFORMANCE OF SEARCH AND SORT ALGORITHMS FOR ANALYZING NEWS ARTICLES =====\n";
             cout << "1. Array Implementation\n";
             cout << "2. Linked List Implementation\n";
             cout << "3. Exit\n";
@@ -168,9 +172,11 @@ public:
                 cout << "1. Sorting Algorithms\n";
                 cout << "2. Searching Algorithms\n";
                 cout << "3. Display Data\n";
-                cout << "4. Reload Data\n";
-                cout << "5. Back to Implementation Selection\n";
-                cout << "6. Exit\n";
+                cout << "4. Display Number of Articles\n";
+                cout << "5. Questions\n";
+                cout << "6. Reload Data\n";
+                cout << "7. Back to Implementation Selection\n";
+                cout << "8. Exit\n";
                 cout << "Enter your choice: ";
                 cin >> subChoice;
 
@@ -216,12 +222,18 @@ public:
                     display_data();
                 }
                 else if (subChoice == 4) {
-                    load_news_data(useArray);
+                    display_number_of_articles();
                 }
                 else if (subChoice == 5) {
-                    break;
+
                 }
                 else if (subChoice == 6) {
+                    load_news_data(useArray);
+                }
+                else if (subChoice == 7) {
+                    break;
+                }
+                else if (subChoice == 8) {
                     exitProgram();
                 }
             }

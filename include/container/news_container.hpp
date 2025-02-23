@@ -13,6 +13,18 @@
 #include <algorithm>
 #include "container/news.hpp"
 
+inline std::string remove_whitespace(const std::string& input) {
+    std::string result = input;
+    result.erase(std::remove_if(result.begin(), result.end(), ::isspace), result.end());
+    return result;
+}
+
+inline std::string remove_special_characters(const std::string& input) {
+    std::string result = input;
+    result.erase(std::remove_if(result.begin(), result.end(), [](char c) { return !std::isalnum(c); }), result.end());
+    return result;
+}
+
 inline void parse_date(const std::string& date_str, struct tm& tm) {
     std::istringstream ss(date_str);
     ss >> std::get_time(&tm, "\"%b %d, %Y\"");
@@ -24,6 +36,9 @@ inline void parse_date(const std::string& date_str, struct tm& tm) {
         }
     }
 }
+
+const std::string unimportant_keywords[30] = {"the", "to", "of", "and", "a", "in", "that", "s", "is", "for", "on", "it", "was", "with", "he", "as", "by", "are", "this", "have",
+"from", "t", "will", "about", "but", "be", "at", "an"};
 
 struct GenreIndex {
     std::string genre_name;
@@ -78,6 +93,9 @@ class NewsContainer {
 
         /// print all the values out onto the console
         void display();
+
+        /// print the size of the container;
+        void display_total_number_of_articles();
 
         /// write the contents inside the container into a file for viewing purposes
         void write_to_file(const std::string& file_path);
@@ -229,7 +247,7 @@ inline long ::NewsContainer::get_criteria_value(News *news, CRITERIA critiera) {
 
 inline void NewsContainer::display_keyword_demographics() {
         int distinct_number_of_keywords = 0;
-        KeywordIndex* keyword_index = new KeywordIndex[10000];
+        KeywordIndex* keyword_index = new KeywordIndex[100000];
 
         bool reached_quarter = false;
         bool reached_halved = false;
@@ -259,6 +277,19 @@ inline void NewsContainer::display_keyword_demographics() {
 
                 //turn word into lowercase
                 std::transform(word.begin(), word.end(), word.begin(), ::tolower);
+                //remove spaces from before and after the word
+                word = remove_special_characters(remove_whitespace(word));
+
+                bool is_unimportant = false;
+                for (const std::string & unimportant_keyword : unimportant_keywords) {
+                    if (word == unimportant_keyword) {
+                        is_unimportant = true;
+                        break;
+                    }
+                }
+                if (is_unimportant) {
+                    continue;
+                }
 
                 bool keyword_exists = false;
                 for (int j = 0; j < distinct_number_of_keywords; j++) {
@@ -277,10 +308,12 @@ inline void NewsContainer::display_keyword_demographics() {
             }
         }
 
+        std::cout << "Keywords detected: " << distinct_number_of_keywords << std::endl;
         std::cout << "Sorting Keywords Descending" << std::endl;
         //now sort the keyword demographics descending
         for (int i = 0; i < distinct_number_of_keywords; i++) {
             for (int j = i + 1; j < distinct_number_of_keywords; j++) {
+                //check if it is the same as unimportant keywords if yes, then exit
                 if (keyword_index[i].count < keyword_index[j].count) {
                     KeywordIndex temp = keyword_index[i];
                     keyword_index[i] = keyword_index[j];
@@ -292,7 +325,7 @@ inline void NewsContainer::display_keyword_demographics() {
         //now print and display the keyword demographics
         std::cout << "Most Common 20 Keywords Demographics" << std::endl;
         for (int i = 0; i < 20; i++) {
-            std::cout << keyword_index[i].keyword << " : " << keyword_index[i].count << std::endl;
+            std::cout << i + 1 << ". "<< keyword_index[i].keyword << " : " << keyword_index[i].count << std::endl;
         }
 }
 
@@ -382,10 +415,14 @@ inline void NewsContainer::load_from_file(const std::string& filepath, bool are_
 
 inline void NewsContainer::display(){
     void* current = head;
-    std::cout  << "Publication Date" << std::setw(20) << "Title" << std::setw(200) << "Content" << std::setw(200) << "Genre" << std::setw(20) << std::endl;
     for (int i = 0; i < size; i++) {
         News* news = get_news_at_memory(current);
-        std::cout <<  "["  << ((news->is_true)? "TRUE NEWS] Genre: ": "FALSE NEWS] Genre:") << news->genre <<" "<< std::put_time(localtime(&news->publication_date), "%b %d, %Y") << std::setw(20) << " " << news->title << std::setw(200) << news->content << std::setw(20) << "\n";
+        std::cout <<  "["  << ((news->is_true)? "TRUE NEWS] ": "FALSE NEWS] ") << news->genre <<" "<< std::put_time(localtime(&news->publication_date), "%b %d, %Y") << std::setw(10) << " " << news->title << std::setw(200) << news->content << std::setw(20) << "\n";
         current = move_to_next(current);
     }
 }
+
+inline void NewsContainer::display_total_number_of_articles() {
+    std::cout << "Total Number of Articles: " << size << std::endl;
+}
+
