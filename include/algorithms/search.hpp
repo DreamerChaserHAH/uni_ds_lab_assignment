@@ -231,48 +231,49 @@ inline NewsContainer* binary_search(NewsContainer* news_container, SEARCH_CRITER
     return result;
 }
 
-inline NewsContainer* exponential_search(NewsContainer* original, SEARCH_CRITERIA criteria, std::string search_content) {
+inline NewsContainer* exponential_search(NewsContainer* news_container, SEARCH_CRITERIA criteria, std::string search_content) {
     // 1. Validate that the container is not null or empty.
-    if (original == nullptr || original->size == 0)
+    if (news_container == nullptr || news_container->size == 0)
         return nullptr;
 
     // 2. Convert the search_content string into a numeric or enumerated value
     //    depending on the chosen SEARCH_CRITERIA.
     long search_value = -1;
     CRITERIA main_criteria;
+    News example;
     switch (criteria) {
         case SEARCH_PUBLICATION_YEAR:
-            // Convert the year string to an integer.
-            search_value = std::stoi(search_content);
-            main_criteria = PUBLICATION_YEAR;
-            break;
+            // Convert year from string to integer.
+                search_value = std::stoi(search_content);
+        main_criteria = PUBLICATION_YEAR;
+        break;
         case SEARCH_PUBLICATION_MONTH:
-            // Convert the month string to an integer.
-            search_value = std::stoi(search_content);
-            main_criteria = PUBLICATION_MONTH;
-            break;
+            // Convert month from string to integer.
+                search_value = std::stoi(search_content);
+        main_criteria = PUBLICATION_MONTH;
+        break;
         case SEARCH_PUBLICATION_GENRE:
-            // Map the string "POLITICS" to NewsGenre::POLITICS; otherwise default to WORLD_NEWS.
-            search_value = (search_content == "POLITICS") ? NewsGenre::POLITICS : NewsGenre::WORLD_NEWS;
-            main_criteria = GENRE;
-            break;
+            example.genre = "\""+search_content+"\"";
+        search_value = news_container->get_criteria_value(&example, GENRE);
+        main_criteria = GENRE;
+        break;
         case SEARCH_TRUE_OR_FALSE_NEWS:
-            // Convert "true" to 1 and "false" to 0.
-            search_value = (search_content == "true") ? 1 : 0;
-            main_criteria = IS_TRUE_NEWS;
-            break;
+            // Convert "true" to 1, "false" to 0.
+                search_value = (search_content == "true") ? 1 : 0;
+        main_criteria = IS_TRUE_NEWS;
+        break;
         default:
             return nullptr;
     }
 
     // 3. Check the first element for a quick match.
-    int n = original->size;
-    News* first_news = original->get_at_location(0);
+    int n = news_container->size;
+    News* first_news = news_container->get_at_location(0);
     if (!first_news) {
         // If the first element is somehow invalid, return nullptr.
         return nullptr;
     }
-    if (get_criteria_value(first_news, main_criteria) == search_value) {
+    if (news_container->get_criteria_value(first_news, main_criteria) == search_value) {
         // The target was found at index 0; we will still proceed to find
         // any consecutive matching elements.
         // The next steps (binary search) will handle range detection.
@@ -282,7 +283,7 @@ inline NewsContainer* exponential_search(NewsContainer* original, SEARCH_CRITERI
     //    Start from index 1, double the index until we either exceed the array
     //    size or find a value >= the target.
     int bound = 1;
-    while (bound < n && get_criteria_value(original->get_at_location(bound), main_criteria) < search_value) {
+    while (bound < n && news_container->get_criteria_value(news_container->get_at_location(bound), main_criteria) < search_value) {
         bound *= 2;
     }
 
@@ -293,11 +294,11 @@ inline NewsContainer* exponential_search(NewsContainer* original, SEARCH_CRITERI
     int found_index = -1;
     while (left <= right) {
         int mid = left + (right - left) / 2;
-        News* mid_news = original->get_at_location(mid);
+        News* mid_news = news_container->get_at_location(mid);
         if (!mid_news) {
             break;
         }
-        long mid_val = get_criteria_value(mid_news, main_criteria);
+        long mid_val = news_container->get_criteria_value(mid_news, main_criteria);
 
         if (mid_val == search_value) {
             // We found an instance of the target.
@@ -320,8 +321,8 @@ inline NewsContainer* exponential_search(NewsContainer* original, SEARCH_CRITERI
     //    This handles the case where multiple items share the same search value.
     int start = found_index;
     while (start > 0) {
-        News* prev_news = original->get_at_location(start - 1);
-        if (prev_news && get_criteria_value(prev_news, main_criteria) == search_value) {
+        News* prev_news = news_container->get_at_location(start - 1);
+        if (prev_news && news_container->get_criteria_value(prev_news, main_criteria) == search_value) {
             start--;
         } else {
             break;
@@ -329,8 +330,8 @@ inline NewsContainer* exponential_search(NewsContainer* original, SEARCH_CRITERI
     }
     int end = found_index;
     while (end < n - 1) {
-        News* next_news = original->get_at_location(end + 1);
-        if (next_news && get_criteria_value(next_news, main_criteria) == search_value) {
+        News* next_news = news_container->get_at_location(end + 1);
+        if (next_news && news_container->get_criteria_value(next_news, main_criteria) == search_value) {
             end++;
         } else {
             break;
@@ -338,9 +339,9 @@ inline NewsContainer* exponential_search(NewsContainer* original, SEARCH_CRITERI
     }
 
     // 8. Create a new container to store all the matching items.
-    auto* result = static_cast<NewsContainer*>(original->allocate_empty());
+    auto* result = static_cast<NewsContainer*>(news_container->allocate_empty());
     for (int i = start; i <= end; i++) {
-        News* matching_news = original->get_at_location(i);
+        News* matching_news = news_container->get_at_location(i);
         if (matching_news) {
             result->insert(*matching_news);
         }
