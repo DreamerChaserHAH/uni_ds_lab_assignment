@@ -146,24 +146,23 @@ void quick_sort_and_two_pointer_search() {
 
 }
 
-
-
 void report_fake_political_news_in_each_month_in_2016() {
-    NewsArray news_container = NewsArray();
+    auto* news_container = new NewsArray();
     std::cout << "Loading from file..." << std::endl;
-    news_container.load_from_file("../data/cleaned/fake.csv", false);
-    news_container.load_from_file("../data/cleaned/true.csv", true);
+    news_container->load_from_file("../data/cleaned/fake.csv", false);
+    news_container->load_from_file("../data/cleaned/true.csv", true);
 
     auto now = std::chrono::system_clock::now();
 
     std::cout << "Getting all news in 2016..." << std::endl;
-    merge_sort(news_container, CRITERIA::PUBLICATION_DATE);
-    NewsArray news_2016_array = *dynamic_cast<NewsArray*>(two_pointer_search(&news_container, SEARCH_CRITERIA::SEARCH_PUBLICATION_YEAR, "2016"));
+    merge_sort(*news_container, CRITERIA::PUBLICATION_DATE);
+    NewsArray news_2016_array = *dynamic_cast<NewsArray*>(two_pointer_search(news_container, SEARCH_CRITERIA::SEARCH_PUBLICATION_YEAR, "2016"));
 
     std::cout << "Getting All Political News in 2016..." << std::endl;
     merge_sort(news_2016_array, CRITERIA::GENRE);
     news_2016_array.write_to_file("merge_sort_2016.txt");
-    NewsArray news_2016_political_array = *dynamic_cast<NewsArray*>(two_pointer_search(&news_2016_array, SEARCH_CRITERIA::SEARCH_PUBLICATION_GENRE, "POLITICS"));
+    NewsArray news_2016_political_array = *dynamic_cast<NewsArray*>(two_pointer_search(&news_2016_array, SEARCH_CRITERIA::SEARCH_PUBLICATION_GENRE, "politics"));
+    news_2016_political_array.write_to_file("2016 politics news.txt");
 
     std::cout << "Getting All Fake Political News in 2016..." << std::endl;
     counting_sort(news_2016_political_array, CRITERIA::IS_TRUE_NEWS);
@@ -202,60 +201,102 @@ void report_fake_political_news_in_each_month_in_2016() {
 
 
 void report_fake_political_news_in_each_month_in_2016_binary() {
-    NewsArray news_container;
+    auto* news_container = new NewsArray();
     std::cout << "Loading from file..." << std::endl;
-    news_container.load_from_file("../data/cleaned/fake.csv", false);
-    news_container.load_from_file("../data/cleaned/true.csv", true);
-    auto start_time = std::chrono::system_clock::now();
-    std::cout << "Getting all news in 2016..." << std::endl;
+    news_container->load_from_file("../data/cleaned/fake.csv", false);
+    news_container->load_from_file("../data/cleaned/true.csv", true);
 
-    // Step 1: Sort by publication date.
-    merge_sort(news_container, CRITERIA::PUBLICATION_DATE);
-    // Filter news from 2016 using binary search.
-    NewsArray news_2016_array = *dynamic_cast<NewsArray*>(binary_search(&news_container, SEARCH_PUBLICATION_YEAR, "2016"));
+    auto now = std::chrono::system_clock::now();
+
+    std::cout << "Getting all news in 2016..." << std::endl;
+    merge_sort(*news_container, CRITERIA::PUBLICATION_DATE);
+    NewsArray news_2016_array = *dynamic_cast<NewsArray*>(binary_search(news_container, SEARCH_CRITERIA::SEARCH_PUBLICATION_YEAR, "2016"));
 
     std::cout << "Getting All Political News in 2016..." << std::endl;
-    // Step 2: Sort by genre and filter political news.
     merge_sort(news_2016_array, CRITERIA::GENRE);
-    NewsArray news_2016_political_array = *dynamic_cast<NewsArray*>(binary_search(&news_2016_array, SEARCH_PUBLICATION_GENRE, "POLITICS"));
+    news_2016_array.write_to_file("merge_sort_2016.txt");
+    NewsArray news_2016_political_array = *dynamic_cast<NewsArray*>(binary_search(&news_2016_array, SEARCH_CRITERIA::SEARCH_PUBLICATION_GENRE, "politics"));
+    news_2016_political_array.write_to_file("2016 politics news.txt");
 
     std::cout << "Getting All Fake Political News in 2016..." << std::endl;
-    // Step 3: Sort by truth value and filter fake news.
     counting_sort(news_2016_political_array, CRITERIA::IS_TRUE_NEWS);
-    NewsArray fake_2016_political_news_container = *dynamic_cast<NewsArray*>(binary_search(&news_2016_political_array, SEARCH_TRUE_OR_FALSE_NEWS, "false"));
+    NewsArray fake_2016_political_news_container = *dynamic_cast<NewsArray*>(binary_search(&news_2016_political_array, SEARCH_CRITERIA::SEARCH_TRUE_OR_FALSE_NEWS, "false"));
 
     std::cout << "Reloading 2016 Political News array" << std::endl;
-    // Step 4: Ensure the container is sorted by month
-    merge_sort(news_2016_political_array, CRITERIA::PUBLICATION_DATE);
+    merge_sort(news_2016_political_array, PUBLICATION_DATE);
 
-
-    int percentage_per_month[12] = {0};
+    auto* percentage_per_month = new int[12];
     for (int i = 0; i < 12; i++) {
-        std::string month = std::to_string(i + 1);
-        NewsArray total_news_in_month = *dynamic_cast<NewsArray*>(binary_search(&news_2016_political_array, SEARCH_PUBLICATION_MONTH, month));
-        NewsArray fake_news_in_month = *dynamic_cast<NewsArray*>(binary_search(&fake_2016_political_news_container, SEARCH_PUBLICATION_MONTH, month));
-        if (total_news_in_month.size > 0) {
-            percentage_per_month[i] = (fake_news_in_month.size / (double)total_news_in_month.size) * 100;
-        } else {
-            percentage_per_month[i] = 0;
-        }
+        NewsArray total_news_in_month = *dynamic_cast<NewsArray*>(binary_search(&news_2016_political_array, SEARCH_CRITERIA::SEARCH_PUBLICATION_MONTH, to_string(i + 1)));
+        NewsArray fake_news_in_month = *dynamic_cast<NewsArray*>(binary_search(&fake_2016_political_news_container, SEARCH_CRITERIA::SEARCH_PUBLICATION_MONTH, to_string(i + 1)));
+        percentage_per_month[i] = (fake_news_in_month.size / (double)total_news_in_month.size) * 100;
     }
 
-    // Display the monthly percentages.
-    std::cout << "Percentage of Fake Political News in 2016:" << std::endl;
-    const char* months[12] = {"January", "February", "March", "April", "May", "June",
-                              "July", "August", "September", "October", "November", "December"};
-    for (int i = 0; i < 12; i++) {
-        std::cout << months[i] << " | " << std::setfill('*') << std::setw(percentage_per_month[i])
-                  << " " << percentage_per_month[i] << "%" << std::endl;
-    }
+    std::cout << "Percentage of Fake Political News in 2016" << std::endl << std::endl;
+    std::cout << "January     |" << std::setfill('*') << std::setw(percentage_per_month[0]) << " " << percentage_per_month[0] << "%" << std::endl;
+    std::cout << "February    |" << std::setfill('*') << std::setw(percentage_per_month[1]) << " " << percentage_per_month[1] << "%" << std::endl;
+    std::cout << "March       |" << std::setfill('*') << std::setw(percentage_per_month[2]) << " " << percentage_per_month[2] << "%" << std::endl;
+    std::cout << "April       |" << std::setfill('*') << std::setw(percentage_per_month[3]) << " " << percentage_per_month[3] << "%" << std::endl;
+    std::cout << "May         |" << std::setfill('*') << std::setw(percentage_per_month[4]) << " " << percentage_per_month[4] << "%" << std::endl;
+    std::cout << "June        |" << std::setfill('*') << std::setw(percentage_per_month[5]) << " " << percentage_per_month[5] << "%" << std::endl;
+    std::cout << "July        |" << std::setfill('*') << std::setw(percentage_per_month[6]) << " " << percentage_per_month[6] << "%" << std::endl;
+    std::cout << "August      |" << std::setfill('*') << std::setw(percentage_per_month[7]) << " " << percentage_per_month[7] << "%" << std::endl;
+    std::cout << "September   |" << std::setfill('*') << std::setw(percentage_per_month[8]) << " " << percentage_per_month[8] << "%" << std::endl;
+    std::cout << "October     |" << std::setfill('*') << std::setw(percentage_per_month[9]) << " " << percentage_per_month[9] << "%" << std::endl;
+    std::cout << "November    |" << std::setfill('*') << std::setw(percentage_per_month[10]) << " " << percentage_per_month[10] << "%" << std::endl;
+    std::cout << "December    |" << std::setfill('*') << std::setw(percentage_per_month[11]) << " " << percentage_per_month[11] << "%" << std::endl;
+
+
     auto end_time = std::chrono::system_clock::now();
-
-    std::chrono::duration<double> elapsed_seconds = end_time - start_time;
+    std::chrono::duration<double> elapsed_seconds = end_time - now;
+    //fake_2016_news_container.display();
     std::cout << "The entire process took: " << elapsed_seconds.count() << "s" << std::endl;
-
 }
 
+void report_fake_political_news_in_each_month_in_2016_linear() {
+        auto* news_container = new NewsArray();
+    std::cout << "Loading from file..." << std::endl;
+    news_container->load_from_file("../data/cleaned/fake.csv", false);
+    news_container->load_from_file("../data/cleaned/true.csv", true);
+
+    auto now = std::chrono::system_clock::now();
+
+    std::cout << "Getting all news in 2016..." << std::endl;
+    NewsArray news_2016_array = *dynamic_cast<NewsArray*>(linear_search(news_container, SEARCH_CRITERIA::SEARCH_PUBLICATION_YEAR, "2016"));
+
+    std::cout << "Getting All Political News in 2016..." << std::endl;
+    NewsArray news_2016_political_array = *dynamic_cast<NewsArray*>(linear_search(&news_2016_array, SEARCH_CRITERIA::SEARCH_PUBLICATION_GENRE, "politics"));
+
+    std::cout << "Getting All Fake Political News in 2016..." << std::endl;
+    NewsArray fake_2016_political_news_container = *dynamic_cast<NewsArray*>(linear_search(&news_2016_political_array, SEARCH_CRITERIA::SEARCH_TRUE_OR_FALSE_NEWS, "false"));
+
+    auto* percentage_per_month = new int[12];
+    for (int i = 0; i < 12; i++) {
+        NewsArray total_news_in_month = *dynamic_cast<NewsArray*>(linear_search(&news_2016_political_array, SEARCH_CRITERIA::SEARCH_PUBLICATION_MONTH, to_string(i + 1)));
+        NewsArray fake_news_in_month = *dynamic_cast<NewsArray*>(linear_search(&fake_2016_political_news_container, SEARCH_CRITERIA::SEARCH_PUBLICATION_MONTH, to_string(i + 1)));
+        percentage_per_month[i] = (fake_news_in_month.size / (double)total_news_in_month.size) * 100;
+    }
+
+    std::cout << "Percentage of Fake Political News in 2016" << std::endl << std::endl;
+    std::cout << "January     |" << std::setfill('*') << std::setw(percentage_per_month[0]) << " " << percentage_per_month[0] << "%" << std::endl;
+    std::cout << "February    |" << std::setfill('*') << std::setw(percentage_per_month[1]) << " " << percentage_per_month[1] << "%" << std::endl;
+    std::cout << "March       |" << std::setfill('*') << std::setw(percentage_per_month[2]) << " " << percentage_per_month[2] << "%" << std::endl;
+    std::cout << "April       |" << std::setfill('*') << std::setw(percentage_per_month[3]) << " " << percentage_per_month[3] << "%" << std::endl;
+    std::cout << "May         |" << std::setfill('*') << std::setw(percentage_per_month[4]) << " " << percentage_per_month[4] << "%" << std::endl;
+    std::cout << "June        |" << std::setfill('*') << std::setw(percentage_per_month[5]) << " " << percentage_per_month[5] << "%" << std::endl;
+    std::cout << "July        |" << std::setfill('*') << std::setw(percentage_per_month[6]) << " " << percentage_per_month[6] << "%" << std::endl;
+    std::cout << "August      |" << std::setfill('*') << std::setw(percentage_per_month[7]) << " " << percentage_per_month[7] << "%" << std::endl;
+    std::cout << "September   |" << std::setfill('*') << std::setw(percentage_per_month[8]) << " " << percentage_per_month[8] << "%" << std::endl;
+    std::cout << "October     |" << std::setfill('*') << std::setw(percentage_per_month[9]) << " " << percentage_per_month[9] << "%" << std::endl;
+    std::cout << "November    |" << std::setfill('*') << std::setw(percentage_per_month[10]) << " " << percentage_per_month[10] << "%" << std::endl;
+    std::cout << "December    |" << std::setfill('*') << std::setw(percentage_per_month[11]) << " " << percentage_per_month[11] << "%" << std::endl;
+
+
+    auto end_time = std::chrono::system_clock::now();
+    std::chrono::duration<double> elapsed_seconds = end_time - now;
+    //fake_2016_news_container.display();
+    std::cout << "The entire process took: " << elapsed_seconds.count() << "s" << std::endl;
+}
 
 
 
@@ -264,7 +305,7 @@ int main() {
     //sort_with_bubble_sort(CRITERIA::PUBLICATION_MONTH);
     //sort_with_selection_sort();
 
-    //sort_with_quick_sort(CRITERIA::IS_TRUE_NEWS);
+    //sort_with_quick_sort(CRITERIA::PUBLICATION_DATE);
     //sort_with_counting_sort(CRITERIA::GENRE);
 
     //sort_with_merge_sort(CRITERIA::IS_TRUE_NEWS);
@@ -274,7 +315,8 @@ int main() {
     //sort_with_heap_sort(CRITERIA::PUBLICATION_DATE);
 
     //report_fake_political_news_in_each_month_in_2016();
-    report_fake_political_news_in_each_month_in_2016_binary();
+    //report_fake_political_news_in_each_month_in_2016_binary();
+    report_fake_political_news_in_each_month_in_2016_linear();
 
     std::cout << "Hello from Array List Implementation File" << std::endl;
 }

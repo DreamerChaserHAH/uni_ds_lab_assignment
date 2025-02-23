@@ -4,14 +4,12 @@
 
 #pragma once
 
-
 #include <string>
 #include <fstream>
 #include <iomanip>
 #include <sstream>
 #include <ctime>
 #include <iostream>
-#include <iomanip>
 #include <algorithm>
 #include "container/news.hpp"
 
@@ -27,6 +25,16 @@ inline void parse_date(const std::string& date_str, struct tm& tm) {
     }
 }
 
+struct GenreIndex {
+    std::string genre_name;
+    int count;
+};
+
+struct KeywordIndex {
+    std::string keyword;
+    int count;
+};
+
 class NewsContainer{
     protected:
         time_t max_date;
@@ -35,15 +43,106 @@ class NewsContainer{
     ///The starting pointer from which this container will be able to access
     ///</summary>
     void* head;
-
     int size;
 
-    NewsContainer(): size(0), head(nullptr), max_date(0) {}
+    GenreIndex* genre_index;
+    KeywordIndex* keyword_index;
+
+    int distinct_number_of_genres;
+    int distinct_number_of_keyword;
+
+    NewsContainer(): size(0), head(nullptr), max_date(0), genre_index(new GenreIndex[30]) {}
 
     //an alternative constructor that allows us to set the head pointer
     NewsContainer(int size, void* head, time_t max_date): size(size), head(head), max_date(max_date){}
 
     virtual ~NewsContainer() = default;
+
+    void update_distincts(News* newNews) {
+
+        if (newNews == nullptr) {
+            return;
+        }
+        /// check if genre is in the genre index already or not
+        bool genre_exists = false;
+        for (int i = 0; i < distinct_number_of_genres; i++) {
+            if (genre_index[i].genre_name == newNews->genre) {
+                genre_index[i].count++;
+                genre_exists = true;
+                break;
+            }
+        }
+
+        //if it does not exist create a new genre and add 1 into there
+        if (!genre_exists) {
+            genre_index[distinct_number_of_genres].genre_name = newNews->genre;
+            genre_index[distinct_number_of_genres].count = 1;
+            distinct_number_of_genres++;
+        }
+    }
+
+    void update_distincts(News* oldNews, News* newNews) {
+        /// delete the news and update details
+        /// check if genre is in the genre index already or not
+
+        if (oldNews == nullptr) {
+            return;
+        }
+
+        for (int i = 0; i < distinct_number_of_genres; i++) {
+            if (genre_index[i].genre_name == oldNews->genre) {
+                genre_index[i].count--;
+                break;
+            }
+        }
+
+        if (newNews == nullptr) {
+            return;
+        }
+
+        /// check if genre is in the genre index already or not
+        bool genre_exists = false;
+        for (int i = 0; i < distinct_number_of_genres; i++) {
+            if (genre_index[i].genre_name == newNews->genre) {
+                genre_index[i].count++;
+                genre_exists = true;
+                break;
+            }
+        }
+
+        //if it does not exist create a new genre and add 1 into there
+        if (!genre_exists) {
+            genre_index[distinct_number_of_genres].genre_name = newNews->genre;
+            genre_index[distinct_number_of_genres].count = 1;
+            distinct_number_of_genres++;
+        }
+    }
+
+    long get_genre_critiera_value(News* news) {
+        for (int gi = 0; gi < distinct_number_of_genres; gi++) {
+            std::string current_genre_name = genre_index[gi].genre_name;
+            if (genre_index[gi].genre_name == news->genre) {
+                return gi;
+            }
+        }
+    }
+
+    long get_criteria_value(News* news, CRITERIA criteria) {
+        switch (criteria) {
+            case GENRE:
+                return get_genre_critiera_value(news);
+            case PUBLICATION_DATE:
+                return news->publication_date;
+            case IS_TRUE_NEWS:
+                return news->is_true;
+            case PUBLICATION_YEAR:
+                return news->get_year();
+            case PUBLICATION_MONTH:
+                return news->get_month();
+            default:
+                return 0;
+        }
+    }
 
     /// <summary>
     /// filepath: the path of the file we are reading
@@ -103,13 +202,10 @@ class NewsContainer{
             News news1;
             news1.title = title;
             news1.content = text;
-            if (subject == "\"worldnews\"") {
-                news1.genre = NewsGenre::WORLD_NEWS;
-            }
-            else if (subject == "\"politicsNews\"") {
-                news1.genre = NewsGenre::POLITICS;
-            }else {
-                news1.genre = NewsGenre::OTHERS;
+            news1.genre = subject;
+
+            if (news1.genre == "\"politicsnews\"") {
+                news1.genre = "\"politics\"";
             }
 
             struct tm tm = {};
@@ -136,7 +232,7 @@ class NewsContainer{
         std::cout  << "Publication Date" << std::setw(20) << "Title" << std::setw(200) << "Content" << std::setw(200) << "Genre" << std::setw(20) << std::endl;
         for (int i = 0; i < size; i++) {
             News* news = get_news_at_memory(current);
-            std::cout <<  "["  << ((news->is_true)? "TRUE NEWS] Genre: ": "FALSE NEWS] Genre:") << news->genre << std::put_time(localtime(&news->publication_date), "%b %d, %Y") << std::setw(20) << " " << news->title << std::setw(200) << news->content << std::setw(20) << "\n";
+            std::cout <<  "["  << ((news->is_true)? "TRUE NEWS] Genre: ": "FALSE NEWS] Genre:") << news->genre <<" "<< std::put_time(localtime(&news->publication_date), "%b %d, %Y") << std::setw(20) << " " << news->title << std::setw(200) << news->content << std::setw(20) << "\n";
             current = move_to_next(current);
         }
     }
@@ -149,7 +245,7 @@ class NewsContainer{
         void* current = head;
         for (int i = 0; i < size; i++) {
             News* news = get_news_at_memory(current);
-            output_file <<  "["  << ((news->is_true)? "TRUE NEWS] Genre: ": "FALSE NEWS] Genre:") << news->genre << std::put_time(localtime(&news->publication_date), "%b %d, %Y") << std::setw(20) << " " << news->title << std::setw(200) << news->content << std::setw(20) << "\n";
+            output_file <<  "["  << ((news->is_true)? "TRUE NEWS] Genre: ": "FALSE NEWS] Genre:") << news->genre << " " << std::put_time(localtime(&news->publication_date), "%b %d, %Y") << std::setw(20) << " " << news->title << std::setw(200) << news->content << std::setw(20) << "\n";
             current = move_to_next(current);
         }
         output_file.close();

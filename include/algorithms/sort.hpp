@@ -26,7 +26,7 @@ inline void bubble_sort(NewsContainer& news_container, CRITERIA criteria) {
             News* news1 = news_container.get_at_location(j);
             News* news2 = news_container.get_at_location(j + 1);
 
-            if (news1 && news2 && news1->is_greater_than(*news2, criteria)) {
+            if (news1 && news2 && news1->is_greater_than(*news2, criteria, &news_container)) {
                 news_container.swap_news(j, j + 1);
                 swapped = true;
             }
@@ -54,7 +54,7 @@ inline void selection_sort(NewsContainer& news_container, CRITERIA criteria) {
             
             if (current_news && min_news) {
                 // Compare publication dates to find the earliest one
-                if (current_news->is_lower_than(*min_news, criteria)) {
+                if (current_news->is_lower_than(*min_news, criteria, &news_container)) {
                     min_index = j;  // Update index of new minimum element
                 }
             }
@@ -86,7 +86,7 @@ inline void insertion_sort(NewsContainer& news_container, CRITERIA criteria) {
         if (compare_news_node == nullptr) {
             break;
         }
-        while (j >= 0 && news_container.get_news_at_memory(compare_news_node)->is_greater_than(current_news, criteria)) {
+        while (j >= 0 && news_container.get_news_at_memory(compare_news_node)->is_greater_than(current_news, criteria, &news_container)) {
             news_container.swap_news(j, j + 1);
             compare_news_node = news_container.move_to_prev(compare_news_node);
             if (compare_news_node == nullptr) {
@@ -148,7 +148,7 @@ inline void merge_sort(NewsContainer& news_container, CRITERIA criteria) {
         News* left_news = left_container->get_at_location(left_index);
         News* right_news = right_container->get_at_location(right_index);
 
-        if (left_news->is_greater_than(*right_news, criteria)) {
+        if (left_news->is_greater_than(*right_news, criteria, &news_container)) {
             final_container->put_at_location(*right_news, i);
             right_index++;
             continue;
@@ -183,7 +183,7 @@ inline void quick_sort(NewsContainer& news_container, CRITERIA criteria) {
     if (pivot_news_pointer == nullptr) {
         return;
     }
-    long pivot_value = get_criteria_value(pivot_news_pointer, criteria);
+    long pivot_value = news_container.get_criteria_value(pivot_news_pointer, criteria);
 
     /// # Step 2
     int left_pointer_index = 0;
@@ -202,7 +202,7 @@ inline void quick_sort(NewsContainer& news_container, CRITERIA criteria) {
             }
             left = *news_at_memory;
 
-            if (get_criteria_value(news_at_memory, criteria) > pivot_value) {
+            if (news_container.get_criteria_value(news_at_memory, criteria) > pivot_value) {
                 break;
             }
 
@@ -219,7 +219,7 @@ inline void quick_sort(NewsContainer& news_container, CRITERIA criteria) {
                 break;
             }
             right = *news_at_memory;
-            if (get_criteria_value(news_at_memory, criteria) < pivot_value) {
+            if (news_container.get_criteria_value(news_at_memory, criteria) < pivot_value) {
                 break;
             }
 
@@ -282,7 +282,7 @@ inline void counting_sort(NewsContainer& news_container, CRITERIA criteria) {
         if (current_news == nullptr) {
             break;
         }
-        count_array[get_criteria_value(current_news, criteria)]++;
+        count_array[news_container.get_criteria_value(current_news, criteria)]++;
         current_pointer = news_container.move_to_next(current_pointer);
     }
 
@@ -298,9 +298,9 @@ inline void counting_sort(NewsContainer& news_container, CRITERIA criteria) {
         if (current_news == nullptr) {
             break;
         }
-        int index = count_array[get_criteria_value(current_news, criteria)];
+        int index = count_array[news_container.get_criteria_value(current_news, criteria)];
         sorted_container->put_at_location(*current_news, index - 1);
-        count_array[get_criteria_value(current_news, criteria)]--;
+        count_array[news_container.get_criteria_value(current_news, criteria)]--;
     }
     delete[] count_array;
     news_container = *sorted_container;
@@ -319,18 +319,13 @@ inline void heapify(NewsContainer& news_container, int i, int n, CRITERIA criter
     int left = 2 * i + 1;
     int right = 2 * i + 2;
 
-    auto get_value = [criteria](News* news) {
-        return news ? get_criteria_value(news, criteria) : INT_MIN;
-    };
-
-
     News* largestNews = news_container.get_at_location(largest);
     News* leftNews = (left < n) ? news_container.get_at_location(left) : nullptr;
     News* rightNews = (right < n) ? news_container.get_at_location(right) : nullptr;
 
     // Compare left child
     if (leftNews) {
-        if (leftNews->is_equal_or_greater_than(*largestNews, criteria)) {
+        if (leftNews->is_equal_or_greater_than(*largestNews, criteria, &news_container)) {
             largest = left;
             largestNews = leftNews;
             }
@@ -338,7 +333,7 @@ inline void heapify(NewsContainer& news_container, int i, int n, CRITERIA criter
 
     // Compare right child
     if (rightNews) {
-        if (rightNews->is_equal_or_greater_than(*largestNews, criteria)) {
+        if (rightNews->is_equal_or_greater_than(*largestNews, criteria, &news_container)) {
             largest = right;
             largestNews = rightNews;
             }
@@ -382,7 +377,7 @@ inline void bucket_sort(NewsContainer& news_container, CRITERIA criteria) {
     for (int i = 0; i < news_container.size; i++) {
         News* news = news_container.get_at_location(i);
         if (news) {
-            long value = get_criteria_value(news, criteria);  // Get just the year
+            long value = news_container.get_criteria_value(news, criteria);  // Get just the year
             if (value < min_value) min_value = value;
             if (value > max_value) max_value = value;
         }

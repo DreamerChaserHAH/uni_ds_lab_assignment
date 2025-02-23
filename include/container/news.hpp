@@ -9,11 +9,7 @@
 #include <string>
 #include <ctime>
 
-enum NewsGenre {
-    WORLD_NEWS,
-    POLITICS,
-    OTHERS
-};
+class NewsContainer; // Forward declaration
 
 enum CRITERIA {
     GENRE,
@@ -23,68 +19,28 @@ enum CRITERIA {
     PUBLICATION_MONTH
 };
 
-struct News;
-inline long get_criteria_value(News* news, CRITERIA criteria);
+enum NewsGenre {
+    MIDDLE_EAST = 0,
+    US_NEWS = 1,
+    WORLD_NEWS = 2,
+    GOVERNMENT = 3,
+    LEFT_NEWS = 4,
+    GENERAL = 5,
+    UNCATEGORIZED = 6
+};
 
 struct News {
     std::string title;
     std::string content;
-    NewsGenre genre;
+    std::string genre;
     time_t publication_date;
     tm publication_time_info;
     bool is_true = false;
 
-    bool is_greater_than(News& news, CRITERIA criteria) {
-        switch (criteria) {
-            case GENRE:
-                return genre > news.genre;
-            case PUBLICATION_DATE:
-                return (get_year() > news.get_year()) ? true: (get_year() == news.get_year()? get_date_in_year() > news.get_date_in_year(): false);
-            case IS_TRUE_NEWS:
-                return is_true > news.is_true;
-            default:
-                return false;
-        }
-    }
-
-    bool is_lower_than(News& news, CRITERIA criteria) {
-        switch (criteria) {
-            case GENRE:
-                return genre < news.genre;
-            case PUBLICATION_DATE:
-                return (get_year() < news.get_year()) ? true: (get_year() == news.get_year()? get_date_in_year() < news.get_date_in_year(): false);
-            case IS_TRUE_NEWS:
-                return is_true < news.is_true;
-            default:
-                return false;
-        }
-    }
-
-    bool is_equal_or_greater_than(News& news, CRITERIA criteria) {
-        switch (criteria) {
-            case GENRE:
-                return genre >= news.genre;
-            case PUBLICATION_DATE:
-                return (get_year() > news.get_year()) ? true: (get_year() == news.get_year() ? get_date_in_year() >= news.get_date_in_year(): false);
-            case IS_TRUE_NEWS:
-                return is_true >= news.is_true;
-            default:
-                return false;
-        }
-    }
-
-    bool is_equal_or_lower_than(News& news, CRITERIA criteria) {
-        switch (criteria) {
-            case GENRE:
-                return genre <= news.genre;
-            case PUBLICATION_DATE:
-                return (get_year() < news.get_year()) ? true: (get_year() == news.get_year() ? get_date_in_year() <= news.get_date_in_year(): false);
-            case IS_TRUE_NEWS:
-                return is_true <= news.is_true;
-            default:
-                return false;
-        }
-    }
+    bool is_greater_than(News& news, CRITERIA criteria, NewsContainer* news_container);
+    bool is_lower_than(News& news, CRITERIA criteria, NewsContainer* news_container);
+    bool is_equal_or_greater_than(News& news, CRITERIA criteria, NewsContainer* news_container);
+    bool is_equal_or_lower_than(News& news, CRITERIA criteria, NewsContainer* news_container);
 
     int get_year() {
         return publication_time_info.tm_year + 1900; // convert to full years
@@ -99,22 +55,4 @@ struct News {
     }
     bool operator==(const News & news) const = delete;
 };
-
-inline long get_criteria_value(News* news, CRITERIA criteria) {
-    switch (criteria) {
-        case GENRE:
-            return news->genre;
-        case PUBLICATION_DATE:
-            return news->publication_date;
-        case IS_TRUE_NEWS:
-            return news->is_true;
-        case PUBLICATION_YEAR:
-            return news->get_year();
-        case PUBLICATION_MONTH:
-            return news->get_month();
-        default:
-            return 0;
-    }
-}
-
 

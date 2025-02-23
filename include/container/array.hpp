@@ -38,15 +38,21 @@ public:
         head_pointer = static_cast<News*>(head);
     }
 
-    NewsArray(News* head, int capacity, int size) {
+    NewsArray(News* head, int capacity, int size, time_t max_date, int distinct_number_of_genres, int distinct_number_of_keyword, GenreIndex* genre_index, KeywordIndex* keyword_index) {
         this->head = head;
         this->capacity = capacity;
         this->size = size;
         head_pointer = static_cast<News*>(head);
+        this->max_date = max_date;
+        this->distinct_number_of_genres = distinct_number_of_genres;
+        this->distinct_number_of_keyword = distinct_number_of_keyword;
+        this->genre_index = genre_index;
+        this->keyword_index = keyword_index;
     }
 
     ~NewsArray() override{
         //delete[] newsArray;
+        delete[] static_cast<News*>(head);
     }
 
     void insert(News newNews) override {
@@ -57,6 +63,8 @@ public:
         if (newNews.publication_date > max_date) {
             max_date = newNews.publication_date;
         }
+
+        update_distincts(&newNews);
 
         static_cast<News*>(head)[size++] = newNews;
     }
@@ -83,6 +91,8 @@ public:
             max_date = newNews.publication_date;
         }
 
+        update_distincts(&newNews);
+
         static_cast<News*>(head)[location] = newNews;
         size++;
     }
@@ -98,9 +108,13 @@ public:
         if (location < 0 || location >= size) {
             throw std::out_of_range("Invalid location");
         }
+        News* news_at_location = get_at_location(location);
         for (int i = location; i < size - 1; i++) {
             static_cast<News*>(head)[i] = static_cast<News*>(head)[i + 1];
         }
+
+        update_distincts(news_at_location, nullptr);
+
         size--;
     }
 
@@ -114,10 +128,12 @@ public:
         /// If there is more than one element, we will replace one by one using the put_at_location function
         int inserting_container_size = value_container->size;
         for (int i = 0; i < inserting_container_size; i++) {
+            News* old_news = get_at_location(starting_location + i);
             News* current_news = value_container->get_at_location(i);
             if (current_news == nullptr) {
                 break;
             }
+            update_distincts(old_news, nullptr);
             put_at_location(*current_news, starting_location + i);
         }
     }
@@ -126,6 +142,13 @@ public:
         if (location < 0 || location >= size) {
             throw std::out_of_range("Invalid location");
         }
+
+        News* current_news = get_at_location(location);
+        if (current_news == nullptr) {
+            return;
+        }
+
+        update_distincts(current_news, &newNews);
         static_cast<News*>(head)[location] = newNews;
     }
 
@@ -170,14 +193,14 @@ public:
         ///split the array to the left excluding the midpoint
         ///the return pointer must be related to the current array
 
-        return new NewsArray(static_cast<News*>(head), mid_point, mid_point);
+        return new NewsArray(static_cast<News*>(head), mid_point, mid_point, max_date, distinct_number_of_genres, distinct_number_of_keyword, genre_index, keyword_index);
     }
 
     void* split_right(int mid_point) override{
         //split the array to the right excluding the midpoint
         //the return pointer must be related to the current array
 
-        return new NewsArray(static_cast<News*>(head) + mid_point + 1, size - (mid_point + 1), size - (mid_point + 1));
+        return new NewsArray(static_cast<News*>(head) + mid_point + 1, size - (mid_point + 1), size - (mid_point + 1), max_date, distinct_number_of_genres, distinct_number_of_keyword, genre_index, keyword_index);
     }
 
     void* allocate_empty_copy() override {

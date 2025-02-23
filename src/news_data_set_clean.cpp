@@ -10,6 +10,12 @@
 #include <iomanip>
 #include <algorithm>
 
+std::string to_lowercase(const std::string& input) {
+    std::string result = input;
+    std::transform(result.begin(), result.end(), result.begin(), [](unsigned char c){ return std::tolower(c); });
+    return result;
+}
+
 bool is_normal_character(const char& s) {
     return !(s >= 'A' && s <= 'Z') && !(s >= 'a' && s <= 'z') && !(s >= '0' && s <= '9') && s != ' ' && s != '\'' && s != '(' && s != ')' && s != ',' && s != '.' && s != ':' && s != ';' && s != '?' && s != '!';
 }
@@ -128,17 +134,7 @@ void clean_csv(std::string input_file_path, std::string output_file_path) {
         // Read subject
         getline(ss, subject, ',');
 
-        subject = remove_unwanted_chars(trim(subject));
-        if (subject != "worldnews" && subject != "politicsNews" && subject != "others") {
-            if (subject == "left-news" || subject == "politics" || subject == "Government News") {
-                subject = "politicsNews";
-            }
-            else if (subject == "Middle-east" || subject == "US_News") {
-                subject = "worldnews";
-            }else {
-                subject = "others";
-            }
-        }
+        subject = to_lowercase(remove_unwanted_chars(trim(subject)));
         // Read date
         getline(ss, date, '\n');
         date = remove_unwanted_chars(trim(date));
@@ -152,7 +148,10 @@ void clean_csv(std::string input_file_path, std::string output_file_path) {
         if (!parse_date_success) {
             //parsing date failed
             date = previous_date;
-            parse_date(date, tm);
+            bool parse_date_success_2 = parse_date(date, tm);
+            if (!parse_date_success_2) {
+                continue;
+            }
         }
         previous_date = date;
         std::ostringstream formatted_date;

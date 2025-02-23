@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 20)
 
 include_directories(include)
 
+add_library(news_library src/container/news.cpp)
+link_libraries(news_library)
+
 # Main Executables
 add_executable(linked_list_implementation src/linked_list_implementation.cpp)
 add_executable(array_implementation src/array_implementation.cpp)

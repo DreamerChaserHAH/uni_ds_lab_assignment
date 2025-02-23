@@ -17,10 +17,15 @@ class NewsLinkedList : public NewsContainer{
 private:
     NewsNode* tail;
 
-    NewsLinkedList(NewsNode* head_pointer, NewsNode* tail_pointer, int size) {
+    NewsLinkedList(NewsNode* head_pointer, NewsNode* tail_pointer, int size, time_t max_date, int distinct_number_of_genres, int distinct_number_of_keyword, GenreIndex* genre_index, KeywordIndex* keyword_index) {
         this->head = head_pointer;
         this->size = size;
         this->tail = tail_pointer;
+        this->max_date = max_date;
+        this->distinct_number_of_genres = distinct_number_of_genres;
+        this->distinct_number_of_keyword = distinct_number_of_keyword;
+        this->genre_index = genre_index;
+        this->keyword_index = keyword_index;
     }
 
 public:
@@ -47,6 +52,8 @@ public:
             tail->nextAddress = newsNode;
             tail = newsNode;
         }
+
+        update_distincts(&newNews);
     }
 
     void insert_empty() override {
@@ -125,6 +132,8 @@ public:
         newsNode->nextAddress = current->nextAddress;
         newsNode->prevAddress = current;
         current->nextAddress = newsNode;
+
+        update_distincts(&newNews);
     }
 
     void delete_at_location(int location) override {
@@ -148,6 +157,7 @@ public:
         if (node == head) {
             head = node->nextAddress;
         }
+        update_distincts(node->data, nullptr);
         delete node->data;
         delete node;
     }
@@ -163,7 +173,9 @@ public:
             if (index >= new_container_size) {
                 break;
             }
-            current_node->data = value_container->get_at_location(index);
+            News* new_value = value_container->get_at_location(index);
+            update_distincts(current_node->data,  new_value);
+            current_node->data = new_value;
             current_node = current_node->nextAddress;
             index++;
         }
@@ -174,6 +186,7 @@ public:
         if (node_ptr == nullptr) {
             return;
         }
+        update_distincts(node_ptr->data, &newNews);
         node_ptr->data = new News(newNews);
     }
 
@@ -247,7 +260,7 @@ public:
             return nullptr;
         }
 
-        return new NewsLinkedList(new_head, new_tail, mid_point);
+        return new NewsLinkedList(new_head, new_tail, mid_point, max_date, distinct_number_of_genres, distinct_number_of_keyword, genre_index, keyword_index);
     }
 
     void* split_right(int mid_point) override {
@@ -258,7 +271,7 @@ public:
         if (current == nullptr) {
             return nullptr;
         }
-        return new NewsLinkedList(new_head, new_tail, size - mid_point - 1);
+        return new NewsLinkedList(new_head, new_tail, size - mid_point - 1, max_date, distinct_number_of_genres, distinct_number_of_keyword, genre_index, keyword_index);
     }
 
     void* allocate_empty_copy() override {
