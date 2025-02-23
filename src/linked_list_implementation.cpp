@@ -39,9 +39,6 @@ void prompt_benchmark_sub_menu() {
     int choice = -1;
     bool exit_input_loop = false;
 
-    std::string false_news = prompt_file_path("Enter the file path for the false file containing all false news:");
-    std::string true_news = prompt_file_path("Enter the file path for the true file containing all true news:");
-
     while (!exit_input_loop) {
         cout << "**CHOOSE SORTING BENCHMARK**" << std::endl;
         cout << "1. Bubble Sort Benchmark (Livi)" << std::endl;
@@ -73,40 +70,40 @@ void prompt_benchmark_sub_menu() {
 
         switch (choice) {
             case 1:
-                linked_list_implementation::sort_with_bubble_sort_benchmark(false_news, true_news, CRITERIA::PUBLICATION_DATE);
+                linked_list_implementation::sort_with_bubble_sort_benchmark( CRITERIA::PUBLICATION_DATE);
                 break;
             case 2:
-                linked_list_implementation::sort_with_selection_sort_benchmark(false_news, true_news, CRITERIA::PUBLICATION_DATE);
+                linked_list_implementation::sort_with_selection_sort_benchmark( CRITERIA::PUBLICATION_DATE);
                 break;
             case 3:
-                linked_list_implementation::sort_with_quick_sort_benchmark(false_news, true_news, CRITERIA::PUBLICATION_DATE);
+                linked_list_implementation::sort_with_quick_sort_benchmark( CRITERIA::PUBLICATION_DATE);
                 break;
             case 4:
-                linked_list_implementation::sort_with_counting_sort_benchmark(false_news, true_news, PUBLICATION_DATE);
+                linked_list_implementation::sort_with_counting_sort_benchmark( PUBLICATION_DATE);
                 break;
             case 5:
-                linked_list_implementation::sort_with_merge_sort_benchmark(false_news, true_news, PUBLICATION_DATE);
+                linked_list_implementation::sort_with_merge_sort_benchmark( PUBLICATION_DATE);
                 break;
             case 6:
-                linked_list_implementation::sort_with_insertion_sort_benchmark(false_news, true_news, PUBLICATION_DATE);
+                linked_list_implementation::sort_with_insertion_sort_benchmark( PUBLICATION_DATE);
                 break;
             case 7:
-                linked_list_implementation::sort_with_heap_sort_benchmark(false_news, true_news, PUBLICATION_DATE);
+                linked_list_implementation::sort_with_heap_sort_benchmark( PUBLICATION_DATE);
                 break;
             case 8:
-                linked_list_implementation::sort_with_bucket_sort_benchmark(false_news, true_news, PUBLICATION_DATE);
+                linked_list_implementation::sort_with_bucket_sort_benchmark( PUBLICATION_DATE);
                 break;
             case 9:
-                linked_list_implementation::report_fake_political_news_in_each_month_in_2016_linear_benchmark(false_news, true_news);
+                linked_list_implementation::report_fake_political_news_in_each_month_in_2016_linear_benchmark ();
                 break;
             case 10:
-                linked_list_implementation::report_fake_political_news_in_each_month_in_2016_binary_benchmark(false_news, true_news);
+                linked_list_implementation::report_fake_political_news_in_each_month_in_2016_binary_benchmark ();
                 break;
             case 11:
-                linked_list_implementation::report_fake_political_news_in_each_month_in_2016_exponential_benchmark(false_news, true_news);
+                linked_list_implementation::report_fake_political_news_in_each_month_in_2016_exponential_benchmark ();
                 break;
             case 12:
-                linked_list_implementation::report_fake_political_news_in_each_month_in_2016_two_pointer_search_benchmark(false_news, true_news);
+                linked_list_implementation::report_fake_political_news_in_each_month_in_2016_two_pointer_search_benchmark ();
                 break;
             case 13:
                 exit_input_loop = true;
@@ -295,19 +292,19 @@ void prompt_searching_algorithm_sub_menu(NewsLinkedList* news_container) {
 
         switch (choice) {
             case 1:
-                linear_search(news_container, search_criteria, search_content);
+                news_container = dynamic_cast<NewsLinkedList*>(linear_search(news_container, search_criteria, search_content));
                 news_container->display();
                 break;
             case 2:
-                binary_search(news_container, search_criteria, search_content);
+                news_container = dynamic_cast<NewsLinkedList*>(binary_search(news_container, search_criteria, search_content));
                 news_container->display();
                 break;
             case 3:
-                exponential_search(news_container, search_criteria, search_content);
+                news_container = dynamic_cast<NewsLinkedList*>(exponential_search(news_container, search_criteria, search_content));
                 news_container->display();
                 break;
             case 4:
-                two_pointer_search(news_container, search_criteria, search_content);
+                news_container = dynamic_cast<NewsLinkedList*>(two_pointer_search(news_container, search_criteria, search_content));
                 news_container->display();
                 break;
             default:
@@ -329,8 +326,10 @@ int main() {
         cout << "1. Load News Linked List" << std::endl;
         cout << "2. Apply Sorting Algorithm" << std::endl;
         cout << "3. Apply Searching Algorithm" << std::endl;
-        cout << "4. Benchmarking" << std::endl;
-        cout << "5. Exit Application" << std::endl;
+        cout << "4. Display Keywords" << std::endl;
+        cout << "5. Display Total Number of Articles" << std::endl;
+        cout << "6. Benchmarking" << std::endl;
+        cout << "7. Exit Application" << std::endl;
         cout << ">";
         std::string input_string;
         cin >> input_string;
@@ -357,10 +356,24 @@ int main() {
                 prompt_searching_algorithm_sub_menu(news_linked_list);
                 break;
             case 4:
+                if (news_linked_list == nullptr) {
+                    std::cout << "Linked List is Empty!" << std::endl;
+                    break;
+                }
+                news_linked_list->display_keyword_demographics();
+                break;
+            case 5:
+                if (news_linked_list == nullptr) {
+                    std::cout << "Linked List is Empty!" << std::endl;
+                    break;
+                }
+                news_linked_list->display_total_number_of_articles();
+                break;
+            case 6:
                 //benchmarking
                 prompt_benchmark_sub_menu();
                 break;
-            case 5:
+            case 7:
                 std::cout << "Application received quit signal" << std::endl;
                 end_application = true;
                 break;

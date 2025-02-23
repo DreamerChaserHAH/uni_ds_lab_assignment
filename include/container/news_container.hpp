@@ -249,6 +249,12 @@ inline long ::NewsContainer::get_criteria_value(News *news, CRITERIA critiera) {
 }
 
 inline void NewsContainer::display_keyword_demographics() {
+
+        if (size == 0) {
+            std::cout << "Container is Empty! Nothing to display!" << std::endl;
+            return;
+        }
+
         int distinct_number_of_keywords = 0;
         KeywordIndex* keyword_index = new KeywordIndex[100000];
 
@@ -350,6 +356,11 @@ inline void NewsContainer::write_to_file(const std::string& file_path) {
 inline void NewsContainer::load_from_file(bool are_true_news) {
     std::string file_path;
     while (true) {
+        if (are_true_news) {
+            std::cout << "Enter the path to the true news file: ";
+        }else {
+            std::cout << "Enter the path to the false news file: ";
+        }
         std::cin >> file_path;
         std::ifstream target_file(file_path);
 
@@ -435,6 +446,11 @@ inline void NewsContainer::load_from_file(const std::string& filepath, bool are_
 }
 
 inline void NewsContainer::display(){
+
+    if (size == 0) {
+        std::cout << "Container is Empty! Nothing to display!" << std::endl;
+        return;
+    }
     void* current = head;
     for (int i = 0; i < size; i++) {
         News* news = get_news_at_memory(current);
@@ -444,6 +460,9 @@ inline void NewsContainer::display(){
 }
 
 inline void NewsContainer::display_total_number_of_articles() {
+    if (size == 0) {
+        std::cout << "Container is Empty! Nothing to display!" << std::endl;
+    }
     std::cout << "Total Number of Articles: " << size << std::endl;
 }
 
