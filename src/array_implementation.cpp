@@ -194,8 +194,6 @@ void prompt_sorting_algorithm_sub_menu(NewsArray* news_container) {
         return;
     }
 
-    CRITERIA criteria = prompt_choose_sorting_criteria();
-
     int choice = -1;
     bool exit_input_loop = false;
 
@@ -223,35 +221,35 @@ void prompt_sorting_algorithm_sub_menu(NewsArray* news_container) {
 
         switch (choice) {
             case 1:
-                bubble_sort(*news_container, criteria);
+                bubble_sort(*news_container, prompt_choose_sorting_criteria());
                 news_container->display();
                 break;
             case 2:
-                selection_sort(*news_container, criteria);
+                selection_sort(*news_container, prompt_choose_sorting_criteria());
                 news_container->display();
                 break;
             case 3:
-                quick_sort(*news_container, criteria);
+                quick_sort(*news_container, prompt_choose_sorting_criteria());
                 news_container->display();
                 break;
             case 4:
-                counting_sort(*news_container, criteria);
+                counting_sort(*news_container, prompt_choose_sorting_criteria());
                 news_container->display();
                 break;
             case 5:
-                bucket_sort(*news_container, criteria);
+                bucket_sort(*news_container, prompt_choose_sorting_criteria());
                 news_container->display();
                 break;
             case 6:
-                heap_sort(*news_container, criteria);
+                heap_sort(*news_container, prompt_choose_sorting_criteria());
                 news_container->display();
                 break;
             case 7:
-                merge_sort(*news_container, criteria);
+                merge_sort(*news_container, prompt_choose_sorting_criteria());
                 news_container->display();
                 break;
             case 8:
-                insertion_sort(*news_container, criteria);
+                insertion_sort(*news_container, prompt_choose_sorting_criteria());
                 news_container->display();
                 break;
             case 9:
@@ -292,24 +290,22 @@ void prompt_searching_algorithm_sub_menu(NewsArray* news_container) {
         }
 
         choice = std::stoi(input_string);
-        SEARCH_CRITERIA search_criteria = prompt_choose_search_criteria();
-        std::string search_content = prompt_search_content();
 
         switch (choice) {
             case 1:
-                news_container = dynamic_cast<NewsArray*>(linear_search(news_container, search_criteria, search_content));
+                news_container = dynamic_cast<NewsArray*>(linear_search(news_container, prompt_choose_search_criteria(), prompt_search_content()));
                 news_container->display();
                 break;
             case 2:
-                news_container = dynamic_cast<NewsArray*>(binary_search(news_container, search_criteria, search_content));
+                news_container = dynamic_cast<NewsArray*>(binary_search(news_container, prompt_choose_search_criteria(), prompt_search_content()));
                 news_container->display();
                 break;
             case 3:
-                news_container = dynamic_cast<NewsArray*>(exponential_search(news_container, search_criteria, search_content));
+                news_container = dynamic_cast<NewsArray*>(exponential_search(news_container, prompt_choose_search_criteria(), prompt_search_content()));
                 news_container->display();
                 break;
             case 4:
-                news_container = dynamic_cast<NewsArray*>(two_pointer_search(news_container, search_criteria, search_content));
+                news_container = dynamic_cast<NewsArray*>(two_pointer_search(news_container, prompt_choose_search_criteria(), prompt_search_content()));
                 news_container->display();
                 break;
             case 5:
