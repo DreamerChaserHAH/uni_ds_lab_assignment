@@ -46,3 +46,5 @@ struct News {
     bool operator==(const News & news) const = delete;
 };
 
+
+
