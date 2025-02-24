@@ -166,7 +166,8 @@ public:
             useArray = (choice == 1);
             load_news_data(useArray);
 
-            while (true) {
+            bool end_sub_loop = false;
+            while (!end_sub_loop) {
                 int subChoice;
                 cout << "\n=== MAIN MENU ===\n";
                 cout << "1. Sorting Algorithms\n";
@@ -251,6 +252,7 @@ public:
                     load_news_data(useArray);
                 }
                 else if (subChoice == 7) {
+                    end_sub_loop = true;
                     break;
                 }
                 else if (subChoice == 8) {
